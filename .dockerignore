@@ -1,0 +1,13 @@
+__tests__/
+.vscode/
+.dockerignore
+.git/
+.gitignore
+node_modules/
+LICENSE
+README.md
+src/
+tsconfig.json
+tsconfig.release.json
+tslint.json
+wallaby.js

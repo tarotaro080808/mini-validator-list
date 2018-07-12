@@ -1,0 +1,31 @@
+version: '3.5'
+
+services:
+
+  mini-validator-list-backend:
+    build:
+      context: .
+      dockerfile: backend.Dockerfile
+    image: cinnapple/mini-validator-list-backend
+    networks:
+      - mini-validator-list
+    volumes:
+      - ./backend/build/src:/usr/src/api
+
+  mini-validator-list-frontend:
+    build:
+      context: .
+      dockerfile: frontend.Dockerfile
+    image: cinnapple/mini-validator-list-frontend
+    ports:
+      - '80:80'
+    volumes:
+      - ./frontend/dist:/usr/share/nginx/html
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - mini-validator-list
+    depends_on:
+      - mini-validator-list-backend
+
+networks:
+  mini-validator-list:

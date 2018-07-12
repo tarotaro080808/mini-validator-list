@@ -1,0 +1,42 @@
+import React from "react";
+import PropTypes from "prop-types";
+
+export default class XRPTipBotButton extends React.Component {
+  constructor(props) {
+    super(props);
+
+    this.state = { ready: false };
+  }
+
+  componentDidMount() {
+    const script = document.createElement("script");
+    script.src = "https://www.xrptipbot.com/static/donate/tipper.js";
+    script.async = true;
+    document.body.appendChild(script);
+
+    this.setState({
+      ready: true
+    });
+  }
+
+  render() {
+    const { to, amount, size, network } = this.props;
+
+    return (
+      <a
+        amount={amount}
+        size={size || 275}
+        to={to}
+        network={network}
+        href="https://www.xrptipbot.com"
+        target="_blank"
+      />
+    );
+  }
+}
+
+XRPTipBotButton.propTypes = {
+  to: PropTypes.object.isRequired,
+  amount: PropTypes.object.isRequired,
+  network: PropTypes.object.isRequired
+};
