@@ -5,6 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack-dev-server --config ./webpack.config.js --mode development",
+    "watch": "webpack --watch --config ./webpack.config.js --mode development",
     "build": "webpack --mode production",
     "test": "echo \"No test specified\" && exit 0"
   },
@@ -33,6 +34,8 @@
     "babel-preset-env": "^1.7.0",
     "react": "^16.4.1",
     "react-autosuggest": "^9.3.4",
-    "react-dom": "^16.4.1"
+    "react-dom": "^16.4.1",
+    "react-motion": "^0.5.2",
+    "react-simple-maps": "^0.12.1"
   }
 }

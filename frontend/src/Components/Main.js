@@ -13,6 +13,7 @@ import LinearProgress from "@material-ui/core/LinearProgress";
 import Hidden from "@material-ui/core/Hidden";
 import ExpandablePanel from "./ExpandablePanel";
 import ResultStatsPanel from "./ResultStatsPanel";
+import DomainMapPanel from "./DomainMapPanel";
 import InteractiveList from "./InteractiveList";
 import Layout from "./Layout";
 import SimpleSnackbar from "./SimpleSnackbar";
@@ -221,15 +222,16 @@ class Main extends React.Component {
       defaultOnly: true
     };
 
-    store.getValidators(data => {
+    store.getValidators().then(validatorData => {
+
       this.setState({
-        lastUpdated: data.lastUpdated,
-        list: data.list,
-        validators: filter(data.list, this.state, {
+        lastUpdated: validatorData.lastUpdated,
+        list: validatorData.list,
+        validators: filter(validatorData.list, this.state, {
           verifiedOnly: initialState.verifiedOnly,
           defaultOnly: initialState.defaultOnly
         }),
-        validatorsForFilter: filter(data.list, this.state, {
+        validatorsForFilter: filter(validatorData.list, this.state, {
           verifiedOnly: true,
           defaultOnly: initialState.defaultOnly,
           unique: true,
@@ -323,6 +325,17 @@ class Main extends React.Component {
                       <Grid container spacing={0}>
                         <Grid item xs={12}>
                           <ResultStatsPanel
+                            validators={this.state.validators}
+                          />
+                        </Grid>
+                      </Grid>
+                    </ExpandablePanel>
+                  </Grid>
+                  <Grid item xs={12} className={classes.gridItem}>
+                    <ExpandablePanel className={classes.paper} title="Map">
+                      <Grid container spacing={0}>
+                        <Grid item xs={12}>
+                          <DomainMapPanel
                             validators={this.state.validators}
                           />
                         </Grid>

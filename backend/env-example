@@ -1,4 +1,8 @@
 PORT=80
 FETCH_INTERVAL=60000
-DEFAULT_UNL_URL="https://vl.ripple.com"
-VALIDATORS_URL="https://data.ripple.com/v2/network/validators"
+GEO_FETCH_INTERVAL=86400000
+DEFAULT_UNL_URL=https://vl.ripple.com
+VALIDATORS_URL=https://data.ripple.com/v2/network/validators
+IPSTACK_GET_URL=http://api.ipstack.com
+IPSTACK_API_KEY=
+EXCLUDE_VALIDATOR_DOMAINS=ripple.com/build/xrp-test-net

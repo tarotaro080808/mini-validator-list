@@ -7,3 +7,7 @@ node_modules
 backend/build/
 
 frontend/dist/bundle.js*
+
+frontend/dist/
+!frontend/dist/index.html
+!frontend/dist/static/*

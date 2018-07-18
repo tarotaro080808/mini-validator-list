@@ -36,7 +36,7 @@ export default class XRPTipBotButton extends React.Component {
 }
 
 XRPTipBotButton.propTypes = {
-  to: PropTypes.object.isRequired,
-  amount: PropTypes.object.isRequired,
-  network: PropTypes.object.isRequired
+  to: PropTypes.string.isRequired,
+  amount: PropTypes.number.isRequired,
+  network: PropTypes.string.isRequired
 };

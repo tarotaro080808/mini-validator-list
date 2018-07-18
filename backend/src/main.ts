@@ -12,9 +12,13 @@ const app = new Koa();
 const router = new Router();
 
 router.get("/api/validators", async ctx => {
-  const result = await service.get();
+  const result = await service.getValidatorInfo();
+  ctx.body = result;
+});
+
+router.get("/api/geo", async ctx => {
+  const result = await service.getGeoInfo();
   ctx.body = result;
 });
 
 app.use(router.routes()).listen(configuration.getPort());
-
