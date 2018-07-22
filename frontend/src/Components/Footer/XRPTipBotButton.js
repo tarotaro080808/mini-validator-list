@@ -2,11 +2,9 @@ import React from "react";
 import PropTypes from "prop-types";
 
 export default class XRPTipBotButton extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { ready: false };
-  }
+  state = {
+    ready: false
+  };
 
   componentDidMount() {
     const script = document.createElement("script");

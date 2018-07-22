@@ -1,24 +1,11 @@
 import { myContainer } from "./inversify.config";
-import { TYPES } from "./types";
-import { IService, IConfiguration } from "./interfaces";
+import { TYPES } from "./inversify.types";
+import { IServer, Lib } from "./types";
 
-import * as Koa from "koa";
-import * as Router from "koa-router";
-
-const configuration = myContainer.get<IConfiguration>(TYPES.Configuration);
-const service = myContainer.get<IService>(TYPES.Service);
-
-const app = new Koa();
-const router = new Router();
-
-router.get("/api/validators", async ctx => {
-  const result = await service.getValidatorInfo();
-  ctx.body = result;
+const logger = myContainer.get<Lib.ILogger>(TYPES.Lib.Logger);
+process.on("uncaughtException", err => {
+  logger.error("Caught exception: " + err);
 });
 
-router.get("/api/geo", async ctx => {
-  const result = await service.getGeoInfo();
-  ctx.body = result;
-});
-
-app.use(router.routes()).listen(configuration.getPort());
+const server = myContainer.get<IServer>(TYPES.Server);
+server.listen();

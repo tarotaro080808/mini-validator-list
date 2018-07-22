@@ -7,11 +7,12 @@
     "node": ">= 8.9.0"
   },
   "devDependencies": {
+    "@types/bluebird": "^3.5.22",
     "@types/koa": "^2.0.46",
     "@types/koa-router": "^7.0.30",
     "@types/koa-static": "^4.0.0",
     "@types/node": "~8.10.18",
-    "@types/bluebird": "^3.5.22",
+    "@types/winston": "^2.3.9",
     "rimraf": "~2.6.2",
     "testdouble": "^3.8.1",
     "tslint": "~5.10.0",
@@ -20,7 +21,7 @@
     "typescript": "~2.9.1"
   },
   "scripts": {
-    "start": "node build/src/main.js",
+    "start": "if [ \"$NODE_ENV\" == 'production' ]; then node /usr/src/api/main.js; else nodemon /usr/src/api/main.js; fi",
     "clean": "rimraf coverage build tmp",
     "build": "tsc -p tsconfig.release.json",
     "watch": "tsc -w -p tsconfig.release.json",
@@ -33,6 +34,7 @@
   "author": "Cinnapple <cinnapple.fun@gmail.com>",
   "license": "APLv2",
   "dependencies": {
+    "@koa/cors": "2",
     "axios": "^0.18.0",
     "base-64": "^0.1.0",
     "base-x": "^3.0.4",
@@ -42,7 +44,9 @@
     "inversify": "^4.13.0",
     "koa": "^2.5.1",
     "koa-router": "^7.4.0",
+    "nodemon": "^1.18.3",
     "reflect-metadata": "^0.1.12",
-    "tslib": "~1.9.2"
+    "tslib": "~1.9.2",
+    "winston": "^3.0.0"
   }
 }

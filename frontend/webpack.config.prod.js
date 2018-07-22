@@ -1,25 +1,18 @@
-const WriteFilePlugin = require("write-file-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
-
 const webpack = require("webpack");
 
 module.exports = {
-  entry: ["react-hot-loader/patch", "./src/index.js"],
+  entry: ["./src/index.js"],
   output: {
     path: __dirname + "/dist",
     publicPath: "/",
-    filename: "bundle.js",
-    hotUpdateChunkFilename: "hot/hot-update.js",
-    hotUpdateMainFilename: "hot/hot-update.json"
+    filename: "bundle.js"
   },
-  devtool: "source-map",
   resolve: {
     extensions: ["*", ".js", ".jsx", ".ts", ".tsx", ".json"]
   },
   module: {
     rules: [
       { test: /\.tsx?$/, loader: "awesome-typescript-loader" },
-      { enforce: "pre", test: /\.js$/, loader: "source-map-loader" },
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -32,9 +25,12 @@ module.exports = {
     "react-dom": "ReactDOM"
   },
   plugins: [
-    new CleanWebpackPlugin(["dist/hot"]),
-    new webpack.HotModuleReplacementPlugin(),
-    new WriteFilePlugin()
+    new webpack.optimize.OccurrenceOrderPlugin(),
+    new webpack.DefinePlugin({
+      'process.env': {
+        'NODE_ENV': JSON.stringify('production')
+      }
+    })
   ],
   devServer: {
     contentBase: "./dist",

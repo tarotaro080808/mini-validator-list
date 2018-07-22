@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
-import { IQuerier, IConfiguration, ResolveDnsResponse } from "./interfaces";
-import { TYPES } from "./types";
+import { IQuerier, IConfiguration, ResolveDnsResponse, Lib } from "./types";
+import { TYPES } from "./inversify.types";
 
 import axios from "axios";
 import * as dns from "dns";
@@ -15,18 +15,26 @@ export default class Querier implements IQuerier {
     @inject(TYPES.Configuration) private _configuration: IConfiguration
   ) {}
 
-  private _get(url: string): Promise<any> {
-    return axios.get(url).then(a => a.data);
+  private async _get<T>(url: string): Promise<T> {
+    return axios.get<T>(url).then(a => a.data);
   }
 
-  getDefaultUnl() {
-    return this._get(this._configuration.getDefaultUNLsURL());
-  }
-
-  getValidators() {
-    return this._get(this._configuration.getValidatorsURL()).then(
-      data => data.validators
+  async getDefaultUnl() {
+    return this._get<Lib.RippleData.DefaultUnlRawResponse>(
+      this._configuration.getDefaultUNLsURL()
     );
+  }
+
+  async getValidators() {
+    return this._get<{ validators: Lib.RippleData.ValidatorRawResponse[] }>(
+      this._configuration.getValidatorsURL()
+    ).then(data => data.validators);
+  }
+
+  async getValidatorDailyReports() {
+    return this._get<{ reports: Lib.RippleData.DailyReportRawResponse[] }>(
+      this._configuration.getValidatorDailyReportsURL()
+    ).then(data => data.reports);
   }
 
   async getIpFromDomain(domain: string) {
@@ -45,7 +53,9 @@ export default class Querier implements IQuerier {
     const queryParam = this._configuration.getIPStackApiKey();
     const data = await bluebird
       .delay(200)
-      .then(() => this._get(`${url}?access_key=${queryParam}`));
+      .then(() =>
+        this._get<Lib.IPStackResponse>(`${url}?access_key=${queryParam}`)
+      );
     return data;
   }
 }

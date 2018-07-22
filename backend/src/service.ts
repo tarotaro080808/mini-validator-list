@@ -4,60 +4,146 @@ import {
   IService,
   IConfiguration,
   ICrypto,
-  RippleValidatorList,
-  IValidatorDataCache,
-  IGeoDataCache,
   IQuerier,
   Lib,
   ResolveDnsResponse,
-  GeoInfoList,
   HashMap,
-  IDataCache
-} from "./interfaces";
-import { TYPES } from "./types";
+  Cache
+} from "./types";
+import { TYPES } from "./inversify.types";
+import { isArray } from "util";
+import { geoDataMock } from "./geoDataCache";
 
-type CacheType = IDataCache<GeoInfoList | RippleValidatorList>;
+type CacheType = Cache.IDataCache<
+  | Lib.IPStackResponse
+  | Lib.RippleData.ValidatorRawResponse
+  | Lib.RippleData.DailyReportRawResponse
+  | Lib.RippleData.DefaultUnlRawResponse
+  | Cache.MergedDataCache
+>;
 
 @injectable()
 export default class Service implements IService {
   private _cache: HashMap<CacheType> = {};
 
   constructor(
+    @inject(TYPES.Lib.Logger) protected _logger: Lib.ILogger,
     @inject(TYPES.Configuration) private _configuration: IConfiguration,
     @inject(TYPES.Querier) private _querier: IQuerier,
     @inject(TYPES.Crypto) private _crypto: ICrypto
   ) {
-    this._fetch().then(() => {
-      this._fetchGeoInfo();
-    });
+    this._startIntervalFetchAll();
+    this._startInitialFetchAll();
+  }
 
+  private async _startInitialFetchAll() {
+    await Promise.all([
+      this._fetchDefaultUnl(),
+      this._fetchDailyReport(),
+      this._fetchValidators().then(() => {
+        return this._withGeoMockData(() => this._fetchGeoInfo(<
+          Cache.IDataCache<Lib.RippleData.ValidatorRawResponse>
+        >this._cache[Cache.TYPES.RIPPLE_VALIDATORS]));
+      })
+    ]);
+    this._mergeIntoValidators();
+  }
+
+  private _withGeoMockData(apiCall){
+    if(process.env["NODE_ENV"] === "production"){
+      return apiCall();
+    } else {
+      return new Promise(resolve => {
+        this._cache[Cache.TYPES.IPSTACK_GEO] = <Cache.IGeoDataCache>geoDataMock;
+        this._logger.info(`cache[${Cache.TYPES.IPSTACK_GEO}] has been populated with MOCK data.`);
+        return resolve(true);
+      });
+    }
+  }
+
+  private _startIntervalFetchAll() {
     const validatorFetchInterval = this._configuration.getFetchInterval();
-    setInterval(() => {
-      this._fetch();
+    setInterval(async () => {
+      await Promise.all([
+        this._fetchDefaultUnl(),
+        this._fetchDailyReport(),
+        this._fetchValidators()
+      ]);
+      this._mergeIntoValidators();
     }, validatorFetchInterval);
 
     const geoInfoFetchInterval = this._configuration.getGeoInfoFetchInterval();
     setInterval(() => {
-      this._fetchGeoInfo();
+      if (this._cache[Cache.TYPES.RIPPLE_VALIDATORS]) {
+        this._withGeoMockData(this._fetchGeoInfo(<
+          Cache.IDataCache<Lib.RippleData.ValidatorRawResponse>
+        >this._cache[Cache.TYPES.RIPPLE_VALIDATORS]));
+      }
     }, geoInfoFetchInterval);
   }
 
-  private async _fetchGeoInfo() {
-    if (!this._cache["validators"]) {
-      return;
-    }
+  private async _fetchDefaultUnl() {
+    this._logger.info(
+      `fetching data for cache[${Cache.TYPES.RIPPLE_DEFAULT_UNL}]...`
+    );
+    return await this._querier.getDefaultUnl().then(data => {
+      this._cache[Cache.TYPES.RIPPLE_DEFAULT_UNL] = {
+        lastUpdated: new Date(),
+        list: [<Lib.RippleData.DefaultUnlRawResponse>data]
+      };
+      this._logger.info(
+        `cache[${Cache.TYPES.RIPPLE_DEFAULT_UNL}] has been populated.`
+      );
+    });
+  }
+
+  private async _fetchDailyReport() {
+    this._logger.info(
+      `fetching data for cache[${Cache.TYPES.RIPPLE_DAILY_REPORT}]...`
+    );
+    return await this._querier.getValidatorDailyReports().then(data => {
+      this._cache[Cache.TYPES.RIPPLE_DAILY_REPORT] = {
+        lastUpdated: new Date(),
+        list: <Lib.RippleData.DailyReportRawResponse[]>data
+      };
+      this._logger.info(
+        `cache[${Cache.TYPES.RIPPLE_DAILY_REPORT}] has been populated.`
+      );
+    });
+  }
+
+  private async _fetchValidators() {
+    this._logger.info(
+      `fetching data for cache[${Cache.TYPES.RIPPLE_VALIDATORS}]...`
+    );
+    return await this._querier.getValidators().then(data => {
+      this._cache[Cache.TYPES.RIPPLE_VALIDATORS] = {
+        lastUpdated: new Date(),
+        list: <Lib.RippleData.ValidatorRawResponse[]>data
+      };
+      this._logger.info(
+        `cache[${Cache.TYPES.RIPPLE_VALIDATORS}] has been populated.`
+      );
+    });
+  }
+
+  private async _fetchGeoInfo(
+    validatorCache: Cache.IDataCache<Lib.RippleData.ValidatorRawResponse>
+  ) {
+    this._logger.info(`fetching data for cache[${Cache.TYPES.IPSTACK_GEO}]...`);
 
     // lookup ip address from the domain
     const capturedDomains = {};
-    const promises: Promise<ResolveDnsResponse>[] = this._cache[
-      "validators"
-    ].list.reduce((prev, v) => {
-      if (v.domain && !capturedDomains[v.domain]) {
-        prev.push(this._querier.getIpFromDomain(v.domain));
-        capturedDomains[v.domain] = true;
-      }
-      return prev;
-    }, []);
+    const promises: Promise<ResolveDnsResponse>[] = validatorCache.list.reduce(
+      (prev, v) => {
+        if (v.domain && !capturedDomains[v.domain]) {
+          prev.push(this._querier.getIpFromDomain(v.domain));
+          capturedDomains[v.domain] = true;
+        }
+        return prev;
+      },
+      []
+    );
 
     // get domain and address pair
     const domainAndAddressPairs = await Promise.all(promises);
@@ -70,7 +156,9 @@ export default class Service implements IService {
       return prev;
     }, []);
 
-    const geoDataSet: GeoInfoList[] = await Promise.all(ipStackPromises);
+    const geoDataSet: Lib.IPStackResponse[] = await Promise.all(
+      ipStackPromises
+    );
     domainAndAddressPairs.forEach(domainAndAddressPair => {
       if (domainAndAddressPair.ip) {
         const geoData = geoDataSet.filter(
@@ -88,61 +176,187 @@ export default class Service implements IService {
       }
     });
 
-    const geoInfo: IGeoDataCache = {
+    this._cache[Cache.TYPES.IPSTACK_GEO] = <Cache.IGeoDataCache>{
       lastUpdated: new Date(),
       list: list
     };
-
-    this._cache["geo"] = geoInfo;
+    this._logger.info(`cache[${Cache.TYPES.IPSTACK_GEO}] has been populated.`);
   }
 
-  private async _fetch() {
-    const result = await Promise.all([
-      this._querier.getDefaultUnl(),
-      this._querier.getValidators()
+  private _first<T>(
+    items: T[],
+    func: (T) => boolean,
+    defaultItem: T = undefined
+  ): T {
+    const filtered = items.filter(func);
+    if (filtered && isArray(filtered) && filtered.length > 0) {
+      return filtered[0];
+    } else {
+      return defaultItem;
+    }
+  }
+
+  private async _mergeIntoValidators() {
+    this._logger.info(`populating cache[${Cache.TYPES.MERGED_DATA}]...`);
+    await Promise.all([
+      this._waitForCache(Cache.TYPES.RIPPLE_DEFAULT_UNL),
+      this._waitForCache(Cache.TYPES.RIPPLE_DAILY_REPORT),
+      this._waitForCache(Cache.TYPES.RIPPLE_VALIDATORS),
+      this._waitForCache(Cache.TYPES.IPSTACK_GEO)
     ]);
 
-    const parsedDefaultUNLs = this._crypto.parseDefaultUNLResponse(result[0]);
-    const parsedValidatorList = result[1];
-    const excludedDomains = this._configuration.getExcludedDomains();
+    this._logger.info(`all prerequisites have been populated...`);
 
-    const formattedValidatorList: IValidatorDataCache = {
-      lastUpdated: new Date(),
-      list: parsedValidatorList
-        .filter(
-          v => v.validation_public_key && excludedDomains.indexOf(v.domain) < 0
-        )
-        .map(v => ({
+    const defaultUnlCache = <Cache.IDefaultUnlResponseCache>(
+      this._cache[Cache.TYPES.RIPPLE_DEFAULT_UNL]
+    );
+    const dailyReports = <Cache.IDailyReportCache>(
+      this._cache[Cache.TYPES.RIPPLE_DAILY_REPORT]
+    );
+    const validators = <Cache.IValidatorDataCache>(
+      this._cache[Cache.TYPES.RIPPLE_VALIDATORS]
+    );
+    const geoInfo = <Cache.IGeoDataCache>this._cache[Cache.TYPES.IPSTACK_GEO];
+
+    const defaultUnl = this._crypto.parseDefaultUNLResponse(
+      defaultUnlCache.list[0]
+    );
+    const altnetRegex = this._configuration.getAltNetDomainsPattern();
+
+    const mergedList = validators.list
+      .filter(v => v.validation_public_key)
+      .map(v => {
+        const data = {
           pubkey: v.validation_public_key,
           domain: v.domain,
           verified: v.domain_state === "verified",
-          default:
-            parsedDefaultUNLs.findIndex(d => d === v.validation_public_key) >= 0
-        }))
-    };
+          default: undefined,
+          is_report_available: false,
+          is_alt_net: false,
+          agreement: 0,
+          disagreement: 0,
+          total_ledgers: 0,
+          city: undefined,
+          country_name: undefined,
+          region_name: undefined,
+          latitude: 0,
+          longitude: 0
+        };
 
-    this._cache["validators"] = formattedValidatorList;
+        const defaultUnlItem = this._first<string>(
+          defaultUnl,
+          pubkey => pubkey === v.validation_public_key
+        );
+        if (defaultUnlItem) {
+          data.default = !!defaultUnlItem;
+        }
+
+        // alt-net check 1: check if the alt net pattern matches.
+        data.is_alt_net = v.domain && !!altnetRegex.exec(data.domain);
+        
+        const reportItem = this._first<Lib.RippleData.DailyReportRawResponse>(
+          dailyReports.list,
+          report => report.validation_public_key === v.validation_public_key
+        );
+        if (reportItem) {
+          // alt-net check 2: check whether alt-net agreement is greater than the main net.
+          // If so, the domain is considered alt-net.
+          if (!data.is_alt_net) {
+            data.is_alt_net =
+              parseFloat(reportItem.alt_net_agreement) >
+              parseFloat(reportItem.main_net_agreement);
+          }
+          data.agreement = !data.is_alt_net
+            ? parseFloat(reportItem.main_net_agreement)
+            : parseFloat(reportItem.alt_net_agreement);
+          let disagreement = 1;
+          if (!data.is_alt_net) {
+            disagreement =
+              reportItem.total_ledgers - reportItem.main_net_ledgers;
+            if (reportItem.total_ledgers > 0) {
+              disagreement /= reportItem.total_ledgers;
+            } else {
+              disagreement = 1;
+            }
+          }
+          data.disagreement = parseFloat(disagreement.toFixed(5));
+          data.total_ledgers = reportItem.total_ledgers;
+          data.is_report_available = true;
+        }
+        const geoItem = this._first<Lib.IPStackResponse>(
+          geoInfo.list,
+          geo => geo.domain === v.domain,
+          <any>{
+            city: undefined,
+            country_name: undefined,
+            region_name: undefined,
+            latitude: undefined,
+            longitude: undefined
+          }
+        );
+        if (geoItem) {
+          data.city = geoItem.city;
+          data.country_name = geoItem.country_name;
+          data.region_name = geoItem.region_name;
+          data.latitude = geoItem.latitude;
+          data.longitude = geoItem.longitude;
+        }
+        return data;
+      });
+
+    this._cache[Cache.TYPES.MERGED_DATA] = <
+      Cache.IDataCache<Cache.MergedDataCache>
+    >{
+      lastUpdated: new Date(),
+      list: mergedList
+    };
+    this._logger.info(`cache[${Cache.TYPES.MERGED_DATA}] has been populated.`);
   }
 
-  private async _getCache(name: string): Promise<CacheType> {
-    return new Promise<CacheType>(resolve => {
-      // wait until the cache is populated.
-      if (!this._cache[name]) {
-        const key = setInterval(() => {
-          if (this._cache[name]) {
-            clearInterval(key);
-          }
-        }, 200);
+  private async _waitForCache(name: string, who: string = "") {
+    return new Promise<boolean>((resolve, reject) => {
+      if (this._cache[name]) {
+        return resolve(true);
       }
-      resolve(this._cache[name]);
+
+      // wait until the cache is populated.
+      const interval = 1000;
+      const timeout = interval * 60;
+      let expired = false;
+      let elapsed = 0;
+      const key = setInterval(() => {
+        this._logger.info(
+          `${who}: waiting for the cache[${name}] to be populated...`
+        );
+        if (this._cache[name] || expired) {
+          clearInterval(key);
+
+          if (this._cache[name]) {
+            this._logger.info(`${who}: cache[${name}] has been populated.`);
+            resolve(true);
+          } else {
+            const message = `${who}: waited long enough for cache[${name}] to be populated. Terminated.`;
+            this._logger.warn(message);
+            reject(message);
+          }
+        }
+        expired = elapsed > timeout;
+        elapsed += interval;
+      }, interval);
     });
   }
 
-  async getValidatorInfo(): Promise<IValidatorDataCache> {
-    return <Promise<IValidatorDataCache>>this._getCache("validators");
+  async getValidatorInfo(): Promise<Cache.IDataCache<Cache.MergedDataCache>> {
+    await this._waitForCache(Cache.TYPES.MERGED_DATA);
+    return <Cache.IDataCache<Cache.MergedDataCache>>(
+      this._cache[Cache.TYPES.MERGED_DATA]
+    );
   }
 
-  async getGeoInfo(): Promise<IGeoDataCache> {
-    return <Promise<IGeoDataCache>>this._getCache("geo");
+  async getGeoInfo(): Promise<Cache.IDataCache<Lib.IPStackResponse>> {
+    await this._waitForCache(Cache.TYPES.IPSTACK_GEO);
+    return <Cache.IDataCache<Lib.IPStackResponse>>(
+      this._cache[Cache.TYPES.IPSTACK_GEO]
+    );
   }
 }
