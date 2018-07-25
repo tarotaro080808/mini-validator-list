@@ -10,4 +10,4 @@ COPY ./backend/build/src /usr/src/api/
 
 RUN ls -la /usr/src/api
 
-CMD ["node", "/usr/src/api/main.js"]
+CMD ["yarn", "run", "start"]

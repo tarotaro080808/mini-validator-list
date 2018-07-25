@@ -6,12 +6,10 @@ fi
 
 echo "getting the latest comopse file..."
 rm -f docker-compose.yml
-rm -f docker-compose.proxy.yml
 curl https://raw.githubusercontent.com/cinnapple/mini-validator-list/master/docker-compose.prod.yml -o docker-compose.yml
-curl https://raw.githubusercontent.com/cinnapple/mini-validator-list/master/docker-compose.prod.yml -o docker-compose.proxy.yml
 
 echo "pulling the latest images..."
-docker-compose pull -f docker-compose.yml
+docker-compose pull
 
 echo "running docker-compose up command..."
-docker-compose up -d -f docker-compose.yml
+docker-compose up -d

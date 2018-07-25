@@ -1,8 +1,9 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
-import Layout from "./Layout";
+
 import XRPTipBotButton from "./XRPTipBotButton";
 
 const styles = theme => ({
@@ -53,26 +54,20 @@ function Footer(props) {
 
   return (
     <footer className={classes.footer}>
-      <Layout justify="center">
-        <div className={classes.innerWrapper}>
-          <div>
-            <XRPTipBotButton
-              network="twitter"
-              to="CinnappleFun"
-              amount={0.2}
-            />
-          </div>
-          <Typography
-            gutterBottom
-            color="inherit"
-            align="center"
-            noWrap
-            variant="caption"
-          >
-            {siteLink(classes)} | {twitterLink(classes)} | {githubLink(classes)}
-          </Typography>
+      <div className={classes.innerWrapper}>
+        <div>
+          <XRPTipBotButton network="twitter" to="CinnappleFun" amount={0.2} />
         </div>
-      </Layout>
+        <Typography
+          gutterBottom
+          color="inherit"
+          align="center"
+          noWrap
+          variant="caption"
+        >
+          {siteLink(classes)} | {twitterLink(classes)} | {githubLink(classes)}
+        </Typography>
+      </div>
     </footer>
   );
 }

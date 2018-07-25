@@ -3,18 +3,24 @@ version: '3.5'
 services:
 
   mini-validator-list-backend:
+    container_name: mini-validator-list-backend
     image: cinnapple/mini-validator-list-backend
     networks:
       - nginx-network
     restart: always
+    environment:
+      NODE_ENV: production
 
   mini-validator-list-frontend:
+    container_name: mini-validator-list-frontend
     image: cinnapple/mini-validator-list-frontend
     networks:
       - nginx-network
     restart: always
     depends_on:
       - mini-validator-list-backend
+    environment:
+      NODE_ENV: production
 
 networks:
   nginx-network:

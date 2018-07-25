@@ -1,9 +1,9 @@
 FROM nginx:1.15.1-alpine
 
-COPY ./frontend/nginx.conf /etc/nginx/conf.d/default.conf
-
-WORKDIR /usr/share/nginx/html
+WORKDIR /usr/share/nginx/frontend
 
 EXPOSE 80 443
 
-COPY ./frontend/dist /usr/share/nginx/html
+COPY ./frontend/nginx.conf /etc/nginx/conf.d/default.conf
+
+COPY ./frontend/dist /usr/share/nginx/dist

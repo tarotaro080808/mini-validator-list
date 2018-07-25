@@ -1,7 +1,7 @@
 // the code is based on https://developers.ripple.com/accounts.html#address-encoding
 import { injectable } from "inversify";
 import "reflect-metadata";
-import { ICrypto, DefaultUnlRawResponse } from "./interfaces";
+import { ICrypto, Lib } from "./types";
 
 import * as crypto from "crypto";
 import * as base64 from "base-64";
@@ -32,7 +32,7 @@ export default class Crypto implements ICrypto {
     return address;
   }
 
-  parseDefaultUNLResponse(defaultUNLResponse: DefaultUnlRawResponse) {
+  parseDefaultUNLResponse(defaultUNLResponse: Lib.RippleData.DefaultUnlRawResponse) {
     const result: string[] = [];
     const validatorList = JSON.parse(base64.decode(defaultUNLResponse.blob))
       .validators;
