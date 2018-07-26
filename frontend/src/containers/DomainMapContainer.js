@@ -17,16 +17,19 @@ const styles = theme => ({
 
 class Component extends React.Component {
   render() {
-    return (
+    const { domainStats } = this.props.vals;
+    return domainStats ? (
       <ExpandablePanel
         className={this.props.classes.panel}
         title="Map"
         expanded={false}
       >
         <div className={this.props.classes.wrapper}>
-          <DomainMapPanel domains={this.props.vals.domainStats} />
+          <DomainMapPanel domains={domainStats} />
         </div>
       </ExpandablePanel>
+    ) : (
+      <React.Fragment />
     );
   }
 }

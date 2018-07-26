@@ -14,12 +14,15 @@ const styles = theme => ({
 
 class Component extends React.Component {
   render() {
-    return (
+    const { filteredValidators } = this.props.vals;
+    return filteredValidators ? (
       <div className={this.props.classes.wrapper}>
         <Paper>
           <Table list={this.props.vals.filteredValidators} />
         </Paper>
       </div>
+    ) : (
+      <React.Fragment />
     );
   }
 }

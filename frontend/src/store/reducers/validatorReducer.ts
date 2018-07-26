@@ -37,27 +37,9 @@ const filterValidators = (state, action) => {
 const setValidators = (state, action) => {
   // original validator data
   const data = <Response<ValidatorList>>action.data;
-  // fitlered validators with default filter
-  const defaultFilter: IFilter = {
-    defaultOnly: true,
-    verifiedOnly: true,
-    mainNetOnly: true,
-    sort: false,
-    filterWord: ""
-  };
-  const v1 = applyValidatorFilter(data.list, defaultFilter, {});
-  const v2 = applyValidatorFilter(
-    data.list,
-    defaultFilter,
-    overrideForAutosuggest
-  );
-  const d = applyDomainFilter(v1, {}, {});
   return updateObject(state, {
     _validators: data.list,
     lastUpdated: data.lastUpdated,
-    filteredValidators: v1,
-    filteredValidatorsForAutosuggest: v2,
-    domainStats: d,
     ready: true
   });
 };
