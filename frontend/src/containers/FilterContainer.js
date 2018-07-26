@@ -23,7 +23,7 @@ const styles = theme => ({
 class Component extends React.Component {
   state = {
     defaultOnly: true,
-    verifiedOnly: true,
+    verifiedOnly: false,
     mainNetOnly: true,
     filterWord: ""
   };
@@ -38,6 +38,10 @@ class Component extends React.Component {
       }
     );
   };
+
+  componentDidMount() {
+    this.props.onApplyFilter(this.state);
+  }
 
   render() {
     return (

@@ -17,16 +17,19 @@ const styles = theme => ({
 
 class Component extends React.Component {
   render() {
-    return (
+    const { filteredValidators } = this.props.vals;
+    return filteredValidators ? (
       <ExpandablePanel
         className={this.props.classes.panel}
         title="Stats"
         expanded={true}
       >
         <div className={this.props.classes.wrapper}>
-          <ResultStatsPanel validators={this.props.vals.filteredValidators} />
+          <ResultStatsPanel validators={filteredValidators} />
         </div>
       </ExpandablePanel>
+    ) : (
+      <React.Fragment />
     );
   }
 }
