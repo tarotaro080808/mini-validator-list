@@ -21,7 +21,7 @@
     "typescript": "~2.9.1"
   },
   "scripts": {
-    "start": "if [ \"$NODE_ENV\" == 'production' ]; then node /usr/src/api/main.js; else nodemon /usr/src/api/main.js; fi",
+    "start": "nodemon /usr/app/api/main.js",
     "clean": "rimraf coverage build tmp",
     "build": "tsc -p tsconfig.release.json",
     "watch": "tsc -w -p tsconfig.release.json",

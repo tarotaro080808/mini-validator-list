@@ -1,13 +1,13 @@
 FROM node:10.6.0-alpine
 
-WORKDIR /usr/src
+WORKDIR /usr/app
 
-COPY ./backend/.env ./backend/package.json /usr/src/
+COPY ./backend/package.json /usr/app/
 
 RUN yarn install --production
 
-COPY ./backend/build/src /usr/src/api/
+COPY ./.env ./backend/run.sh /usr/app/
 
-RUN ls -la /usr/src/api
+COPY ./backend/build/src /usr/app/api/
 
-CMD ["yarn", "run", "start"]
+CMD ["sh", "./run.sh"]

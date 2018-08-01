@@ -1,5 +1,4 @@
 const WriteFilePlugin = require("write-file-webpack-plugin");
-const CleanWebpackPlugin = require("clean-webpack-plugin");
 
 const webpack = require("webpack");
 
@@ -46,7 +45,6 @@ module.exports = {
     "react-dom": "ReactDOM"
   },
   plugins: [
-    new CleanWebpackPlugin(["dist/hot"]),
     new webpack.HotModuleReplacementPlugin(),
     new WriteFilePlugin()
   ],

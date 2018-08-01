@@ -3,8 +3,8 @@ import { connect } from "react-redux";
 
 import { withStyles } from "@material-ui/core/styles";
 
-import ExpandablePanel from "../components/Common/ExpandablePanel";
-import DomainMapPanel from "../components/DomainMap/DomainMapPanel";
+import ExpandablePanel from "../../../components/Common/ExpandablePanel";
+import ResultStatsPanel from "../../../components/Stats/ResultStatsPanel";
 
 const styles = theme => ({
   panel: {
@@ -17,15 +17,15 @@ const styles = theme => ({
 
 class Component extends React.Component {
   render() {
-    const { domainStats } = this.props.vals;
-    return domainStats ? (
+    const { classes, vals } = this.props;
+    return vals.filteredValidators ? (
       <ExpandablePanel
-        className={this.props.classes.panel}
-        title="Map"
-        expanded={false}
+        className={classes.panel}
+        title="Stats"
+        expanded={true}
       >
-        <div className={this.props.classes.wrapper}>
-          <DomainMapPanel domains={domainStats} />
+        <div className={classes.wrapper}>
+          <ResultStatsPanel validators={vals.filteredValidators} />
         </div>
       </ExpandablePanel>
     ) : (

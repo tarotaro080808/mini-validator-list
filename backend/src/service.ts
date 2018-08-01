@@ -38,6 +38,29 @@ export default class Service implements IService {
     this._startInitialFetchAll();
   }
 
+  private _startIntervalFetchAll() {
+    const validatorFetchInterval = this._configuration.getFetchInterval();
+    setInterval(async () => {
+      await Promise.all([
+        this._fetchDefaultUnl(),
+        this._fetchDailyReport(),
+        this._fetchValidators()
+      ]);
+      this._mergeAll();
+    }, validatorFetchInterval);
+
+    const geoInfoFetchInterval = this._configuration.getGeoInfoFetchInterval();
+    setInterval(() => {
+      if (this._cache[Cache.TYPES.RIPPLE_VALIDATORS]) {
+        this._withGeoMockData(
+          this._fetchGeoInfo(<
+            Cache.IDataCache<Lib.RippleData.ValidatorRawResponse>
+          >this._cache[Cache.TYPES.RIPPLE_VALIDATORS])
+        );
+      }
+    }, geoInfoFetchInterval);
+  }
+
   private async _startInitialFetchAll() {
     await Promise.all([
       this._fetchDefaultUnl(),
@@ -50,7 +73,7 @@ export default class Service implements IService {
         );
       })
     ]);
-    this._mergeIntoValidators();
+    this._mergeAll();
   }
 
   private _withGeoMockData(apiCall) {
@@ -67,34 +90,11 @@ export default class Service implements IService {
     }
   }
 
-  private _startIntervalFetchAll() {
-    const validatorFetchInterval = this._configuration.getFetchInterval();
-    setInterval(async () => {
-      await Promise.all([
-        this._fetchDefaultUnl(),
-        this._fetchDailyReport(),
-        this._fetchValidators()
-      ]);
-      this._mergeIntoValidators();
-    }, validatorFetchInterval);
-
-    const geoInfoFetchInterval = this._configuration.getGeoInfoFetchInterval();
-    setInterval(() => {
-      if (this._cache[Cache.TYPES.RIPPLE_VALIDATORS]) {
-        this._withGeoMockData(
-          this._fetchGeoInfo(<
-            Cache.IDataCache<Lib.RippleData.ValidatorRawResponse>
-          >this._cache[Cache.TYPES.RIPPLE_VALIDATORS])
-        );
-      }
-    }, geoInfoFetchInterval);
-  }
-
   private async _fetchDefaultUnl() {
     this._logger.info(
       `fetching data for cache[${Cache.TYPES.RIPPLE_DEFAULT_UNL}]...`
     );
-    return await this._querier.getDefaultUnl().then(data => {
+    return this._querier.getDefaultUnl().then(data => {
       this._cache[Cache.TYPES.RIPPLE_DEFAULT_UNL] = {
         lastUpdated: new Date(),
         list: [<Lib.RippleData.DefaultUnlRawResponse>data]
@@ -109,7 +109,7 @@ export default class Service implements IService {
     this._logger.info(
       `fetching data for cache[${Cache.TYPES.RIPPLE_DAILY_REPORT}]...`
     );
-    return await this._querier.getValidatorDailyReports().then(data => {
+    return this._querier.getValidatorDailyReports().then(data => {
       this._cache[Cache.TYPES.RIPPLE_DAILY_REPORT] = {
         lastUpdated: new Date(),
         list: <Lib.RippleData.DailyReportRawResponse[]>data
@@ -124,7 +124,7 @@ export default class Service implements IService {
     this._logger.info(
       `fetching data for cache[${Cache.TYPES.RIPPLE_VALIDATORS}]...`
     );
-    return await this._querier.getValidators().then(data => {
+    return this._querier.getValidators().then(data => {
       this._cache[Cache.TYPES.RIPPLE_VALIDATORS] = {
         lastUpdated: new Date(),
         list: <Lib.RippleData.ValidatorRawResponse[]>data
@@ -204,7 +204,7 @@ export default class Service implements IService {
     }
   }
 
-  private async _mergeIntoValidators() {
+  private async _mergeAll() {
     this._logger.info(`populating cache[${Cache.TYPES.MERGED_DATA}]...`);
     await Promise.all([
       this._waitForCache(Cache.TYPES.RIPPLE_DEFAULT_UNL),

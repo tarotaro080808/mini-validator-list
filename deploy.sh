@@ -5,5 +5,5 @@ curl https://raw.githubusercontent.com/cinnapple/mini-validator-list/master/dock
 echo "pulling the latest images..."
 docker-compose pull
 
-echo "running docker-compose up command..."
+echo "running..."
 docker-compose up -d

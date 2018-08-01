@@ -1,19 +1,16 @@
 import React from "react";
 import { connect } from "react-redux";
 import queryString from "query-string";
-import * as actions from "../store/actions/index";
+import * as actions from "../../../store/actions/index";
 
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 import Switch from "@material-ui/core/Switch";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
-// import IconButton from "@material-ui/core/IconButton";
-// import DeleteIcon from "@material-ui/icons/Delete";
 
-import ExpandablePanel from "../components/Common/ExpandablePanel";
-import IntegrationAutosuggest from "../components/Filter/IntegrationAutosuggest";
-// import ShareUrlDialog from "../components/Filter/ShareUrlDialog";
+import ExpandablePanel from "../../../components/Common/ExpandablePanel";
+import IntegrationAutosuggest from "../../../components/Filter/IntegrationAutosuggest";
 
 const styles = theme => ({
   panel: {
@@ -122,27 +119,21 @@ class Component extends React.Component {
   }
 
   render() {
-    const { classes } = this.props;
+    const { classes, vals } = this.props;
+    const { defaultOnly, verifiedOnly, mainNetOnly, filterWord } = this.state;
 
     return (
-      <ExpandablePanel
-        className={this.props.classes.panel}
-        title="Filter"
-        expanded={true}
-      >
-        <div className={this.props.classes.wrapper}>
+      <ExpandablePanel className={classes.panel} title="Filter" expanded={true}>
+        <div className={classes.wrapper}>
           <FormGroup row>
             <Grid container spacing={0}>
               <Grid item xs={12} sm={4}>
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={this.state.defaultOnly}
+                      checked={defaultOnly}
                       onChange={e =>
-                        this.handleApplyFilter(
-                          "defaultOnly",
-                          !this.state.defaultOnly
-                        )
+                        this.handleApplyFilter("defaultOnly", !defaultOnly)
                       }
                       value="defaultOnly"
                     />
@@ -154,12 +145,9 @@ class Component extends React.Component {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={this.state.verifiedOnly}
+                      checked={verifiedOnly}
                       onChange={e =>
-                        this.handleApplyFilter(
-                          "verifiedOnly",
-                          !this.state.verifiedOnly
-                        )
+                        this.handleApplyFilter("verifiedOnly", !verifiedOnly)
                       }
                       value="verifiedOnly"
                     />
@@ -171,12 +159,9 @@ class Component extends React.Component {
                 <FormControlLabel
                   control={
                     <Switch
-                      checked={this.state.mainNetOnly}
+                      checked={mainNetOnly}
                       onChange={e =>
-                        this.handleApplyFilter(
-                          "mainNetOnly",
-                          !this.state.mainNetOnly
-                        )
+                        this.handleApplyFilter("mainNetOnly", !mainNetOnly)
                       }
                       value="mainNetOnly"
                     />
@@ -186,22 +171,12 @@ class Component extends React.Component {
               </Grid>
               <Grid item xs={12}>
                 <IntegrationAutosuggest
-                  list={this.props.vals.filteredValidatorsForAutosuggest}
-                  value={this.state.filterWord}
+                  list={vals.filteredValidatorsForAutosuggest}
+                  value={filterWord}
                   handleFilterChange={value =>
                     this.handleApplyFilter("filterWord", value)
                   }
                 />
-              </Grid>
-              <Grid item xs={12}>
-                {/* <IconButton
-                  className={classes.button}
-                  aria-label="Delete"
-                  onClick={() => this.handleClear()}
-                >
-                  <DeleteIcon />
-                </IconButton> */}
-                {/* <ShareUrlDialog url={this.state.shareUrl} /> */}
               </Grid>
             </Grid>
           </FormGroup>
