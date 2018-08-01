@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 
-import XRPTipBotButton from "./XRPTipBotButton";
+import XRPTipBotButton from "../Common/XRPTipBotButton";
 
 const styles = theme => ({
   linkText: {

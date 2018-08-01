@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 
-import Table from "../components/ValidatorList/Table";
+import Table from "../../../components/ValidatorList/Table";
 
 const styles = theme => ({
   wrapper: {
@@ -14,11 +14,11 @@ const styles = theme => ({
 
 class Component extends React.Component {
   render() {
-    const { filteredValidators } = this.props.vals;
-    return filteredValidators ? (
-      <div className={this.props.classes.wrapper}>
+    const { vals, classes } = this.props;
+    return vals.filteredValidators ? (
+      <div className={classes.wrapper}>
         <Paper>
-          <Table list={this.props.vals.filteredValidators} />
+          <Table list={vals.filteredValidators} />
         </Paper>
       </div>
     ) : (

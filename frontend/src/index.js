@@ -6,7 +6,8 @@ import thunk from "redux-thunk";
 import { reducer as tooltipReducer } from "redux-tooltip";
 
 import validatorReducer from "./store/reducers/validatorReducer";
-import AppContainer from "./containers/AppContainer";
+
+import App from "./App";
 
 const rootReducer = combineReducers({
   validators: validatorReducer,
@@ -33,14 +34,11 @@ if (process.env["NODE_ENV"] === "development") {
   applyTheseMiddleware = applyMiddleware(thunk);
 }
 
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyTheseMiddleware)
-);
+const store = createStore(rootReducer, composeEnhancers(applyTheseMiddleware));
 
 ReactDOM.render(
   <Provider store={store}>
-    <AppContainer title="Mini Validator List" />
+    <App />
   </Provider>,
   document.querySelector("#app")
 );

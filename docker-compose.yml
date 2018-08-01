@@ -7,7 +7,7 @@ services:
     build:
       context: .
       dockerfile: backend.Dockerfile
-    image: cinnapple/mini-validator-list-backend
+    image: mini-validator-list-backend
     networks:
       - mini-validator-list
     volumes:
@@ -20,7 +20,7 @@ services:
     build:
       context: .
       dockerfile: frontend.Dockerfile
-    image: cinnapple/mini-validator-list-frontend
+    image: mini-validator-list-frontend
     ports:
       - '80:80'
     volumes:
