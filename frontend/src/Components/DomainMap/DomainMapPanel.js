@@ -63,7 +63,7 @@ class SimpleMarkers extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, domains } = this.props;
 
     return (
       <div style={wrapperStyles}>
@@ -120,7 +120,7 @@ class SimpleMarkers extends Component {
                 </Geographies>
                 <Graticule />
                 <Markers>
-                  {this.props.domains.map((domain, i) => (
+                  {domains.map((domain, i) => (
                     <Marker
                       key={i}
                       marker={{
@@ -180,7 +180,7 @@ class SimpleMarkers extends Component {
           )}
         </Motion>
         <MapSelectDomainDialog
-          domains={this.props.domains}
+          domains={domains}
           handleSelectDomain={this.handleSelectDomain}
           handleReset={this.handleReset}
         />

@@ -8,7 +8,7 @@ const initialState: ValidatorState = {
   _validators: undefined,
   filteredValidators: undefined,
   filteredValidatorsForAutosuggest: undefined,
-  domainStats: undefined,
+  uniqueDomains: undefined,
   ready: false
 };
 
@@ -30,7 +30,7 @@ const filterValidators = (state, action) => {
   return updateObject(state, {
     filteredValidators: v1,
     filteredValidatorsForAutosuggest: v2,
-    domainStats: d
+    uniqueDomains: d
   });
 };
 

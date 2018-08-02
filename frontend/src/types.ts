@@ -4,7 +4,7 @@ export interface ValidatorState extends ReactState {
   _validators: any[];
   filteredValidators: any[];
   filteredValidatorsForAutosuggest: any[];
-  domainStats: any[];
+  uniqueDomains: any[];
   ready: boolean;
 }
 

@@ -9,6 +9,7 @@ import Grid from "@material-ui/core/Grid";
 
 import Filter from "./Panels/Filter";
 import Stats from "./Panels/Stats";
+// import DomainMap from "./Panels/DomainMap";
 import ValidatorList from "./Panels/ValidatorList";
 import LastUpdatedInfoBar from "../../components/Common/LastUpdatedInfoBar";
 
@@ -29,6 +30,9 @@ const styles = theme => ({
   },
   gridItemBottom: {
     marginBottom: theme.spacing.unit * 1
+  },
+  tooltip: {
+    fontFamily: ["'Montserrat'", "Roboto"].join(",")
   }
 });
 
@@ -51,12 +55,15 @@ class Component extends React.Component {
               <Grid item xs={12} className={classes.gridItem}>
                 <Stats />
               </Grid>
+              {/* <Grid item xs={12} className={classes.gridItemBottom}>
+                <DomainMap />
+              </Grid> */}
               <Grid item xs={12} className={classes.gridItemBottom}>
                 <ValidatorList />
               </Grid>
             </Grid>
             <LastUpdatedInfoBar vals={vals} />
-            <Tooltip />
+            <Tooltip className={classes.tooltip} />
           </React.Fragment>
         ) : (
           <LinearProgress color="secondary" />
