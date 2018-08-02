@@ -5,7 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
-import Header from "./components/Header/Header";
+import AppFrame from "./containers/Frame/AppFrame";
 import Main from "./containers/Main/Main";
 import Footer from "./components/Footer/Footer";
 
@@ -49,11 +49,10 @@ class Component extends React.Component {
     const { classes } = this.props;
 
     return (
-      <div className={classes.root}>
-        <Header title={APP_TITLE} />
+      <AppFrame title={APP_TITLE}>
         <Main />
         <Footer />
-      </div>
+      </AppFrame>
     );
   }
 }
