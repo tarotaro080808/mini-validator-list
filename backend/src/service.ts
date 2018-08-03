@@ -135,6 +135,11 @@ export default class Service implements IService {
     });
   }
 
+  private _roundCoordinate(num: number) {
+    const factor = 100;
+    return Math.round(num * factor) / factor;
+  }
+
   private async _fetchGeoInfo(
     validatorCache: Cache.IDataCache<Lib.RippleData.ValidatorRawResponse>
   ) {
@@ -178,8 +183,8 @@ export default class Service implements IService {
           country_name: geoData.country_name,
           region_name: geoData.region_name,
           city: geoData.city,
-          latitude: geoData.latitude,
-          longitude: geoData.longitude
+          latitude: this._roundCoordinate(geoData.latitude),
+          longitude: this._roundCoordinate(geoData.longitude)
         });
       }
     });

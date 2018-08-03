@@ -1,6 +1,10 @@
 import { IFilter } from "../types";
 
-export default (validatorList: any[], state: IFilter, options: any) => {
+const filterValidators = (
+  validatorList: any[],
+  state: IFilter,
+  options: any
+) => {
   const _sorter = (a, b) => {
     return a.domain && b.domain
       ? a.domain < b.domain
@@ -92,3 +96,34 @@ export default (validatorList: any[], state: IFilter, options: any) => {
 
   return result;
 };
+
+const distinctDomains = (validatorList: any[]) => {
+  const domainHashMap = {};
+  validatorList = validatorList.reduce((prev, curr) => {
+    if (curr.domain && !domainHashMap[curr.domain] && curr.ip) {
+      domainHashMap[curr.domain] = true;
+      prev.push(curr);
+    }
+    return prev;
+  }, []);
+
+  return validatorList;
+};
+
+const groupDomainsByLocation = (distinctDomains: any[]) => {
+  const locationHashMap = {};
+  distinctDomains.forEach(curr => {
+    const position = JSON.stringify([curr.latitude, curr.longitude]);
+    if (curr.domain) {
+      if (!locationHashMap[position]) {
+        locationHashMap[position] = [curr];
+      } else {
+        locationHashMap[position].push(curr);
+      }
+    }
+  });
+
+  return locationHashMap;
+};
+
+export { filterValidators, distinctDomains, groupDomainsByLocation };

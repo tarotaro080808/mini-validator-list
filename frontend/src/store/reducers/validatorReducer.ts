@@ -1,8 +1,7 @@
 import * as actionTypes from "../actions/actionTypes";
 import { Response, ValidatorList, ValidatorState, IFilter } from "../../types";
 import { updateObject } from "../utility";
-import applyValidatorFilter from "../validatorFilter";
-import applyDomainFilter from "../domainFilter";
+import { filterValidators, distinctDomains, groupDomainsByLocation } from "../dataOperations";
 
 const initialState: ValidatorState = {
   _validators: undefined,
@@ -18,23 +17,25 @@ const overrideForAutosuggest = {
   sort: true
 };
 
-const filterValidators = (state, action) => {
+const filterValidatorsReducer = (state, action) => {
   const filter = <IFilter>action.data;
-  const v1 = applyValidatorFilter(state._validators, filter, {});
-  const v2 = applyValidatorFilter(
+  const v1 = filterValidators(state._validators, filter, {});
+  const v2 = filterValidators(
     state._validators,
     filter,
     overrideForAutosuggest
   );
-  const d = applyDomainFilter(v1, {}, {});
+  const d = distinctDomains(v1);
+  const l = groupDomainsByLocation(v1);
   return updateObject(state, {
     filteredValidators: v1,
     filteredValidatorsForAutosuggest: v2,
-    uniqueDomains: d
+    uniqueDomains: d,
+    positions: l
   });
 };
 
-const setValidators = (state, action) => {
+const setValidatorsReducer = (state, action) => {
   // original validator data
   const data = <Response<ValidatorList>>action.data;
   return updateObject(state, {
@@ -47,9 +48,9 @@ const setValidators = (state, action) => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_VALIDATORS:
-      return setValidators(state, action);
+      return setValidatorsReducer(state, action);
     case actionTypes.FILTER_VALIDATORS:
-      return filterValidators(state, action);
+      return filterValidatorsReducer(state, action);
     default:
       return state;
   }

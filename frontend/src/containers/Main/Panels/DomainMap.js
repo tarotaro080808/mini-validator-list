@@ -21,7 +21,7 @@ class Component extends React.Component {
     return vals.uniqueDomains ? (
       <ExpandablePanel className={classes.panel} title="Map" expanded={false}>
         <div className={classes.wrapper}>
-          <DomainMapPanel domains={vals.uniqueDomains} />
+          <DomainMapPanel domains={vals.uniqueDomains} positions={vals.positions} />
         </div>
       </ExpandablePanel>
     ) : (

@@ -1,7 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
-import { Tooltip } from "redux-tooltip";
 
 import { withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
@@ -9,7 +8,7 @@ import Grid from "@material-ui/core/Grid";
 
 import Filter from "./Panels/Filter";
 import Stats from "./Panels/Stats";
-// import DomainMap from "./Panels/DomainMap";
+import DomainMap from "./Panels/DomainMap";
 import ValidatorList from "./Panels/ValidatorList";
 import LastUpdatedInfoBar from "../../components/Common/LastUpdatedInfoBar";
 
@@ -55,15 +54,14 @@ class Component extends React.Component {
               <Grid item xs={12} className={classes.gridItem}>
                 <Stats />
               </Grid>
-              {/* <Grid item xs={12} className={classes.gridItemBottom}>
+              <Grid item xs={12} className={classes.gridItem}>
                 <DomainMap />
-              </Grid> */}
+              </Grid>
               <Grid item xs={12} className={classes.gridItemBottom}>
                 <ValidatorList />
               </Grid>
             </Grid>
             <LastUpdatedInfoBar vals={vals} />
-            <Tooltip className={classes.tooltip} />
           </React.Fragment>
         ) : (
           <LinearProgress color="secondary" />

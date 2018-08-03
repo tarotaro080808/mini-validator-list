@@ -1,207 +1,122 @@
-import React, { Component } from "react";
-import { connect } from "react-redux";
-import { actions } from "redux-tooltip";
-import {
-  ComposableMap,
-  ZoomableGroup,
-  Geographies,
-  Geography,
-  Graticule,
-  Markers,
-  Marker
-} from "react-simple-maps";
-import { Motion, spring } from "react-motion";
+import React from "react";
+
+import { withStyles } from "@material-ui/core/styles";
 
 import MapSelectDomainDialog from "./MapSelectDomainDialog";
 
-const wrapperStyles = {
-  width: "100%",
-  margin: "0 auto",
-  textAlign: "center"
+const { Map: LeafletMap, TileLayer, Marker, Popup } = window.ReactLeaflet;
+
+const styles = theme => ({
+  popup: {
+    fontSize: "1rem",
+    fontFamily: theme.typography.fontFamily
+  },
+  domain: {
+    fontWeight: "bold"
+  }
+});
+
+// refer: https://leaflet-extras.github.io/leaflet-providers/preview/index.html
+const TILE_PROVIDER = {
+  url:
+    "https://cartodb-basemaps-{s}.global.ssl.fastly.net/rastertiles/voyager/{z}/{x}/{y}{r}.png",
+  attribution:
+    '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="http://cartodb.com/attributions">CartoDB</a>'
 };
 
-const ZOOM_FACTOR = 2;
+const getRegionText = domain => {
+  if (domain.region_name) {
+    return <span>{`${domain.region_name}, ${domain.country_name}`}</span>;
+  }
+  if (domain.country_name) {
+    return <span>{`${domain.country_name}`}</span>;
+  }
+  return <span>Unknown location</span>;
+};
 
-class SimpleMarkers extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      center: [0, 20],
-      zoom: 1,
-      selected: undefined
-    };
-    this.handleSelectDomain = this.handleSelectDomain.bind(this);
-    this.handleReset = this.handleReset.bind(this);
-    this.handleMove = this.handleMove.bind(this);
-    this.handleLeave = this.handleLeave.bind(this);
-  }
-  handleMove(domain, evt) {
-    const x = evt.clientX;
-    const y = evt.clientY + window.pageYOffset;
-    this.props.onShow(x, y, domain.domain);
-  }
-  handleLeave() {
-    this.props.onHide();
-  }
-  handleSelectDomain(domain) {
-    this.setState({
-      zoom: ZOOM_FACTOR,
-      center: [domain.longitude, domain.latitude],
-      selected: domain
-    });
-  }
-  handleReset() {
-    this.setState({
-      center: [0, 20],
-      zoom: 1,
-      selected: undefined
-    });
-  }
+const getList = (domains, classes) => {
+  const elements = [];
+  const domainHashMap = {};
+
+  domains.forEach(domain => {
+    if (!domainHashMap[domain.domain]) {
+      domainHashMap[domain.domain] = 1;
+    } else {
+      domainHashMap[domain.domain]++;
+    }
+  });
+
+  Object.keys(domainHashMap).forEach(domainName => {
+    const domain = domains.filter(d => d.domain === domainName)[0];
+    if (elements.length > 0) {
+      elements.push(<br />);
+    }
+    if (domainHashMap[domainName] > 1) {
+      elements.push(
+        <span className={classes.domain}>{`${domain.domain} (${domainHashMap[domainName]})`}</span>
+      );
+    } else {
+      elements.push(<span className={classes.domain}>{domain.domain}</span>);
+    }
+  });
+
+  domains.forEach(domain => {});
+
+  // pospend the region info
+  elements.push(<hr />);
+  elements.push(getRegionText(domains[0]));
+
+  return elements;
+};
+
+class Component extends React.Component {
+  state = {
+    center: [30, 0],
+    zoom: 1,
+    selected: undefined
+  };
 
   isDomainSelected = domain => {
     return this.state.selected && domain.domain === this.state.selected.domain;
   };
 
-  render() {
-    const { classes, domains } = this.props;
+  handleSelectDomain = domain => {
+    this.setState({
+      center: [domain.latitude, domain.longitude],
+      zoom: 8,
+      selected: undefined
+    });
+  };
 
+  render() {
+    const { classes, domains, positions } = this.props;
     return (
-      <div style={wrapperStyles}>
-        <Motion
-          defaultStyle={{
-            zoom: 1,
-            x: 0,
-            y: 20
-          }}
-          style={{
-            zoom: spring(this.state.zoom, { stiffness: 210, damping: 20 }),
-            x: spring(this.state.center[0], { stiffness: 210, damping: 20 }),
-            y: spring(this.state.center[1], { stiffness: 210, damping: 20 })
-          }}
-        >
-          {({ zoom, x, y }) => (
-            <ComposableMap
-              style={{
-                width: "100%",
-                height: "auto"
-              }}
-            >
-              <ZoomableGroup center={[x, y]} zoom={zoom}>
-                <Geographies geography="/static/world.json">
-                  {(geographies, projection) =>
-                    geographies.map((geography, i) => (
-                      <Geography
-                        key={i}
-                        geography={geography}
-                        projection={projection}
-                        style={{
-                          default: {
-                            fill: "#ECEFF1",
-                            stroke: "#607D8B",
-                            strokeWidth: 0.75,
-                            outline: "none"
-                          },
-                          hover: {
-                            fill: "#CFD8DC",
-                            stroke: "#607D8B",
-                            strokeWidth: 0.75,
-                            outline: "none"
-                          },
-                          pressed: {
-                            fill: "#FF5722",
-                            stroke: "#607D8B",
-                            strokeWidth: 0.75,
-                            outline: "none"
-                          }
-                        }}
-                      />
-                    ))
-                  }
-                </Geographies>
-                <Graticule />
-                <Markers>
-                  {domains.map((domain, i) => (
-                    <Marker
-                      key={i}
-                      marker={{
-                        coordinates: [domain.longitude, domain.latitude]
-                      }}
-                      style={{
-                        default: { fill: "#2C3E50", stroke: "#2C3E50" },
-                        hover: { fill: "#FFFFFF" },
-                        pressed: { fill: "#FF5722" }
-                      }}
-                      onMouseMove={(item, evt) => this.handleMove(domain, evt)}
-                      onMouseLeave={(item, evt) =>
-                        this.handleLeave(domain, evt)
-                      }
-                    >
-                      {this.isDomainSelected(domain) && (
-                        <circle
-                          cx={0}
-                          cy={0}
-                          r={10}
-                          style={{
-                            stroke: "#18BC9C",
-                            fill: "#18BC9C",
-                            strokeWidth: 3,
-                            opacity: 0.9
-                          }}
-                        />
-                      )}
-                      {this.state.selected &&
-                        !this.isDomainSelected(domain) && (
-                          <circle
-                            cx={0}
-                            cy={0}
-                            r={6}
-                            style={{
-                              strokeWidth: 3,
-                              opacity: 0.7
-                            }}
-                          />
-                        )}
-                      {!this.state.selected && (
-                        <circle
-                          cx={0}
-                          cy={0}
-                          r={6}
-                          style={{
-                            strokeWidth: 3,
-                            opacity: 0.8
-                          }}
-                        />
-                      )}
-                    </Marker>
-                  ))}
-                </Markers>
-              </ZoomableGroup>
-            </ComposableMap>
-          )}
-        </Motion>
+      <React.Fragment>
+        <LeafletMap center={this.state.center} zoom={this.state.zoom}>
+          <TileLayer
+            attribution={TILE_PROVIDER.attribution}
+            url={TILE_PROVIDER.url}
+          />
+          {Object.keys(positions).map((position, i) => {
+            return (
+              JSON.parse(position)[0] !== null && (
+                <Marker position={JSON.parse(position)}>
+                  <Popup className={classes.popup}>
+                    {getList(positions[position], classes)}
+                  </Popup>
+                </Marker>
+              )
+            );
+          })}
+        </LeafletMap>
         <MapSelectDomainDialog
           domains={domains}
           handleSelectDomain={this.handleSelectDomain}
           handleReset={this.handleReset}
         />
-      </div>
+      </React.Fragment>
     );
   }
 }
-const mapDispatchToProps = dispatch => {
-  return {
-    onMove: showOrHide => dispatch(showOrHide),
-    onShow: (x, y, domain) =>
-      dispatch(
-        actions.show({
-          origin: { x, y },
-          content: domain
-        })
-      ),
-    onHide: () => dispatch(actions.hide())
-  };
-};
-export default connect(
-  null,
-  mapDispatchToProps
-)(SimpleMarkers);
+
+export default withStyles(styles)(Component);

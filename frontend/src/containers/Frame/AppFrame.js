@@ -10,7 +10,7 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
-import { primaryContentListItems, secondaryContentListItems } from "./TileData";
+import { primaryContentListItems } from "./TileData";
 
 const styles = theme => ({
   list: {
@@ -29,9 +29,9 @@ const styles = theme => ({
     textAlign: "center"
   },
   menuTitle: {
-    primary: {
-      fontFamily: "Pacifico, sans-serif"
-    }
+    fontFamily: "Pacifico, sans-serif",
+    fontSize: "140%",
+    textAlign: "center"
   },
   menuButton: {
     position: "fixed"
@@ -55,12 +55,12 @@ class TemporaryDrawer extends React.Component {
     const sideList = (
       <div className={classes.list}>
         <ListItem>
-          <ListItemText primary={title} className={classes.menuTitle} />
+          <ListItemText
+            primary={<div className={classes.menuTitle}>{title}</div>}
+          />
         </ListItem>
         <Divider />
         <List>{primaryContentListItems}</List>
-        <Divider />
-        <List>{secondaryContentListItems}</List>
       </div>
     );
 
