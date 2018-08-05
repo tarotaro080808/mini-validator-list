@@ -13,6 +13,7 @@ services:
     volumes:
       - ./backend/build/src:/usr/app/api
       - .env:/usr/app/.env
+      - ./secret:/usr/app/secret
     environment:
       NODE_ENV: development
 

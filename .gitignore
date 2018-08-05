@@ -2,6 +2,7 @@
 node_modules
 yarn.lock
 yarn-*
+secret
 
 # backend
 backend/build/

@@ -207,6 +207,7 @@ class EnhancedTable extends React.Component {
                     if (v.domain) {
                       domainElement = (
                         <a
+                          key={"tablelink-" + index}
                           className={classes.link}
                           href={`https://${v.domain}`}
                           target="_blank"
@@ -217,7 +218,7 @@ class EnhancedTable extends React.Component {
                       );
                     }
                     return (
-                      <React.Fragment>
+                      <React.Fragment key={index}>
                         {
                           <TableRow hover tabIndex={-1} key={v.id}>
                             <PrimaryTableCell component="th" scope="row">

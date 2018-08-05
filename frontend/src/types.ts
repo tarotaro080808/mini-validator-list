@@ -7,6 +7,10 @@ export interface ValidatorState extends ReactState {
   uniqueDomains: any[];
   ready: boolean;
 }
+export interface AnalyticsState extends ReactState {
+  referres: any[];
+  ready: boolean;
+}
 
 export interface Response<T> {
   list: T[];
@@ -15,6 +19,9 @@ export interface Response<T> {
 
 export interface ValidatorList {
   domain: string;
+}
+
+export interface ReferrersList {
 }
 
 export interface GeoList {

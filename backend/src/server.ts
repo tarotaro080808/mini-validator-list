@@ -1,7 +1,7 @@
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
 import { TYPES } from "./inversify.types";
-import { IConfiguration, IService, Lib } from "./types";
+import { IConfiguration, IRippleService, Lib, IGoogleService } from "./types";
 
 import * as cors from "@koa/cors";
 
@@ -12,7 +12,8 @@ class Server {
     @inject(TYPES.Lib.Koa.App) protected _app: Lib.Koa.IServer,
     @inject(TYPES.Lib.Koa.Router) protected _router: Lib.Koa.IRouter,
     @inject(TYPES.Configuration) protected _configuration: IConfiguration,
-    @inject(TYPES.Service) protected _service: IService
+    @inject(TYPES.RippleService) protected _rippleService: IRippleService,
+    @inject(TYPES.GoogleService) protected _googleService: IGoogleService
   ) {
     this._setRoutes();
     this._app.use(this._router.routes());
@@ -20,12 +21,17 @@ class Server {
 
   private _setRoutes() {
     this._router.get("/api/validators", async ctx => {
-      const result = await this._service.getValidatorInfo();
+      const result = await this._rippleService.getValidatorInfo();
       ctx.body = result;
     });
 
     this._router.get("/api/geo", async ctx => {
-      const result = await this._service.getGeoInfo();
+      const result = await this._rippleService.getGeoInfo();
+      ctx.body = result;
+    });
+
+    this._router.get("/api/referrals", async ctx => {
+      const result = await this._googleService.getReferrals();
       ctx.body = result;
     });
   }
@@ -42,9 +48,17 @@ class DevServer extends Server {
     @inject(TYPES.Lib.Koa.App) protected _app: Lib.Koa.IServer,
     @inject(TYPES.Lib.Koa.Router) protected _router: Lib.Koa.IRouter,
     @inject(TYPES.Configuration) protected _configuration: IConfiguration,
-    @inject(TYPES.Service) protected _service: IService
+    @inject(TYPES.RippleService) protected _rippleService: IRippleService,
+    @inject(TYPES.GoogleService) protected _googleService: IGoogleService
   ) {
-    super(_logger, _app, _router, _configuration, _service);
+    super(
+      _logger,
+      _app,
+      _router,
+      _configuration,
+      _rippleService,
+      _googleService
+    );
     this._app.use(cors());
     _logger.info("using DevServer. Enabled Cors.");
   }

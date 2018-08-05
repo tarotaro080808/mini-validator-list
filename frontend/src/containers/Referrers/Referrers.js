@@ -6,13 +6,16 @@ import { withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 
-import Filter from "./Panels/Filter";
-import Stats from "./Panels/Stats";
-import DomainMap from "./Panels/DomainMap";
-import ValidatorList from "./Panels/ValidatorList";
-import LastUpdatedInfoBar from "../../components/Common/LastUpdatedInfoBar";
+import ReferrersList from "./Panels/ReferrersList";
 
 const styles = theme => ({
+  main: {
+    margin: theme.spacing.unit * 2
+  },
+  innerContent: {
+    maxWidth: 900,
+    margin: "0 auto"
+  },
   gridItem: {
     marginBottom: theme.spacing.unit * 2
   },
@@ -26,31 +29,21 @@ const styles = theme => ({
 
 class Component extends React.Component {
   componentDidMount() {
-    this.props.onInitValidators();
+    this.props.onInitReferrers();
   }
 
   render() {
-    const { classes, vals } = this.props;
+    const { classes, an } = this.props;
 
     return (
       <React.Fragment>
-        {vals.ready ? (
+        {an.ready ? (
           <React.Fragment>
             <Grid container spacing={0}>
-              <Grid item xs={12} className={classes.gridItem}>
-                <Filter />
-              </Grid>
-              <Grid item xs={12} className={classes.gridItem}>
-                <Stats />
-              </Grid>
-              <Grid item xs={12} className={classes.gridItem}>
-                <DomainMap />
-              </Grid>
               <Grid item xs={12} className={classes.gridItemBottom}>
-                <ValidatorList />
+                <ReferrersList />
               </Grid>
             </Grid>
-            <LastUpdatedInfoBar vals={vals} />
           </React.Fragment>
         ) : (
           <LinearProgress color="secondary" />
@@ -62,13 +55,13 @@ class Component extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    vals: state.validators
+    an: state.analytics
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
-    onInitValidators: () => dispatch(actions.initValidators())
+    onInitReferrers: () => dispatch(actions.initReferrers())
   };
 };
 

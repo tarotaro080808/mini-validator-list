@@ -6,11 +6,6 @@ import Toolbar from "@material-ui/core/Toolbar";
 import Drawer from "@material-ui/core/Drawer";
 import IconButton from "@material-ui/core/IconButton";
 import MenuIcon from "@material-ui/icons/Menu";
-import List from "@material-ui/core/List";
-import ListItem from "@material-ui/core/ListItem";
-import ListItemText from "@material-ui/core/ListItemText";
-import Divider from "@material-ui/core/Divider";
-import { primaryContentListItems } from "./TileData";
 
 const styles = theme => ({
   list: {
@@ -30,7 +25,7 @@ const styles = theme => ({
   },
   menuTitle: {
     fontFamily: "Pacifico, sans-serif",
-    fontSize: "140%",
+    fontSize: "130%",
     textAlign: "center"
   },
   menuButton: {
@@ -38,7 +33,7 @@ const styles = theme => ({
   }
 });
 
-class TemporaryDrawer extends React.Component {
+class Component extends React.Component {
   state = {
     open: false
   };
@@ -50,19 +45,7 @@ class TemporaryDrawer extends React.Component {
   };
 
   render() {
-    const { title, classes, children } = this.props;
-
-    const sideList = (
-      <div className={classes.list}>
-        <ListItem>
-          <ListItemText
-            primary={<div className={classes.menuTitle}>{title}</div>}
-          />
-        </ListItem>
-        <Divider />
-        <List>{primaryContentListItems}</List>
-      </div>
-    );
+    const { title, classes, list, children } = this.props;
 
     return (
       <div>
@@ -86,7 +69,7 @@ class TemporaryDrawer extends React.Component {
             onClick={this.toggleDrawer(false)}
             onKeyDown={this.toggleDrawer(false)}
           >
-            {sideList}
+            {list}
           </div>
         </Drawer>
         {children}
@@ -95,4 +78,4 @@ class TemporaryDrawer extends React.Component {
   }
 }
 
-export default withStyles(styles)(TemporaryDrawer);
+export default withStyles(styles)(Component);

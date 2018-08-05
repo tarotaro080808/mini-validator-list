@@ -52,7 +52,7 @@ const createUrl = filter => {
 
 const defaultFilter = {
   defaultOnly: true,
-  verifiedOnly: false,
+  verifiedOnly: true,
   mainNetOnly: true,
   filterWord: ""
 };

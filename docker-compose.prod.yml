@@ -7,6 +7,9 @@ services:
     image: cinnapple/mini-validator-list-backend
     networks:
       - nginx-network
+    volumes:
+      - .env:/usr/app/.env
+      - ./secret:/usr/app/secret
     restart: always
     environment:
       NODE_ENV: production

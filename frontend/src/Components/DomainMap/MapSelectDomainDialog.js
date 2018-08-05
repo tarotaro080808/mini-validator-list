@@ -100,8 +100,8 @@ class FullScreenDialog extends React.Component {
             </Toolbar>
           </AppBar>
           <List>
-            {domains.map(d => (
-              <div>
+            {domains.map((d, i) => (
+              <div key={i}>
                 <ListItem button onClick={() => this.handleSelectItem(d)}>
                   <ListItemText
                     primary={d.domain}
