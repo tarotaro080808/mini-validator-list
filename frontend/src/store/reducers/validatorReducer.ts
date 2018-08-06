@@ -1,10 +1,22 @@
 import * as actionTypes from "../actions/actionTypes";
-import { Response, ValidatorList, ValidatorState, IFilter } from "../../types";
+import { ValidatorState, IFilter } from "../../types";
 import { updateObject } from "../utility";
-import { filterValidators, distinctDomains, groupDomainsByLocation } from "../dataOperations";
+import {
+  filterValidators,
+  distinctDomains,
+  groupDomainsByLocation,
+  calculateStats
+} from "../dataOperations";
 
 const initialState: ValidatorState = {
   _validators: undefined,
+  filter: {
+    defaultOnly: true,
+    verifiedOnly: true,
+    mainNetOnly: true,
+    filterWord: "",
+    sort: undefined
+  },
   filteredValidators: undefined,
   filteredValidatorsForAutosuggest: undefined,
   uniqueDomains: undefined,
@@ -27,9 +39,12 @@ const filterValidatorsReducer = (state, action) => {
   );
   const d = distinctDomains(v1);
   const l = groupDomainsByLocation(v1);
+  const s = calculateStats(v1, d);
   return updateObject(state, {
     filteredValidators: v1,
     filteredValidatorsForAutosuggest: v2,
+    filter: filter,
+    stats: s,
     uniqueDomains: d,
     positions: l
   });
@@ -37,12 +52,15 @@ const filterValidatorsReducer = (state, action) => {
 
 const setValidatorsReducer = (state, action) => {
   // original validator data
-  const data = <Response<ValidatorList>>action.data;
-  return updateObject(state, {
-    _validators: data.list,
-    lastUpdated: data.lastUpdated,
-    ready: true
+  const data = <any>action.data;
+  const newState = updateObject(state, {
+    _validators: data.validators,
+    lastUpdated: data.lastUpdated
   });
+  return updateObject(
+    newState,
+    filterValidatorsReducer(newState, { data: data.filter || state.filter })
+  );
 };
 
 const reducer = (state = initialState, action) => {

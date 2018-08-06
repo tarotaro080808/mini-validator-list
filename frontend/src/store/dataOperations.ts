@@ -1,4 +1,5 @@
 import { IFilter } from "../types";
+import { _sort } from "./utility";
 
 const filterValidators = (
   validatorList: any[],
@@ -100,12 +101,14 @@ const filterValidators = (
 const distinctDomains = (validatorList: any[]) => {
   const domainHashMap = {};
   validatorList = validatorList.reduce((prev, curr) => {
-    if (curr.domain && !domainHashMap[curr.domain] && curr.ip) {
+    if (curr.verified && !domainHashMap[curr.domain]) {
       domainHashMap[curr.domain] = true;
       prev.push(curr);
     }
     return prev;
   }, []);
+
+  _sort(validatorList, "domain", "asc");
 
   return validatorList;
 };
@@ -126,4 +129,22 @@ const groupDomainsByLocation = (distinctDomains: any[]) => {
   return locationHashMap;
 };
 
-export { filterValidators, distinctDomains, groupDomainsByLocation };
+const calculateStats = (validators: any[], uniqueDomains: any[]) => {
+  const stats = {
+    total: validators.length,
+    runByRipple: validators.filter(a => a.is_ripple).length,
+    default: validators.filter(a => a.default).length,
+    verified: uniqueDomains.length,
+    dominance: undefined
+  };
+
+  stats.dominance = stats.runByRipple / stats.total;
+  return stats;
+};
+
+export {
+  filterValidators,
+  distinctDomains,
+  groupDomainsByLocation,
+  calculateStats
+};

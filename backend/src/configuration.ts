@@ -1,3 +1,5 @@
+import * as path from "path";
+import * as rootPath from "app-root-path";
 import { injectable, inject } from "inversify";
 import { IConfiguration, IProcessEnv } from "./types";
 import { TYPES } from "./inversify.types";
@@ -19,6 +21,10 @@ export default class Configuration implements IConfiguration {
 
   getGeoInfoFetchInterval(): number {
     return parseInt(this.getFromProcessEnv("GEO_FETCH_INTERVAL"));
+  }
+
+  getGAFetchInterval(): number {
+    return parseInt(this.getFromProcessEnv("GA_FETCH_INTERVAL"));
   }
 
   getDefaultUNLsURL(): string {
@@ -43,5 +49,22 @@ export default class Configuration implements IConfiguration {
 
   getAltNetDomainsPattern(): RegExp {
     return new RegExp(this.getFromProcessEnv("ALTNET_DOMAINS_PATTERN"));
+  }
+
+  getGAViewId(): string {
+    return this.getFromProcessEnv("GA_VIEW_ID");
+  }
+
+  getGAExcludedReferralDomainsRegex(): RegExp {
+    return new RegExp(
+      this.getFromProcessEnv("GA_REFERRER_EXCLUDE_DOMAINS_REGEX")
+    );
+  }
+
+  getGoogleJwtJsonFilePath(): string {
+    return path.join(
+      rootPath.toString(),
+      this.getFromProcessEnv("GOOGLE_JWT_JSON_FILE_PATH")
+    );
   }
 }

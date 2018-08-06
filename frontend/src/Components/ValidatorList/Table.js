@@ -102,10 +102,8 @@ class EnhancedTableHead extends React.Component {
 EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
   onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
   order: PropTypes.string.isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired
+  orderBy: PropTypes.string.isRequired
 };
 
 const styles = theme => ({
@@ -207,6 +205,7 @@ class EnhancedTable extends React.Component {
                     if (v.domain) {
                       domainElement = (
                         <a
+                          key={"tablelink-" + index}
                           className={classes.link}
                           href={`https://${v.domain}`}
                           target="_blank"
@@ -217,7 +216,7 @@ class EnhancedTable extends React.Component {
                       );
                     }
                     return (
-                      <React.Fragment>
+                      <React.Fragment key={index}>
                         {
                           <TableRow hover tabIndex={-1} key={v.id}>
                             <PrimaryTableCell component="th" scope="row">

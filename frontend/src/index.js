@@ -4,12 +4,16 @@ import { Provider } from "react-redux";
 import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 
+import appReducer from "./store/reducers/appReducer";
 import validatorReducer from "./store/reducers/validatorReducer";
+import analyticsReducer from "./store/reducers/analyticsReducer";
 
 import App from "./App";
 
 const rootReducer = combineReducers({
-  validators: validatorReducer
+  app: appReducer,
+  validators: validatorReducer,
+  analytics: analyticsReducer
 });
 
 let composeEnhancers = compose;
@@ -33,8 +37,6 @@ if (process.env["NODE_ENV"] === "development") {
 }
 
 const store = createStore(rootReducer, composeEnhancers(applyTheseMiddleware));
-
-const { Map: LeafletMap, TileLayer, Marker, Popup } = ReactLeaflet
 
 ReactDOM.render(
   <Provider store={store}>

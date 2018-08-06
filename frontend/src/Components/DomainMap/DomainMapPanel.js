@@ -1,8 +1,9 @@
 import React from "react";
 
 import { withStyles } from "@material-ui/core/styles";
+import Button from "@material-ui/core/Button";
 
-import MapSelectDomainDialog from "./MapSelectDomainDialog";
+import FullScreenSelect from "../Common/FullScreenSelect";
 
 const { Map: LeafletMap, TileLayer, Marker, Popup } = window.ReactLeaflet;
 
@@ -13,6 +14,9 @@ const styles = theme => ({
   },
   domain: {
     fontWeight: "bold"
+  },
+  select: {
+    marginTop: "1rem"
   }
 });
 
@@ -25,16 +29,26 @@ const TILE_PROVIDER = {
 };
 
 const getRegionText = domain => {
+  let text = "Unknown location";
   if (domain.region_name) {
-    return <span>{`${domain.region_name}, ${domain.country_name}`}</span>;
+    text = `${domain.region_name}, ${domain.country_name}`;
   }
   if (domain.country_name) {
-    return <span>{`${domain.country_name}`}</span>;
+    text = `${domain.country_name}`;
   }
-  return <span>Unknown location</span>;
+  return <span key={text}>{text}</span>;
 };
 
-const getList = (domains, classes) => {
+const formatDomainName = domain => {
+  const region =
+    (domain.city ? domain.city + " " : "") +
+    (domain.region_name ? domain.region_name + " " : "");
+  const country = domain.country_name ? domain.country_name : "";
+  const fullName = (region ? region + ", " : "") + country;
+  return fullName || "Unknown";
+};
+
+const getList = (domains, position, classes) => {
   const elements = [];
   const domainHashMap = {};
 
@@ -46,34 +60,40 @@ const getList = (domains, classes) => {
     }
   });
 
-  Object.keys(domainHashMap).forEach(domainName => {
+  Object.keys(domainHashMap).forEach((domainName, index) => {
+    const key = `${position}-${index}`;
     const domain = domains.filter(d => d.domain === domainName)[0];
-    if (elements.length > 0) {
-      elements.push(<br />);
-    }
+
+    let text = "";
     if (domainHashMap[domainName] > 1) {
-      elements.push(
-        <span className={classes.domain}>{`${domain.domain} (${domainHashMap[domainName]})`}</span>
-      );
+      text = `${domain.domain} (${domainHashMap[domainName]})`;
     } else {
-      elements.push(<span className={classes.domain}>{domain.domain}</span>);
+      text = domain.domain;
     }
+
+    if (elements.length > 0) {
+      elements.push(<br key={`br-${key}`} />);
+    }
+    elements.push(
+      <span key={`span-${key}`} className={classes.domain}>
+        {text}
+      </span>
+    );
   });
 
-  domains.forEach(domain => {});
-
   // pospend the region info
-  elements.push(<hr />);
+  elements.push(<hr key={position} />);
   elements.push(getRegionText(domains[0]));
 
-  return elements;
+  return <div key={position}>{elements}</div>;
 };
 
-class Component extends React.Component {
+class DomainMapPanel extends React.Component {
   state = {
     center: [30, 0],
     zoom: 1,
-    selected: undefined
+    selected: undefined,
+    domainSelectOpen: false
   };
 
   isDomainSelected = domain => {
@@ -88,8 +108,21 @@ class Component extends React.Component {
     });
   };
 
+  handleOpenDomainSelect = () => {
+    this.setState({
+      domainSelectOpen: true
+    });
+  };
+
+  handleCloseDomainSelect = () => {
+    this.setState({
+      domainSelectOpen: false
+    });
+  };
+
   render() {
     const { classes, domains, positions } = this.props;
+    const { domainSelectOpen } = this.state;
     return (
       <React.Fragment>
         <LeafletMap center={this.state.center} zoom={this.state.zoom}>
@@ -100,23 +133,40 @@ class Component extends React.Component {
           {Object.keys(positions).map((position, i) => {
             return (
               JSON.parse(position)[0] !== null && (
-                <Marker position={JSON.parse(position)}>
+                <Marker key={position} position={JSON.parse(position)}>
                   <Popup className={classes.popup}>
-                    {getList(positions[position], classes)}
+                    {getList(positions[position], position, classes)}
                   </Popup>
                 </Marker>
               )
             );
           })}
         </LeafletMap>
-        <MapSelectDomainDialog
-          domains={domains}
-          handleSelectDomain={this.handleSelectDomain}
-          handleReset={this.handleReset}
-        />
+        <div className={classes.select}>
+          <Button
+            variant="outlined"
+            size="small"
+            onClick={this.handleOpenDomainSelect}
+            style={{
+              width: "100%",
+              backgroundColor: "#eee"
+            }}
+          >
+            Locate Domain
+          </Button>
+          <FullScreenSelect
+            list={domains}
+            selectTitle="Select Domain"
+            open={domainSelectOpen}
+            getListItemPrimaryText={domain => domain.domain}
+            getListItemSecondaryText={domain => formatDomainName(domain)}
+            handleClose={this.handleCloseDomainSelect}
+            handleSelectItem={this.handleSelectDomain}
+          />
+        </div>
       </React.Fragment>
     );
   }
 }
 
-export default withStyles(styles)(Component);
+export default withStyles(styles)(DomainMapPanel);

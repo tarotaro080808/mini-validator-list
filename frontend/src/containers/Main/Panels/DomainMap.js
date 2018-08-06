@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -15,26 +14,28 @@ const styles = theme => ({
   }
 });
 
-class Component extends React.Component {
+class DomainMap extends React.Component {
   render() {
-    const { classes, vals } = this.props;
-    return vals.uniqueDomains ? (
-      <ExpandablePanel className={classes.panel} title="Map" expanded={false}>
-        <div className={classes.wrapper}>
-          <DomainMapPanel domains={vals.uniqueDomains} positions={vals.positions} />
+    const { classes, vals, isLoading } = this.props;
+    return (
+      <ExpandablePanel
+        className={classes.panel}
+        title="Domain Map"
+        expanded={false}
+      >
+        <div className={classes.wrapper} key="DomainMap">
+          {!isLoading && vals.uniqueDomains ? (
+            <DomainMapPanel
+              domains={vals.uniqueDomains}
+              positions={vals.positions}
+            />
+          ) : (
+            <React.Fragment />
+          )}
         </div>
       </ExpandablePanel>
-    ) : (
-      <React.Fragment />
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    vals: state.validators
-  };
-};
-export default connect(mapStateToProps)(
-  withStyles(styles, { withTheme: true })(Component)
-);
+export default withStyles(styles, { withTheme: true })(DomainMap);

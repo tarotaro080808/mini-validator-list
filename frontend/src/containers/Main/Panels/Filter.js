@@ -1,6 +1,5 @@
 import React from "react";
 import { connect } from "react-redux";
-import queryString from "query-string";
 import * as actions from "../../../store/actions/index";
 
 import { withStyles } from "@material-ui/core/styles";
@@ -38,73 +37,25 @@ const styles = theme => ({
 
 const urlbase = "https://minivalist.cinn.app";
 
-const createUrl = filter => {
-  const qs = [];
-  qs.push(`d=${filter.defaultOnly ? "y" : "n"}`);
-  qs.push(`v=${filter.verifiedOnly ? "y" : "n"}`);
-  qs.push(`m=${filter.mainNetOnly ? "y" : "n"}`);
-  if (filter.filterWord) {
-    qs.push(`w=${filter.filterWord}`);
-  }
-  let url = `${urlbase}?${qs.join("&")}`;
-  return url;
-};
-
-const defaultFilter = {
-  defaultOnly: true,
-  verifiedOnly: false,
-  mainNetOnly: true,
-  filterWord: ""
-};
-
 const clearFilter = {
   defaultOnly: true,
-  verifiedOnly: false,
+  verifiedOnly: true,
   mainNetOnly: true,
   filterWord: ""
 };
 
-class Component extends React.Component {
+class Filter extends React.Component {
   state = {
-    ...defaultFilter,
     shareUrl: urlbase
   };
 
   handleApplyFilter = (type, value) => {
-    this.setState(
-      {
-        [type]: value
-      },
-      () => {
-        this.setState({
-          shareUrl: createUrl(this.state)
-        });
-        this.props.onApplyFilter(this.state);
-      }
-    );
+    const newFilter = {
+      ...this.props.vals.filter,
+      [type]: value
+    };
+    this.props.onApplyFilter(newFilter);
   };
-
-  componentDidMount() {
-    const qs = queryString.parse(window.location.search);
-    if (Object.keys(qs).length > 0) {
-      this.setState(
-        {
-          defaultOnly: qs.d === "y",
-          verifiedOnly: qs.v === "y",
-          mainNetOnly: qs.m === "y",
-          filterWord: qs.w || this.state.filterWord
-        },
-        () => {
-          this.setState({
-            shareUrl: createUrl(this.state)
-          });
-          this.props.onApplyFilter(this.state);
-        }
-      );
-    } else {
-      this.props.onApplyFilter(this.state);
-    }
-  }
 
   handleClear() {
     this.setState(
@@ -113,18 +64,19 @@ class Component extends React.Component {
         shareUrl: urlbase
       },
       () => {
-        this.props.onApplyFilter(this.state);
+        this.props.onApplyFilter(clearFilter);
       }
     );
   }
 
   render() {
-    const { classes, vals } = this.props;
-    const { defaultOnly, verifiedOnly, mainNetOnly, filterWord } = this.state;
+    const { classes, vals, app } = this.props;
+    const { defaultOnly, verifiedOnly, mainNetOnly, filterWord } = vals.filter;
+    const isArchiveMode = app.mode === "ARCHIVE";
 
     return (
       <ExpandablePanel className={classes.panel} title="Filter" expanded={true}>
-        <div className={classes.wrapper}>
+        <div className={classes.wrapper} key="Filter">
           <FormGroup row>
             <Grid container spacing={0}>
               <Grid item xs={12} sm={4}>
@@ -132,6 +84,7 @@ class Component extends React.Component {
                   control={
                     <Switch
                       checked={defaultOnly}
+                      disabled={isArchiveMode}
                       onChange={e =>
                         this.handleApplyFilter("defaultOnly", !defaultOnly)
                       }
@@ -146,6 +99,7 @@ class Component extends React.Component {
                   control={
                     <Switch
                       checked={verifiedOnly}
+                      disabled={isArchiveMode}
                       onChange={e =>
                         this.handleApplyFilter("verifiedOnly", !verifiedOnly)
                       }
@@ -160,6 +114,7 @@ class Component extends React.Component {
                   control={
                     <Switch
                       checked={mainNetOnly}
+                      disabled={isArchiveMode}
                       onChange={e =>
                         this.handleApplyFilter("mainNetOnly", !mainNetOnly)
                       }
@@ -186,19 +141,13 @@ class Component extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    vals: state.validators
-  };
-};
-
 const mapDispatchToProps = dispatch => {
   return {
-    onApplyFilter: filter => dispatch(actions.filterValidators(filter))
+    onApplyFilter: newFilter => dispatch(actions.filterValidators(newFilter))
   };
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
-)(withStyles(styles, { withTheme: true })(Component));
+)(withStyles(styles, { withTheme: true })(Filter));

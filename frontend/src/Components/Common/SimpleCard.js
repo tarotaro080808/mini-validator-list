@@ -22,9 +22,7 @@ function SimpleCard(props) {
           <Typography variant="headline" component="h2">
             {value}
           </Typography>
-          <Typography color="textSecondary">
-            {description}
-          </Typography>
+          <Typography color="textSecondary">{description}</Typography>
         </CardContent>
       </Card>
     </div>

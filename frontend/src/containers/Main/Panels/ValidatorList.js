@@ -1,5 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
 
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
@@ -12,27 +11,21 @@ const styles = theme => ({
   }
 });
 
-class Component extends React.Component {
+class ValidatorList extends React.Component {
   render() {
-    const { vals, classes } = this.props;
-    return vals.filteredValidators ? (
-      <div className={classes.wrapper}>
+    const { classes, vals, isLoading } = this.props;
+    return (
+      <div className={classes.wrapper} key="ValidatorList">
         <Paper>
-          <Table list={vals.filteredValidators} />
+          {!isLoading && vals.filteredValidators ? (
+            <Table list={vals.filteredValidators} />
+          ) : (
+            <React.Fragment />
+          )}
         </Paper>
       </div>
-    ) : (
-      <React.Fragment />
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    vals: state.validators
-  };
-};
-
-export default connect(mapStateToProps)(
-  withStyles(styles, { withTheme: true })(Component)
-);
+export default withStyles(styles, { withTheme: true })(ValidatorList);
