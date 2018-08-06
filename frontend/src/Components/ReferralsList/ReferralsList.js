@@ -1,8 +1,6 @@
 import React from "react";
-import PropTypes from "prop-types";
 import classNames from "classnames";
 import { withStyles } from "@material-ui/core/styles";
-import ListSubheader from "@material-ui/core/ListSubheader";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
@@ -37,7 +35,7 @@ const getIconClassName = domain => {
 
 const isWellKnown = domain => getIconClassName(domain) !== "far fa-star";
 
-class NestedList extends React.Component {
+class ReferralsList extends React.Component {
   constructor(props) {
     super(props);
     this.state = { open: {} };
@@ -52,7 +50,7 @@ class NestedList extends React.Component {
       ...this.state.open,
       [title]: !currentState
     };
-    this.setState(state => ({ open: open }));
+    this.setState({ open: open });
   };
 
   render() {
@@ -60,44 +58,39 @@ class NestedList extends React.Component {
 
     return (
       <div className={classes.root}>
-        <List
-          component="nav"
-          subheader={<ListSubheader component="div">{title}</ListSubheader>}
-        >
+        <List component="nav" disablePadding>
           {list.map((item, index) => {
             return (
-              <React.Fragment key={index}>
-                <List disablePadding>
-                  <Divider />
-                  <a
-                    href={item.url}
-                    target="_blank"
-                    style={{ textDecoration: "none" }}
-                  >
-                    <ListItem key={index} button className={classes.nested}>
-                      <ListItemIcon>
-                        <Chip
-                          label={
-                            <Icon
-                              className={classNames(
-                                getIconClassName(item.domain)
-                              )}
-                              color="primary"
-                            />
-                          }
-                          className={classes.chip}
-                        />
-                      </ListItemIcon>
-                      <ListItemText
-                        primary={
-                          `${item.title}` +
-                          (!isWellKnown(item.domain) ? ` [${item.domain}]` : "")
+              <div key={index}>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  style={{ textDecoration: "none" }}
+                >
+                  <ListItem key={index} button className={classes.nested}>
+                    <ListItemIcon>
+                      <Chip
+                        label={
+                          <Icon
+                            className={classNames(
+                              getIconClassName(item.domain)
+                            )}
+                            color="primary"
+                          />
                         }
+                        className={classes.chip}
                       />
-                    </ListItem>
-                  </a>
-                </List>
-              </React.Fragment>
+                    </ListItemIcon>
+                    <ListItemText
+                      primary={
+                        `${item.title}` +
+                        (!isWellKnown(item.domain) ? ` [${item.domain}]` : "")
+                      }
+                    />
+                  </ListItem>
+                </a>
+                <Divider />
+              </div>
             );
           })}
         </List>
@@ -105,9 +98,4 @@ class NestedList extends React.Component {
     );
   }
 }
-
-NestedList.propTypes = {
-  classes: PropTypes.object.isRequired
-};
-
-export default withStyles(styles)(NestedList);
+export default withStyles(styles)(ReferralsList);

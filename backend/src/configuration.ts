@@ -55,7 +55,7 @@ export default class Configuration implements IConfiguration {
     return this.getFromProcessEnv("GA_VIEW_ID");
   }
 
-  getGAExcludedReferrerDomainsRegex(): RegExp {
+  getGAExcludedReferralDomainsRegex(): RegExp {
     return new RegExp(
       this.getFromProcessEnv("GA_REFERRER_EXCLUDE_DOMAINS_REGEX")
     );

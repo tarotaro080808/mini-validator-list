@@ -2,6 +2,7 @@ const TYPES = {
   Server: Symbol.for("Server"),
   RippleService: Symbol.for("RippleService"),
   GoogleService: Symbol.for("GoogleService"),
+  GitHubService: Symbol.for("GitHubService"),
   Querier: Symbol.for("Querier"),
   Configuration: Symbol.for("Configuration"),
   ProcessEnv: Symbol.for("ProcessEnv"),
@@ -15,7 +16,8 @@ const TYPES = {
       Router: Symbol.for("Lib.Koa.Router")
     },
     Logger: Symbol.for("Logger"),
-    GoogleApi: Symbol.for("GoogleApi")
+    GoogleApi: Symbol.for("GoogleApi"),
+    GitHubApi: Symbol.for("GitHubApi")
   }
 };
 

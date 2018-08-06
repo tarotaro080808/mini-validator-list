@@ -22,9 +22,9 @@ export default class CacheManager<TCacheType>
     };
   }
 
-  async set(name: string, action: () => Promise<TCacheType | TCacheType[]>) {
+  async set(name: string, workflow: () => Promise<TCacheType | TCacheType[]>) {
     this._logger.info(`fetching data for cache[${name}]...`);
-    const data = await action();
+    const data = await workflow();
     this._set(name, data);
     this._logger.info(`cache[${name}] has been populated.`);
     return Promise.resolve();

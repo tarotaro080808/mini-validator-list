@@ -6,30 +6,13 @@ import { withStyles } from "@material-ui/core/styles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 
-import ReferrersList from "./Panels/ReferrersList";
+import ReferralsList from "./Panels/ReferralsList";
 
-const styles = theme => ({
-  main: {
-    margin: theme.spacing.unit * 2
-  },
-  innerContent: {
-    maxWidth: 900,
-    margin: "0 auto"
-  },
-  gridItem: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  gridItemBottom: {
-    marginBottom: theme.spacing.unit * 1
-  },
-  tooltip: {
-    fontFamily: ["'Montserrat'", "Roboto"].join(",")
-  }
-});
+const styles = theme => ({});
 
 class Component extends React.Component {
   componentDidMount() {
-    this.props.onInitReferrers();
+    this.props.onInitReferrals();
   }
 
   render() {
@@ -40,8 +23,8 @@ class Component extends React.Component {
         {an.ready ? (
           <React.Fragment>
             <Grid container spacing={0}>
-              <Grid item xs={12} className={classes.gridItemBottom}>
-                <ReferrersList />
+              <Grid item xs={12}>
+                <ReferralsList />
               </Grid>
             </Grid>
           </React.Fragment>
@@ -61,7 +44,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onInitReferrers: () => dispatch(actions.initReferrers())
+    onInitReferrals: () => dispatch(actions.initReferrals())
   };
 };
 

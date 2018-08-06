@@ -1,5 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Link } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  Redirect
+} from "react-router-dom";
+import classNames from "classnames";
 
 import { withStyles } from "@material-ui/core/styles";
 
@@ -8,10 +15,12 @@ import CssBaseline from "@material-ui/core/CssBaseline";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
+import Icon from "@material-ui/core/Icon";
+import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 import AppFrame from "./containers/Frame/AppFrame";
-import Main from "./containers/Main/Main";
-import Referrers from "./containers/Referrers/Referrers";
+import MainContainer from "./containers/Main/MainContainer";
+// import ReferralsContainer from "./containers/Referrals/ReferralsContainer";
 import Footer from "./components/Footer/Footer";
 
 const APP_TITLE = "Mini Validator List";
@@ -60,26 +69,66 @@ const styles = theme => ({
     margin: "0 auto",
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 8
+    marginTop: theme.spacing.unit * 8,
+    marginBottom: theme.spacing.unit * 2
   }
 });
 
 const routes = [
   {
+    internal: true,
     path: "/",
-    text: "Main",
+    text: "List",
     exact: true,
-    componentFactory: () => <Main />
+    icon: "fas fa-list-alt",
+    componentFactory: () => <MainContainer />
+  },
+  // {
+  //   internal: true,
+  //   path: "/referrals",
+  //   text: "Referrals",
+  //   exact: true,
+  //   icon: "far fa-comments",
+  //   componentFactory: () => <ReferralsContainer />
+  // },
+  {
+    divider: true
   },
   {
-    path: "/referrers",
-    text: "Referres",
-    exact: true,
-    componentFactory: () => <Referrers />
+    internal: false,
+    path: "https://www.xrptipbot.com/u:CinnappleFun/n:twitter",
+    text: "Donate",
+    icon: "far fa-laugh-beam"
   }
 ];
 
-class Component extends React.Component {
+const link = (route, index) => {
+  const key = `menulink-${index}`;
+  const listItem = (
+    <ListItem button>
+      <ListItemIcon>
+        <Icon className={classNames(route.icon)} color="primary" />
+      </ListItemIcon>
+      <ListItemText primary={route.text} />
+    </ListItem>
+  );
+
+  if (route.internal) {
+    return (
+      <Link key={key} to={route.path} style={{ textDecoration: "none" }}>
+        {listItem}
+      </Link>
+    );
+  } else {
+    return (
+      <a key={key} href={route.path} style={{ textDecoration: "none" }}>
+        {listItem}
+      </a>
+    );
+  }
+};
+
+class App extends React.Component {
   render() {
     const { classes } = this.props;
 
@@ -91,22 +140,9 @@ class Component extends React.Component {
           />
         </ListItem>
         <Divider />
-        {routes.map((r, i) => (
-          <Link key={i} to={r.path} style={{ textDecoration: "none" }}>
-            <ListItem button>
-              <ListItemText primary={r.text} />
-            </ListItem>
-          </Link>
-        ))}
-        <Divider />
-        <a
-          href="https://www.xrptipbot.com/u:CinnappleFun/n:twitter"
-          style={{ textDecoration: "none" }}
-        >
-          <ListItem button>
-            <ListItemText primary="Donate" />
-          </ListItem>
-        </a>
+        {routes
+          .filter(r => !r.hidden)
+          .map((r, i) => (r.divider ? <Divider key={i} /> : link(r, i)))}
       </div>
     );
 
@@ -114,14 +150,19 @@ class Component extends React.Component {
       <Router>
         <AppFrame title={APP_TITLE} list={list}>
           <main className={classes.main}>
-            {routes.map((r, i) => (
-              <Route
-                key={i}
-                exact={r.exact}
-                path={r.path}
-                component={r.componentFactory}
-              />
-            ))}
+            <Switch>
+              {routes
+                .filter(r => r.internal)
+                .map((r, i) => (
+                  <Route
+                    key={`route-${i}`}
+                    exact={r.exact}
+                    path={r.path}
+                    component={r.componentFactory}
+                  />
+                ))}
+              <Redirect from="*" to="/" />
+            </Switch>
           </main>
           <Footer />
         </AppFrame>
@@ -130,4 +171,4 @@ class Component extends React.Component {
   }
 }
 
-export default withRoot(withStyles(styles)(Component));
+export default withRoot(withStyles(styles)(App));

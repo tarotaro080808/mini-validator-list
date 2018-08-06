@@ -6,6 +6,7 @@ import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as winston from "winston";
 import { google } from "googleapis";
+import * as Octokit from "@octokit/rest";
 import { IThirdPartyLibFactory, IConfiguration } from "./types";
 
 @injectable()
@@ -30,5 +31,9 @@ export default class ThirdPartyLibFactory implements IThirdPartyLibFactory {
       auth: client
     });
     return analytics;
+  };
+  createGitHubApi = () => {
+    const octokit = new Octokit();
+    return octokit;
   };
 }

@@ -3,7 +3,7 @@ import SimpleSnackbar from "../Common/SimpleSnackbar";
 
 import dateTime from "../../util/datetime";
 
-const Component = props => {
+const LastUpdatedInfoBar = props => {
   return (
     <SimpleSnackbar>
       LAST UPDATED: {" " + dateTime(props.vals.lastUpdated)}
@@ -11,4 +11,4 @@ const Component = props => {
   );
 };
 
-export default Component;
+export default LastUpdatedInfoBar;

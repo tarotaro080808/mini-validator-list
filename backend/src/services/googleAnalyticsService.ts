@@ -12,7 +12,7 @@ import {
 import * as moment from "moment";
 import { TYPES } from "../inversify.types";
 
-type AvailableTypes = any;
+type AvailableTypes = Lib.Google.IApiResponse;
 
 @injectable()
 export default class GoogleAnalyticsService implements IGoogleService {
@@ -68,20 +68,20 @@ export default class GoogleAnalyticsService implements IGoogleService {
         }
       });
 
-      const excludeRegex = this._configuration.getGAExcludedReferrerDomainsRegex();
+      const excludeRegex = this._configuration.getGAExcludedReferralDomainsRegex();
 
       // sort
       const list = res.data.reports[0].data.rows.reduce((prev, curr) => {
-        const fullReferrer = curr.dimensions[0];
-        const domain = fullReferrer.split("/")[0];
+        const fullReferral = curr.dimensions[0];
+        const domain = fullReferral.split("/")[0];
         const views = parseInt(curr.metrics[0].values[0]);
-        const url = `https://${fullReferrer}`;
-        const title = fullReferrer
+        const url = `https://${fullReferral}`;
+        const title = fullReferral
           .replace(domain, "")
           .replace(/[-_\/]{1,}/gi, " ")
           .trim();
 
-        // check if the referrer has dot (.)
+        // check if the referral has dot (.)
         if (domain.indexOf(".") < 0) {
           return prev;
         }
@@ -92,14 +92,14 @@ export default class GoogleAnalyticsService implements IGoogleService {
         }
 
         // exclude top page referrals
-        if (fullReferrer.replace(domain, "") === "/") {
+        if (fullReferral.replace(domain, "") === "/") {
           return prev;
         }
 
         if (!prev[domain]) {
           prev[domain] = [];
         }
-        prev.push({ fullReferrer, domain, views, url, title });
+        prev.push({ fullReferral, domain, views, url, title });
         return prev;
       }, []);
 
@@ -113,9 +113,9 @@ export default class GoogleAnalyticsService implements IGoogleService {
     });
   }
 
-  async getReferrals(): Promise<Cache.IDataCache<Lib.Google.IApiResponse[]>> {
+  async getReferrals(): Promise<Cache.IDataCache<Lib.Google.IApiResponse>> {
     await this._cacheManager.waitFor(Cache.TYPES.GOOGLE_REFERRALS);
-    return this._cacheManager.get<Lib.Google.IApiResponse[]>(
+    return this._cacheManager.get<Lib.Google.IApiResponse>(
       Cache.TYPES.GOOGLE_REFERRALS
     );
   }

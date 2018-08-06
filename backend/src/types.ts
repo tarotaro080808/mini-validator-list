@@ -1,6 +1,7 @@
 import { Logger } from "../node_modules/winston";
 import Koa from "koa";
 import Router from "koa-router";
+import * as Octokit from "@octokit/rest";
 import { analyticsreporting_v4 } from "../node_modules/googleapis";
 
 export type HashMap<TType> = { [key: string]: TType };
@@ -10,6 +11,7 @@ export interface IThirdPartyLibFactory {
   createRouter(): Lib.Koa.IRouter;
   createLogger(): Lib.ILogger;
   createGAReportingApi(): Promise<Lib.Google.IApi>;
+  createGitHubApi(): Lib.GitHub.IApi;
 }
 
 export interface ICacheManagerFactory {
@@ -39,6 +41,8 @@ export namespace Cache {
     RIPPLE_DAILY_REPORT: "ripple.reports",
     RIPPLE_VALIDATORS: "ripple.validators",
     GOOGLE_REFERRALS: "google.referrals",
+    GITHUB_DEFAULT_UNL_ARCHIVES: "github.defaultUNLArchives",
+    GITHUB_DEFAULT_UNL: "github.defaultUNL",
     IPSTACK_GEO: "ipstack.geo",
     MERGED_DATA: "data.merged"
   };
@@ -83,7 +87,7 @@ export interface IConfiguration {
   getPort(): number;
   getAltNetDomainsPattern(): RegExp;
   getGAViewId(): string;
-  getGAExcludedReferrerDomainsRegex(): RegExp;
+  getGAExcludedReferralDomainsRegex(): RegExp;
   getGoogleJwtJsonFilePath(): string;
 }
 
@@ -96,12 +100,23 @@ export interface IQuerier {
 }
 
 export interface IRippleService {
-  getValidatorInfo(): Promise<Cache.IDataCache<Cache.MergedDataCache>>;
+  getValidatorInfo(params?: {
+    date: string;
+    defaultUnl: Lib.RippleData.DefaultUnlRawResponse;
+  }): Promise<Cache.IDataCache<Cache.MergedDataCache>>;
   getGeoInfo(): Promise<Cache.IDataCache<Lib.IPStackResponse>>;
 }
 
 export interface IGoogleService {
-  getReferrals(): Promise<Cache.IDataCache<Lib.Google.IApiResponse[]>>;
+  getReferrals(): Promise<Cache.IDataCache<Lib.Google.IApiResponse>>;
+}
+
+export interface IGitHubService {
+  getDefaultUnlArchives(): Promise<Cache.IDataCache<Lib.GitHub.IRepositoryContentResponse>>;
+  startFetchDefaultUnl(date: string): void;
+  getDefaultUnl(
+    date: string
+  ): Promise<Cache.IDataCache<Lib.RippleData.DefaultUnlRawResponse>>;
 }
 
 export interface ICrypto {
@@ -149,6 +164,14 @@ export namespace Lib {
     export interface IServer extends Koa {}
     export interface IRouter extends Router {}
   }
+  export namespace GitHub {
+    export interface IApi extends Octokit {}
+    export interface IRepositoryContentResponse {
+      name: string;
+      url: string;
+      date: string;
+    }
+  }
   export namespace Google {
     export type JwtJson = {
       web: {
@@ -162,8 +185,12 @@ export namespace Lib {
     };
     export interface IApi extends analyticsreporting_v4.Analyticsreporting {}
     export interface IApiResponse {
+      fullReferral: string;
       domain: string;
-      referrers: { referrer: string; views: number }[];
+      views: string;
+      url: string;
+      title: string;
     }
+    [];
   }
 }

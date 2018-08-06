@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import { withStyles } from "@material-ui/core/styles";
 import Paper from "@material-ui/core/Paper";
 
-import NestedList from "../../../components/Common/NestedList";
+import ReferralsList from "../../../components/ReferralsList/ReferralsList";
 
 const styles = theme => ({
   wrapper: {
@@ -18,7 +18,7 @@ class Component extends React.Component {
     return an.referres ? (
       <div className={classes.wrapper}>
         <Paper>
-          <NestedList title="Referrals" list={an.referres} />
+          <ReferralsList title="Referrals" list={an.referres} />
         </Paper>
       </div>
     ) : (

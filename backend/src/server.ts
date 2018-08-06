@@ -1,7 +1,13 @@
 import { injectable, inject } from "inversify";
 import "reflect-metadata";
 import { TYPES } from "./inversify.types";
-import { IConfiguration, IRippleService, Lib, IGoogleService } from "./types";
+import {
+  IConfiguration,
+  IRippleService,
+  Lib,
+  IGoogleService,
+  IGitHubService
+} from "./types";
 
 import * as cors from "@koa/cors";
 
@@ -13,7 +19,8 @@ class Server {
     @inject(TYPES.Lib.Koa.Router) protected _router: Lib.Koa.IRouter,
     @inject(TYPES.Configuration) protected _configuration: IConfiguration,
     @inject(TYPES.RippleService) protected _rippleService: IRippleService,
-    @inject(TYPES.GoogleService) protected _googleService: IGoogleService
+    @inject(TYPES.GoogleService) protected _googleService: IGoogleService,
+    @inject(TYPES.GitHubService) protected _githubService: IGitHubService
   ) {
     this._setRoutes();
     this._app.use(this._router.routes());
@@ -24,15 +31,30 @@ class Server {
       const result = await this._rippleService.getValidatorInfo();
       ctx.body = result;
     });
-
-    this._router.get("/api/geo", async ctx => {
-      const result = await this._rippleService.getGeoInfo();
+    this._router.get("/api/validators/:date", async ctx => {
+      const date = ctx.params.date;
+      const defaultUnl = await this._githubService.getDefaultUnl(date);
+      const result = await this._rippleService.getValidatorInfo({
+        date: date,
+        defaultUnl: defaultUnl.list[0]
+      });
       ctx.body = result;
     });
 
     this._router.get("/api/referrals", async ctx => {
       const result = await this._googleService.getReferrals();
       ctx.body = result;
+    });
+
+    this._router.get("/api/archives", async ctx => {
+      const result = await this._githubService.getDefaultUnlArchives();
+      ctx.body = result;
+    });
+
+    this._router.post("/api/archives/:date", async ctx => {
+      const date = ctx.params.date;
+      this._githubService.startFetchDefaultUnl(date);
+      ctx.body = { success: true };
     });
   }
 
@@ -49,7 +71,8 @@ class DevServer extends Server {
     @inject(TYPES.Lib.Koa.Router) protected _router: Lib.Koa.IRouter,
     @inject(TYPES.Configuration) protected _configuration: IConfiguration,
     @inject(TYPES.RippleService) protected _rippleService: IRippleService,
-    @inject(TYPES.GoogleService) protected _googleService: IGoogleService
+    @inject(TYPES.GoogleService) protected _googleService: IGoogleService,
+    @inject(TYPES.GitHubService) protected _githubService: IGitHubService
   ) {
     super(
       _logger,
@@ -57,7 +80,8 @@ class DevServer extends Server {
       _router,
       _configuration,
       _rippleService,
-      _googleService
+      _googleService,
+      _githubService
     );
     this._app.use(cors());
     _logger.info("using DevServer. Enabled Cors.");

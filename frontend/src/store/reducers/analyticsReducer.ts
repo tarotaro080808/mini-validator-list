@@ -1,5 +1,5 @@
 import * as actionTypes from "../actions/actionTypes";
-import { Response, AnalyticsState, ReferrersList } from "../../types";
+import { Response, AnalyticsState, ReferralsList } from "../../types";
 import { updateObject } from "../utility";
 
 const initialState: AnalyticsState = {
@@ -7,9 +7,8 @@ const initialState: AnalyticsState = {
   ready: false
 };
 
-const setReferrersReducer = (state, action) => {
-  // original validator data
-  const data = <Response<ReferrersList>>action.data;
+const setReferralsReducer = (state, action) => {
+  const data = <Response<ReferralsList>>action.data;
   return updateObject(state, {
     referres: data.list,
     lastUpdated: data.lastUpdated,
@@ -20,7 +19,7 @@ const setReferrersReducer = (state, action) => {
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.SET_REFERRERS:
-      return setReferrersReducer(state, action);
+      return setReferralsReducer(state, action);
     default:
       return state;
   }

@@ -2,6 +2,7 @@ export interface ReactState {}
 
 export interface ValidatorState extends ReactState {
   _validators: any[];
+  filter: IFilter;
   filteredValidators: any[];
   filteredValidatorsForAutosuggest: any[];
   uniqueDomains: any[];
@@ -9,6 +10,12 @@ export interface ValidatorState extends ReactState {
 }
 export interface AnalyticsState extends ReactState {
   referres: any[];
+  ready: boolean;
+}
+
+export interface ArchivesState extends ReactState {
+  archives: any[];
+  lastUpdated: Date;
   ready: boolean;
 }
 
@@ -21,8 +28,9 @@ export interface ValidatorList {
   domain: string;
 }
 
-export interface ReferrersList {
-}
+export interface ReferralsList {}
+
+export interface ArchivesList {}
 
 export interface GeoList {
   domain: string;

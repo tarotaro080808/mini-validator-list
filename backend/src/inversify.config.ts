@@ -10,18 +10,20 @@ import {
   Lib,
   IGoogleService,
   IThirdPartyLibFactory,
-  IIntervalManager
+  IIntervalManager,
+  IGitHubService
 } from "./types";
 import { TYPES } from "./inversify.types";
 import { Server, DevServer } from "./server";
 import RippleService from "./services/rippleService";
-import GoogleService from "./services/gaService";
+import GoogleService from "./services/googleAnalyticsService";
 import Configuration from "./configuration";
 import CacheManagerFactory from "./cache/cacheManagerFactory";
 import Crypto from "./crypto";
 import Querier from "./querier";
 import ThirdPartyLibFactory from "./thirdPartyLibFactory";
 import IntervalManager from "./services/intervalManager";
+import GitHubService from "./services/githubService";
 
 require("dotenv").config();
 
@@ -43,6 +45,10 @@ myContainer
 myContainer
   .bind<IGoogleService>(TYPES.GoogleService)
   .to(GoogleService)
+  .inSingletonScope();
+myContainer
+  .bind<IGitHubService>(TYPES.GitHubService)
+  .to(GitHubService)
   .inSingletonScope();
 myContainer
   .bind<IConfiguration>(TYPES.Configuration)
@@ -82,5 +88,8 @@ myContainer
 myContainer
   .bind<Promise<Lib.Google.IApi>>(TYPES.Lib.GoogleApi)
   .toConstantValue(thirdPartyLibFactory.createGAReportingApi());
+myContainer
+  .bind<Lib.GitHub.IApi>(TYPES.Lib.GitHubApi)
+  .toConstantValue(thirdPartyLibFactory.createGitHubApi());
 
 export { myContainer };

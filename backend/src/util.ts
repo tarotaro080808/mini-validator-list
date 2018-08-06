@@ -23,4 +23,8 @@ const _union = (listA: string[], listB: string[]) => {
   return Object.keys(dict);
 };
 
-export { _first, _union };
+const DATED_CACHE = (cacheName: string, date: string) => {
+  return `${cacheName}${date ? `.${date}` : ""}`;
+};
+
+export { _first, _union, DATED_CACHE };
