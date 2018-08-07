@@ -80,6 +80,7 @@ class AppFrame extends React.Component {
 
   handleSelectUnlFile = item => {
     this.props.onDefaultUnlSelected(item);
+    this.props.showNotification(`DEFAULT UNL ${item.date} SET`, "success");
   };
 
   render() {
@@ -150,7 +151,8 @@ class AppFrame extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    app: state.app
+    app: state.app,
+    ntf: state.notification
   };
 };
 
@@ -158,7 +160,9 @@ const mapDispatchToProps = dispatch => {
   return {
     onInitArchives: () => dispatch(actions.initArchives()),
     onDefaultUnlSelected: item => dispatch(actions.selectDefaultUnl(item)),
-    onDefaultUnlUnselected: () => dispatch(actions.unselectDefaultUnl())
+    onDefaultUnlUnselected: () => dispatch(actions.unselectDefaultUnl()),
+    showNotification: (message, variant) =>
+      dispatch(actions.showNotification(message, variant, ""))
   };
 };
 

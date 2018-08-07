@@ -1,5 +1,6 @@
 const WriteFilePlugin = require("write-file-webpack-plugin");
-
+const BundleAnalyzerPlugin = require("webpack-bundle-analyzer")
+  .BundleAnalyzerPlugin;
 const webpack = require("webpack");
 
 module.exports = {
@@ -45,8 +46,10 @@ module.exports = {
     "react-dom": "ReactDOM"
   },
   plugins: [
+    new webpack.optimize.OccurrenceOrderPlugin(),
     new webpack.HotModuleReplacementPlugin(),
-    new WriteFilePlugin()
+    new WriteFilePlugin(),
+    new BundleAnalyzerPlugin()
   ],
   devServer: {
     contentBase: "./dist",

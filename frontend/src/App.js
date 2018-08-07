@@ -19,6 +19,7 @@ import Icon from "@material-ui/core/Icon";
 import ListItemIcon from "@material-ui/core/ListItemIcon";
 
 import AppFrame from "./containers/Frame/AppFrame";
+import NotificationContainer from "./containers/Frame/NotificationContainer";
 import MainContainer from "./containers/Main/MainContainer";
 // import ReferralsContainer from "./containers/Referrals/ReferralsContainer";
 import Footer from "./components/Footer/Footer";
@@ -148,24 +149,27 @@ class App extends React.Component {
 
     return (
       <Router>
-        <AppFrame title={APP_TITLE} list={list}>
-          <main className={classes.main}>
-            <Switch>
-              {routes
-                .filter(r => r.internal)
-                .map((r, i) => (
-                  <Route
-                    key={`route-${i}`}
-                    exact={r.exact}
-                    path={r.path}
-                    component={r.componentFactory}
-                  />
-                ))}
-              <Redirect from="*" to="/" />
-            </Switch>
-          </main>
-          <Footer />
-        </AppFrame>
+        <React.Fragment>
+          <AppFrame title={APP_TITLE} list={list}>
+            <main className={classes.main}>
+              <Switch>
+                {routes
+                  .filter(r => r.internal)
+                  .map((r, i) => (
+                    <Route
+                      key={`route-${i}`}
+                      exact={r.exact}
+                      path={r.path}
+                      component={r.componentFactory}
+                    />
+                  ))}
+                <Redirect from="*" to="/" />
+              </Switch>
+            </main>
+            <Footer />
+          </AppFrame>
+          <NotificationContainer />
+        </React.Fragment>
       </Router>
     );
   }
