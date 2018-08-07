@@ -32,8 +32,5 @@ export default class ThirdPartyLibFactory implements IThirdPartyLibFactory {
     });
     return analytics;
   };
-  createGitHubApi = () => {
-    const octokit = new Octokit();
-    return octokit;
-  };
+  createGitHubApi = () => new Octokit();
 }

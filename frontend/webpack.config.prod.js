@@ -45,9 +45,5 @@ module.exports = {
         'NODE_ENV': JSON.stringify('production')
       }
     })
-  ],
-  devServer: {
-    contentBase: "./dist",
-    hot: true
-  }
+  ]
 };

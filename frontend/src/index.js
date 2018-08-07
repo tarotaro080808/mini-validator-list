@@ -5,6 +5,7 @@ import { createStore, combineReducers, applyMiddleware, compose } from "redux";
 import thunk from "redux-thunk";
 
 import appReducer from "./store/reducers/appReducer";
+import notificationReducer from "./store/reducers/notificationReducer";
 import validatorReducer from "./store/reducers/validatorReducer";
 import analyticsReducer from "./store/reducers/analyticsReducer";
 
@@ -12,6 +13,7 @@ import App from "./App";
 
 const rootReducer = combineReducers({
   app: appReducer,
+  notification: notificationReducer,
   validators: validatorReducer,
   analytics: analyticsReducer
 });

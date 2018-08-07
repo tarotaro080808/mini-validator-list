@@ -7,12 +7,11 @@ import Grid from "@material-ui/core/Grid";
 
 import withNetworkHandler from "../../util/withNetworkHandler";
 import axios from "../../util/axios-api";
-import ArchiveMode from "./Panels/ArchiveMode";
+import dateTime from "../../util/datetime";
 import Filter from "./Panels/Filter";
 import Stats from "./Panels/Stats";
 import DomainMap from "./Panels/DomainMap";
 import ValidatorList from "./Panels/ValidatorList";
-import LastUpdatedInfoBar from "../../components/Common/LastUpdatedInfoBar";
 
 const styles = theme => ({
   gridItem: {
@@ -26,8 +25,15 @@ class MainContainer extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    const { app } = this.props; // old props
-    if (props.app.selectedDefaultUnl !== app.selectedDefaultUnl) {
+    const { app, vals } = this.props; // old props
+
+    const transitionedToArchiveMode =
+      props.app.selectedDefaultUnl !== app.selectedDefaultUnl;
+    const transitionedToCurrentMode =
+      !props.app.selectedDefaultUnl &&
+      vals.lastUpdated !== props.vals.lastUpdated;
+
+    if (transitionedToArchiveMode) {
       const date = props.app.selectedDefaultUnl
         ? props.app.selectedDefaultUnl.date
         : undefined;
@@ -38,25 +44,20 @@ class MainContainer extends React.Component {
         filterWord: ""
       };
       this.props.onInitValidators(date, filter);
+    } else if (transitionedToCurrentMode) {
+      this.props.showNotification(
+        `LAST UPDATED: ${dateTime(props.vals.lastUpdated)}`,
+        ""
+      );
     }
   }
 
   render() {
     const { classes, vals, app, isLoading } = this.props;
-    const isArchivedMode = app.mode === "ARCHIVE";
-
-    const archivedModePaper = isArchivedMode ? (
-      <Grid item xs={12} className={classes.gridItem}>
-        <ArchiveMode app={app} />
-      </Grid>
-    ) : (
-      <React.Fragment />
-    );
 
     return (
       <React.Fragment>
         <Grid container spacing={0}>
-          {archivedModePaper}
           <Grid item xs={12} className={classes.gridItem}>
             <Filter vals={vals} app={app} isLoading={isLoading} />
           </Grid>
@@ -70,7 +71,6 @@ class MainContainer extends React.Component {
             <ValidatorList vals={vals} isLoading={isLoading} />
           </Grid>
         </Grid>
-        <LastUpdatedInfoBar vals={vals} />
       </React.Fragment>
     );
   }
@@ -86,7 +86,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onInitValidators: (date, filter) =>
-      dispatch(actions.initValidators(date, filter))
+      dispatch(actions.initValidators(date, filter)),
+    showNotification: (message, variant) =>
+      dispatch(actions.showNotification(message, variant, ""))
   };
 };
 
