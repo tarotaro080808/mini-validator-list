@@ -197,7 +197,7 @@ export default class RippleService implements IRippleService {
         );
 
         const mergedList = allValidationPublicKeys
-          .filter(pubkey => pubkey)
+          .filter(pubkey => pubkey && pubkey !== "undefined") // remove stale validators
           .map(pubkey => {
             let v = _first(
               validators.list,
@@ -332,7 +332,9 @@ export default class RippleService implements IRippleService {
       }
     }
 
-    await this._cacheManager.waitFor(DATED_CACHE(Cache.TYPES.MERGED_DATA, date));
+    await this._cacheManager.waitFor(
+      DATED_CACHE(Cache.TYPES.MERGED_DATA, date)
+    );
     return this._cacheManager.get<Cache.MergedDataCache>(
       DATED_CACHE(Cache.TYPES.MERGED_DATA, date)
     );

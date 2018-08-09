@@ -14,7 +14,7 @@ function _first<T>(
 const _union = (listA: string[], listB: string[]) => {
   const dict = {};
   const add = (d, v) => {
-    if (!d[v]) {
+    if (v && !d[v]) {
       d[v] = true;
     }
   };
