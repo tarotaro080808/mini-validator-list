@@ -5,12 +5,12 @@ import Card from "@material-ui/core/Card";
 import CardContent from "@material-ui/core/CardContent";
 import Typography from "@material-ui/core/Typography";
 
-const styles = {
+const styles = theme => ({
   card: {
-    background: "#eee",
-    boxShadow: "none"
+    boxShadow: "none",
+    border: "1px solid #ccc"
   }
-};
+});
 
 function SimpleCard(props) {
   const { classes, description, value } = props;
@@ -22,7 +22,7 @@ function SimpleCard(props) {
           <Typography variant="headline" component="h2">
             {value}
           </Typography>
-          <Typography color="textSecondary">{description}</Typography>
+          <Typography>{description}</Typography>
         </CardContent>
       </Card>
     </div>

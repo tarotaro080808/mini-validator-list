@@ -10,6 +10,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import IntegrationAutosuggest from "../../../components/Filter/IntegrationAutosuggest";
+import DefaultUnlSelectButton from "../../../components/Filter/DefaultUnlSelectButton";
 
 const styles = theme => ({
   panel: {
@@ -69,13 +70,30 @@ class Filter extends React.Component {
     );
   }
 
+  handleSelectDefaultUnl = item => {
+    this.props.onDefaultUnlSelected(item);
+    this.props.showNotification(`DEFAULT UNL ${item.date} SET`, "");
+  };
+
   render() {
     const { classes, vals, app } = this.props;
     const { defaultOnly, verifiedOnly, mainNetOnly, filterWord } = vals.filter;
     const isArchiveMode = app.mode === "ARCHIVE";
 
+    let footer = (
+      <DefaultUnlSelectButton
+        archives={app.archives}
+        handleSelect={this.handleSelectDefaultUnl}
+      />
+    );
+
     return (
-      <ExpandablePanel className={classes.panel} title="Filter" expanded={true}>
+      <ExpandablePanel
+        className={classes.panel}
+        title="Filter"
+        expanded={true}
+        footer={footer}
+      >
         <div className={classes.wrapper} key="Filter">
           <FormGroup row>
             <Grid container spacing={0}>
@@ -141,13 +159,24 @@ class Filter extends React.Component {
   }
 }
 
+const mapStateToProps = state => {
+  return {
+    app: state.app,
+    ntf: state.notification
+  };
+};
+
 const mapDispatchToProps = dispatch => {
   return {
-    onApplyFilter: newFilter => dispatch(actions.filterValidators(newFilter))
+    onApplyFilter: newFilter => dispatch(actions.filterValidators(newFilter)),
+    onDefaultUnlSelected: item => dispatch(actions.selectDefaultUnl(item)),
+    onDefaultUnlUnselected: () => dispatch(actions.unselectDefaultUnl()),
+    showNotification: (message, variant) =>
+      dispatch(actions.showNotification(message, variant, ""))
   };
 };
 
 export default connect(
-  null,
+  mapStateToProps,
   mapDispatchToProps
 )(withStyles(styles, { withTheme: true })(Filter));

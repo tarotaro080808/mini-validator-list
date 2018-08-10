@@ -1,5 +1,6 @@
 import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
+import { webStorage } from "../webStorage";
 
 enum AppMode {
   CURRENT_MODE = "CURRENT",
@@ -9,7 +10,8 @@ enum AppMode {
 const initialState: any = {
   mode: AppMode.CURRENT_MODE,
   archives: undefined,
-  selectedDefaultUnl: undefined
+  selectedDefaultUnl: undefined,
+  themeType: webStorage.getAppData().themeType || "light"
 };
 
 const selectDefaultUnl = (state, action) => {
@@ -34,6 +36,12 @@ const setArchivesReducer = (state, action) => {
   });
 };
 
+const setThemeTypeReducer = (state, action) => {
+  return updateObject(state, {
+    themeType: action.data
+  });
+};
+
 const reducer = (state = initialState, action) => {
   switch (action.type) {
     case actionTypes.DEFAULT_UNL_SELECTED:
@@ -42,6 +50,8 @@ const reducer = (state = initialState, action) => {
       return unselectDefaultUnl(state);
     case actionTypes.SET_ARCHIVES:
       return setArchivesReducer(state, action);
+    case actionTypes.TOGGLE_THEMETYPE:
+      return setThemeTypeReducer(state, action);
     default:
       return state;
   }

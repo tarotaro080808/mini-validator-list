@@ -23,9 +23,6 @@ const styles = theme => ({
   appBar: {
     backgroundColor: theme.palette.primary.main
   },
-  appBarSecondary: {
-    backgroundColor: theme.palette.secondary.main
-  },
   appBarTitle: {
     fontFamily: "Pacifico, sans-serif",
     fontSize: "150%",
@@ -78,22 +75,15 @@ class AppFrame extends React.Component {
     });
   };
 
-  handleSelectUnlFile = item => {
-    this.props.onDefaultUnlSelected(item);
-    this.props.showNotification(`DEFAULT UNL ${item.date} SET`, "success");
-  };
-
   render() {
     const { title, classes, list, children, app } = this.props;
     const { drawerOpen, unlSelectOpen } = this.state;
     const isArchiveMode = app.mode === "ARCHIVE";
+    const nextThemeType = app.themeType === "dark" ? "light" : "dark";
 
     return (
       <div>
-        <AppBar
-          position="fixed"
-          className={isArchiveMode ? classes.appBarSecondary : classes.appBar}
-        >
+        <AppBar position="fixed" className={classes.appBar}>
           <Toolbar variant="dense">
             <IconButton
               color="inherit"
@@ -104,18 +94,18 @@ class AppFrame extends React.Component {
               <MenuIcon />
             </IconButton>
             <div className={classes.appBarTitle}>
-              {isArchiveMode ? "Archive Mode" : title}
+              {isArchiveMode ? `Archive ${app.selectedDefaultUnl.date}` : title}
             </div>
             <IconButton
               color="inherit"
-              aria-label="Open drawer"
-              onClick={this.handleOpenUnlFileSelect}
+              aria-label="Toggle theme"
+              onClick={() => this.props.onThemeTypeToggled(nextThemeType)}
               className={classes.menuButtonRight}
             >
-              {isArchiveMode ? (
-                <Icon className={classNames("fas fa-times-circle")} />
+              {nextThemeType === "dark" ? (
+                <Icon className={classNames("far fa-moon")} />
               ) : (
-                <Icon className={classNames("fas fa-history")} />
+                <Icon className={classNames("fas fa-moon")} />
               )}
             </IconButton>
           </Toolbar>
@@ -159,10 +149,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onInitArchives: () => dispatch(actions.initArchives()),
-    onDefaultUnlSelected: item => dispatch(actions.selectDefaultUnl(item)),
-    onDefaultUnlUnselected: () => dispatch(actions.unselectDefaultUnl()),
-    showNotification: (message, variant) =>
-      dispatch(actions.showNotification(message, variant, ""))
+    onThemeTypeToggled: themeType =>
+      dispatch(actions.toggleThemeType(themeType))
   };
 };
 

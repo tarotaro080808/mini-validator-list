@@ -1,9 +1,10 @@
 import React from "react";
-import ContentLoader from "react-content-loader";
 
 import { withStyles } from "@material-ui/core/styles";
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
-import DomainMapPanel from "../../../components/DomainMap/DomainMapPanel";
+import Loader from "../../../components/Common/Loader";
+import Map from "../../../components/DomainMap/Map";
+import DomainSelectButton from "../../../components/DomainMap/DomainSelectButton";
 
 const styles = theme => ({
   panel: {
@@ -14,29 +15,36 @@ const styles = theme => ({
   }
 });
 
-const Loader = props => (
-  <ContentLoader
-    speed={2}
-    height={230}
-    primaryColor="#f3f3f3"
-    secondaryColor="#ecebeb"
-    preserveAspectRatio="xMidYMid slice"
-    {...props}
-  >
-    <rect x="0" y="0" rx="5" ry="5" width="100%" height="230" />
-  </ContentLoader>
-);
-
 class DomainMap extends React.Component {
+  state = {
+    selectedDomain: undefined
+  };
+
+  handleSelectDomain = domain => {
+    this.setState({
+      selectedDomain: domain
+    });
+  };
+
   render() {
-    const { classes, vals, isLoading } = this.props;
-    let content = Loader(this.props);
+    const { classes, vals, app, isLoading } = this.props;
+    const { selectedDomain } = this.state;
+    let content = <Loader speed={2} height={230} />;
+    let footer = <React.Fragment />;
 
     if (!isLoading && vals.uniqueDomains) {
       content = (
-        <DomainMapPanel
+        <Map
           domains={vals.uniqueDomains}
+          selectedDomain={selectedDomain}
           positions={vals.positions}
+          themeType={app.themeType}
+        />
+      );
+      footer = (
+        <DomainSelectButton
+          domains={vals.uniqueDomains}
+          handleSelect={this.handleSelectDomain}
         />
       );
     }
@@ -46,6 +54,7 @@ class DomainMap extends React.Component {
         className={classes.panel}
         title="Domain Map"
         expanded={false}
+        footer={footer}
       >
         <div className={classes.wrapper} key="DomainMap">
           {content}
