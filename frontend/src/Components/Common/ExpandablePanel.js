@@ -6,6 +6,7 @@ import ExpansionPanelDetails from "@material-ui/core/ExpansionPanelDetails";
 import ExpansionPanelSummary from "@material-ui/core/ExpansionPanelSummary";
 import Typography from "@material-ui/core/Typography";
 import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Divider from "@material-ui/core/Divider";
 
 const styles = theme => ({
   root: {
@@ -36,8 +37,27 @@ class ExpandablePanel extends React.Component {
   };
 
   render() {
-    const { classes, title, children } = this.props;
+    const { classes, title, children, footer } = this.props;
     const { expanded } = this.state;
+
+    const footerComponent = footer && (
+      <React.Fragment>
+        <Divider />
+        <ExpansionPanelDetails style={{ paddingBottom: "0.5rem" }}>
+          {footer}
+        </ExpansionPanelDetails>
+      </React.Fragment>
+    );
+
+    const details = [<ExpansionPanelDetails>{children}</ExpansionPanelDetails>];
+    if (footer) {
+      details.push(<Divider />);
+      details.push(
+        <ExpansionPanelDetails style={{ paddingBottom: "0.5rem" }}>
+          {footer}
+        </ExpansionPanelDetails>
+      );
+    }
 
     return (
       <div className={classes.root}>
@@ -45,7 +65,7 @@ class ExpandablePanel extends React.Component {
           <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
             <Typography className={classes.heading}>{title}</Typography>
           </ExpansionPanelSummary>
-          <ExpansionPanelDetails>{children}</ExpansionPanelDetails>
+          {details}
         </ExpansionPanel>
       </div>
     );

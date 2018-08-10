@@ -78,19 +78,21 @@ class FullScreenSelect extends React.Component {
               </IconButton>
             </Toolbar>
           </AppBar>
-          <List>
-            {list.map((item, i) => (
-              <div key={i}>
-                <ListItem button onClick={() => this.handleSelectItem(item)}>
-                  <ListItemText
-                    primary={getListItemPrimaryText(item)}
-                    secondary={getListItemSecondaryText(item)}
-                  />
-                </ListItem>
-                <Divider />
-              </div>
-            ))}
-          </List>
+          {list && (
+            <List>
+              {list.map((item, i) => (
+                <div key={i}>
+                  <ListItem button onClick={() => this.handleSelectItem(item)}>
+                    <ListItemText
+                      primary={getListItemPrimaryText(item)}
+                      secondary={getListItemSecondaryText(item)}
+                    />
+                  </ListItem>
+                  <Divider />
+                </div>
+              ))}
+            </List>
+          )}
         </Dialog>
       </div>
     );

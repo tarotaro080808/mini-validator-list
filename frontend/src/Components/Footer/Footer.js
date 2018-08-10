@@ -1,17 +1,18 @@
 import React from "react";
 import PropTypes from "prop-types";
+import classNames from "classnames";
 
 import { withStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
+import Button from "@material-ui/core/Button";
+import Divider from "@material-ui/core/Divider";
+import Icon from "@material-ui/core/Icon";
+import IconButton from "@material-ui/core/IconButton";
 
 import XRPTipBotButton from "../Common/XRPTipBotButton";
 
 const styles = theme => ({
-  linkText: {
-    color: theme.palette.primary.main
-  },
-  linkIcon: {
-    color: theme.palette.primary.main
+  icon: {
+    fontSize: "110%"
   },
   footer: {
     width: "100%",
@@ -23,32 +24,6 @@ const styles = theme => ({
   }
 });
 
-const githubLink = classes => (
-  <a
-    className={classes.linkIcon}
-    href="https://github.com/cinnapple/mini-validator-list"
-    target="_blank"
-  >
-    GitHub
-  </a>
-);
-
-const twitterLink = classes => (
-  <a
-    className={classes.linkIcon}
-    href="https://twitter.com/CinnappleFun"
-    target="_blank"
-  >
-    Twitter
-  </a>
-);
-
-const siteLink = classes => (
-  <a className={classes.linkText} href="https://cinnapple.fun" target="_blank">
-    Cinnapple
-  </a>
-);
-
 function Footer(props) {
   const { classes } = props;
 
@@ -58,15 +33,21 @@ function Footer(props) {
         <div>
           <XRPTipBotButton network="twitter" to="CinnappleFun" amount={0.2} />
         </div>
-        <Typography
-          gutterBottom
-          color="inherit"
-          align="center"
-          noWrap
-          variant="caption"
+        <Divider />
+        <IconButton
+          aria-label="Twitter"
+          component="a"
+          href={"https://twitter.com/CinnappleFun"}
         >
-          {siteLink(classes)} | {twitterLink(classes)} | {githubLink(classes)}
-        </Typography>
+          <Icon className={classNames("fab fa-twitter-square")} />
+        </IconButton>
+        <IconButton
+          aria-label="GitHub"
+          component="a"
+          href={"https://github.com/cinnapple/mini-validator-list"}
+        >
+          <Icon className={classNames("fab fa-github-square")} />
+        </IconButton>
       </div>
     </footer>
   );

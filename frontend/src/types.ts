@@ -30,7 +30,10 @@ export interface ValidatorList {
 
 export interface ReferralsList {}
 
-export interface ArchivesList {}
+export interface Archive {
+  date: string;
+  name: string;
+}
 
 export interface GeoList {
   domain: string;

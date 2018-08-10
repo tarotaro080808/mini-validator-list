@@ -18,10 +18,14 @@ const PrimaryTableCell = withStyles(theme => ({
   }
 }))(TableCell);
 
-const ValidationPubkeyTableCell = withStyles(theme => ({
+const NumericTableCell = withStyles(theme => ({
+  body: {}
+}))(TableCell);
+
+const SecondaryTableCell = withStyles(theme => ({
   body: {
     fontSize: "1rem",
-    textDecorationStyle: "dotted"
+    backgroundColor: theme.palette.primary.light
   }
 }))(TableCell);
 
@@ -39,11 +43,18 @@ const columnData = [
     disablePadding: false,
     label: "Domain"
   },
+  { id: "agreement", numeric: true, disablePadding: false, label: "Agreement" },
   {
-    id: "pubkey",
-    numeric: false,
+    id: "disagreement",
+    numeric: true,
     disablePadding: false,
-    label: "Validation Public Key"
+    label: "Disagreement"
+  },
+  {
+    id: "totalvalidations",
+    numeric: true,
+    disablePadding: false,
+    label: "Total Validations"
   }
 ];
 
@@ -114,11 +125,8 @@ const styles = theme => ({
     margin: theme.spacing.unit,
     backgroundColor: "transparent"
   },
-  primaryTableCell: {
-    width: "50%"
-  },
   secondaryTableCell: {
-    width: "50%"
+    width: "100%"
   }
 });
 
@@ -164,6 +172,20 @@ class EnhancedTable extends React.Component {
       this.props.list && (
         <React.Fragment>
           <div className={classes.tableWrapper}>
+            <FormGroup row className={classes.itemMargin}>
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    checked={this.state.secondary}
+                    onChange={(event, checked) =>
+                      this.setState({ secondary: checked })
+                    }
+                    value="secondary"
+                  />
+                }
+                label="Show Validation Public Key"
+              />
+            </FormGroup>
             <Table className={classes.table} aria-labelledby="tableTitle">
               <EnhancedTableHead
                 numSelected={selected.length}
@@ -190,7 +212,6 @@ class EnhancedTable extends React.Component {
                         {
                           <TableRow hover tabIndex={-1} key={v.id}>
                             <PrimaryTableCell
-                              className={classes.primaryTableCell}
                               component="a"
                               scope="row"
                               href={`https://${v.domain}`}
@@ -198,8 +219,7 @@ class EnhancedTable extends React.Component {
                             >
                               {domainElement}
                             </PrimaryTableCell>
-                            <ValidationPubkeyTableCell
-                              className={classes.secondaryTableCell}
+                            <PrimaryTableCell
                               component="a"
                               scope="row"
                               href={`https://xrpcharts.ripple.com/#/validators/${
@@ -208,9 +228,37 @@ class EnhancedTable extends React.Component {
                               target="_blank"
                             >
                               <code>{v.pubkey}</code>
-                            </ValidationPubkeyTableCell>
+                            </PrimaryTableCell>
+                            {/* <NumericTableCell numeric>
+                              {v.is_report_available
+                                ? formatAgreementRate(v.agreement)
+                                : "-"}
+                            </NumericTableCell>
+                            <NumericTableCell numeric>
+                              {v.is_report_available
+                                ? formatAgreementRate(v.disagreement)
+                                : "-"}
+                            </NumericTableCell>
+                            <NumericTableCell numeric>
+                              {v.is_report_available ? v.total_ledgers : "-"}
+                            </NumericTableCell> */}
                           </TableRow>
                         }
+                        {this.state.secondary && (
+                          <TableRow hover key={"pubkey-" + v.id}>
+                            <SecondaryTableCell
+                              component="a"
+                              scope="row"
+                              href={`https://xrpcharts.ripple.com/#/validators/${
+                                v.pubkey
+                              }`}
+                              className={classes.secondaryTableCell}
+                              target="_blank"
+                            >
+                              <code>{v.pubkey}</code>
+                            </SecondaryTableCell>
+                          </TableRow>
+                        )}
                       </React.Fragment>
                     );
                   })}

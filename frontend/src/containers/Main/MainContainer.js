@@ -65,7 +65,7 @@ class MainContainer extends React.Component {
             <Stats vals={vals} isLoading={isLoading} />
           </Grid>
           <Grid item xs={12} className={classes.gridItem}>
-            <DomainMap vals={vals} isLoading={isLoading} />
+            <DomainMap vals={vals} app={app} isLoading={isLoading} />
           </Grid>
           <Grid item xs={12}>
             <ValidatorList vals={vals} isLoading={isLoading} />

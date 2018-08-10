@@ -1,4 +1,5 @@
 import React from "react";
+import { connect } from "react-redux";
 import {
   BrowserRouter as Router,
   Switch,
@@ -26,32 +27,22 @@ import Footer from "./components/Footer/Footer";
 
 const APP_TITLE = "Mini Validator List";
 
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      light: "#CFD8DC",
-      main: "#2C3E50",
-      dark: "#455A64",
-      contrastText: "#FFFFFF"
+const createDynamicMuiTheme = type => {
+  return createMuiTheme({
+    palette: {
+      type: type,
+      primary: {
+        main: "#2C3E50"
+      },
+      secondary: {
+        main: "#18BC9C"
+      }
     },
-    secondary: {
-      main: "#18BC9C"
-    },
-    text: {
-      primary: "#2C3E50"
+    typography: {
+      fontFamily: ["'Montserrat'", "Roboto"].join(",")
     }
-  },
-  typography: {
-    fontFamily: ["'Montserrat'", "Roboto"].join(",")
-  }
-});
-
-const withRoot = Component => props => (
-  <MuiThemeProvider theme={theme}>
-    <CssBaseline />
-    <Component {...props} />
-  </MuiThemeProvider>
-);
+  });
+};
 
 const styles = theme => ({
   root: {
@@ -130,8 +121,19 @@ const link = (route, index) => {
 };
 
 class App extends React.Component {
+  state = {
+    themeType: "light"
+  };
+
+  handleThemeToggle = themeType => {
+    this.setState({
+      themeType: themeType
+    });
+  };
+
   render() {
-    const { classes } = this.props;
+    const { classes, app } = this.props;
+    const { themeType } = this.state;
 
     const list = (
       <div className={classes.list}>
@@ -150,12 +152,17 @@ class App extends React.Component {
     return (
       <Router>
         <React.Fragment>
-          <AppFrame title={APP_TITLE} list={list}>
-            <main className={classes.main}>
-              <Switch>
-                {routes
-                  .filter(r => r.internal)
-                  .map((r, i) => (
+          <MuiThemeProvider theme={createDynamicMuiTheme(app.themeType)}>
+            <CssBaseline />
+            <AppFrame
+              title={APP_TITLE}
+              list={list}
+              themeType={themeType}
+              handleThemeToggle={this.handleThemeToggle}
+            >
+              <main className={classes.main}>
+                <Switch>
+                  {routes.filter(r => r.internal).map((r, i) => (
                     <Route
                       key={`route-${i}`}
                       exact={r.exact}
@@ -163,16 +170,26 @@ class App extends React.Component {
                       component={r.componentFactory}
                     />
                   ))}
-                <Redirect from="*" to="/" />
-              </Switch>
-            </main>
-            <Footer />
-          </AppFrame>
-          <NotificationContainer />
+                  <Redirect from="*" to="/" />
+                </Switch>
+              </main>
+              <Footer />
+            </AppFrame>
+            <NotificationContainer />
+          </MuiThemeProvider>
         </React.Fragment>
       </Router>
     );
   }
 }
 
-export default withRoot(withStyles(styles)(App));
+const mapStateToProps = state => {
+  return {
+    app: state.app
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  null
+)(withStyles(styles)(App));

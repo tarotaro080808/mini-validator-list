@@ -12,11 +12,17 @@ const styles = theme => ({
   },
   wrapper: {
     width: "100%"
+  },
+  circle: {
+    color:
+      theme.palette.primary[
+        theme.palette.type === "dark" ? "contrastText" : "main"
+      ]
   }
 });
 
-const createCircle = () => (
-  <CircularProgress size={23} thickness={4} />
+const createCircle = classes => (
+  <CircularProgress size={23} thickness={4} className={classes.circle} />
 );
 
 class Stats extends React.Component {
@@ -30,22 +36,22 @@ class Stats extends React.Component {
 
     statsList.push({
       description: "validators",
-      value: createCircle(),
+      value: createCircle(classes),
       size
     });
     statsList.push({
       description: "in default UNL",
-      value: createCircle(),
+      value: createCircle(classes),
       size
     });
     statsList.push({
       description: "ripple.com",
-      value: createCircle(),
+      value: createCircle(classes),
       size
     });
     statsList.push({
       description: "dominance",
-      value: createCircle(),
+      value: createCircle(classes),
       size
     });
 
