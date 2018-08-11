@@ -11,7 +11,6 @@ import MenuIcon from "@material-ui/icons/Menu";
 import Icon from "@material-ui/core/Icon";
 
 import * as actions from "../../store/actions/index";
-import FullScreenSelect from "../../components/Common/FullScreenSelect";
 
 const styles = theme => ({
   list: {
@@ -46,7 +45,6 @@ const styles = theme => ({
 class AppFrame extends React.Component {
   state = {
     drawerOpen: false,
-    unlSelectOpen: false
   };
 
   componentDidMount() {
@@ -59,25 +57,9 @@ class AppFrame extends React.Component {
     });
   };
 
-  handleOpenUnlFileSelect = () => {
-    if (this.props.app.selectedDefaultUnl) {
-      this.props.onDefaultUnlUnselected();
-    } else {
-      this.setState({
-        unlSelectOpen: true
-      });
-    }
-  };
-
-  handleCloseUnlFileSelect = () => {
-    this.setState({
-      unlSelectOpen: false
-    });
-  };
-
   render() {
     const { title, classes, list, children, app } = this.props;
-    const { drawerOpen, unlSelectOpen } = this.state;
+    const { drawerOpen } = this.state;
     const isArchiveMode = app.mode === "ARCHIVE";
     const nextThemeType = app.themeType === "dark" ? "light" : "dark";
 
@@ -120,19 +102,6 @@ class AppFrame extends React.Component {
             {list}
           </div>
         </Drawer>
-        {app.archives ? (
-          <FullScreenSelect
-            list={app.archives}
-            selectTitle="Default UNL Archives"
-            open={unlSelectOpen}
-            getListItemPrimaryText={item => item.date}
-            getListItemSecondaryText={item => item.name}
-            handleClose={this.handleCloseUnlFileSelect}
-            handleSelectItem={this.handleSelectUnlFile}
-          />
-        ) : (
-          <React.Fragment />
-        )}
         {children}
       </div>
     );
