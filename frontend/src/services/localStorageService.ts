@@ -1,6 +1,4 @@
-type AppData = {
-  themeType: string;
-};
+import { AppData } from "../types";
 
 const KEYS = {
   APP: "APP"
@@ -8,7 +6,8 @@ const KEYS = {
 
 const SCHEMA = {
   APP: {
-    themeType: ""
+    themeType: "",
+    lang: ""
   }
 };
 
@@ -36,7 +35,7 @@ class LocalStorageRepository {
   };
 }
 
-class LocalStorage {
+class LocalStorageService {
   private _with = (repositoryType: string) => {
     return new LocalStorageRepository(repositoryType);
   };
@@ -47,6 +46,6 @@ class LocalStorage {
     this._with(KEYS.APP).set(props);
 }
 
-const webStorage = new LocalStorage();
+const localStorageService = new LocalStorageService();
 
-export { webStorage };
+export { localStorageService };

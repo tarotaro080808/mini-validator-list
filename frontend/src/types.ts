@@ -1,22 +1,40 @@
-export interface ReactState {}
-
-export interface ValidatorState extends ReactState {
-  _validators: any[];
-  filter: IFilter;
-  filteredValidators: any[];
-  filteredValidatorsForAutosuggest: any[];
-  uniqueDomains: any[];
-  ready: boolean;
-}
-export interface AnalyticsState extends ReactState {
-  referres: any[];
-  ready: boolean;
+export enum AppMode {
+  CURRENT_MODE = "CURRENT",
+  ARCHIVE_MODE = "ARCHIVE"
 }
 
-export interface ArchivesState extends ReactState {
-  archives: any[];
-  lastUpdated: Date;
-  ready: boolean;
+export type ThemeType = "dark" | "light";
+
+export type Language = "en" | "ja";
+
+export type AppData = {
+  themeType: ThemeType;
+  lang: Language;
+};
+
+export namespace State {
+  export type App = {
+    themeType: ThemeType;
+    lang: Language;
+  };
+  export type Validator = {
+    _validators: any[];
+    filter: IFilter;
+    filteredValidators: any[];
+    filteredValidatorsForAutosuggest: any[];
+    uniqueDomains: any[];
+    archives: any[];
+    selectedDefaultUnlId: undefined;
+  };
+  export type Analytics = {
+    referres: any[];
+    ready: boolean;
+  };
+  export type ArchivesState = {
+    archives: any[];
+    lastUpdated: Date;
+    ready: boolean;
+  };
 }
 
 export interface Response<T> {

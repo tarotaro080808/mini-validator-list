@@ -40,20 +40,18 @@ class ExpandablePanel extends React.Component {
     const { classes, title, children, footer } = this.props;
     const { expanded } = this.state;
 
-    const footerComponent = footer && (
-      <React.Fragment>
-        <Divider />
-        <ExpansionPanelDetails style={{ paddingBottom: "0.5rem" }}>
-          {footer}
-        </ExpansionPanelDetails>
-      </React.Fragment>
-    );
-
-    const details = [<ExpansionPanelDetails>{children}</ExpansionPanelDetails>];
+    const details = [
+      <ExpansionPanelDetails key={`${title}-expandablepaneldetails`}>
+        {children}
+      </ExpansionPanelDetails>
+    ];
     if (footer) {
-      details.push(<Divider />);
+      details.push(<Divider key={`${title}-expandablepaneldetails-divider`} />);
       details.push(
-        <ExpansionPanelDetails style={{ paddingBottom: "0.5rem" }}>
+        <ExpansionPanelDetails
+          key={`${title}-expandablepaneldetails-footer`}
+          style={{ paddingBottom: "0.5rem" }}
+        >
           {footer}
         </ExpansionPanelDetails>
       );

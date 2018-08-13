@@ -6,6 +6,8 @@ import CircularProgress from "@material-ui/core/CircularProgress";
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import ResultStatsPanel from "../../../components/Stats/ResultStatsPanel";
 
+import { t, res } from "../../../services/i18nService";
+
 const styles = theme => ({
   panel: {
     width: "100%"
@@ -35,22 +37,22 @@ class Stats extends React.Component {
     };
 
     statsList.push({
-      description: "validators",
+      description: t(res.STATS_VALIDATORS),
       value: createCircle(classes),
       size
     });
     statsList.push({
-      description: "in default UNL",
+      description: t(res.STATS_IN_DEFAULT_UNL),
       value: createCircle(classes),
       size
     });
     statsList.push({
-      description: "ripple.com",
+      description: t(res.STATS_RIPPLE),
       value: createCircle(classes),
       size
     });
     statsList.push({
-      description: "dominance",
+      description: t(res.STATS_DOMINANCE),
       value: createCircle(classes),
       size
     });
@@ -63,8 +65,12 @@ class Stats extends React.Component {
     }
 
     return (
-      <ExpandablePanel className={classes.panel} title="Stats" expanded={true}>
-        <div className={classes.wrapper} key="Stats">
+      <ExpandablePanel
+        className={classes.panel}
+        title={t(res.STATS)}
+        expanded={true}
+      >
+        <div className={classes.wrapper}>
           <ResultStatsPanel statsList={statsList} />
         </div>
       </ExpandablePanel>
