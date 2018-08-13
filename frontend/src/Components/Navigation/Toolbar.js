@@ -11,10 +11,7 @@ import { links } from "../../menu";
 import { t } from "../../services/i18nService";
 
 const styles = theme => ({
-  appBar: {
-    backgroundColor:
-      theme.type === "dark" ? "#424242" : theme.palette.primary.main
-  },
+  appBar: {},
   navIconHide: {
     [theme.breakpoints.up("md")]: {
       display: "none"

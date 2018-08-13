@@ -7,7 +7,7 @@ import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
   card: {
-    backgroundColor: theme.type === "light" ? "red" : "inherit",
+    backgroundColor: theme.palette.type === "light" ? "#eee" : undefined,
     boxShadow: "none",
     border: "1px solid #ccc"
   }
@@ -34,4 +34,4 @@ SimpleCard.propTypes = {
   classes: PropTypes.object.isRequired
 };
 
-export default withStyles(styles)(SimpleCard);
+export default withStyles(styles, { withTheme: true })(SimpleCard);
