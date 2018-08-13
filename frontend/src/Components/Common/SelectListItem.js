@@ -38,12 +38,6 @@ class SelectListItem extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    app: state.app
-  };
-};
-
 const mapDispatchToProps = dispatch => {
   return {
     onOpen: (items, handleSelect) =>
@@ -52,6 +46,6 @@ const mapDispatchToProps = dispatch => {
 };
 
 export default connect(
-  mapStateToProps,
+  null,
   mapDispatchToProps
 )(withStyles(styles, { withTheme: true })(SelectListItem));

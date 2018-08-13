@@ -30,7 +30,7 @@ const formatDomainName = domain => {
 const createLocateDomainOptions = items => {
   return items.map(item => ({
     primaryLabel: item.domain,
-    secondaryLabel: formatDomainName(item.domain),
+    secondaryLabel: formatDomainName(item),
     value: item.domain
   }));
 };
