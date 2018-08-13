@@ -5,9 +5,8 @@ import * as actions from "../../store/actions/index";
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
 
-import withNetworkHandler from "../../util/withNetworkHandler";
+import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";
 import axios from "../../util/axios-api";
-import dateTime from "../../util/datetime";
 import Filter from "./Panels/Filter";
 import Stats from "./Panels/Stats";
 import DomainMap from "./Panels/DomainMap";
@@ -25,30 +24,19 @@ class MainContainer extends React.Component {
   }
 
   componentWillReceiveProps(props) {
-    const { app, vals } = this.props; // old props
-
-    const transitionedToArchiveMode =
-      props.app.selectedDefaultUnl !== app.selectedDefaultUnl;
-    const transitionedToCurrentMode =
-      !props.app.selectedDefaultUnl &&
-      vals.lastUpdated !== props.vals.lastUpdated;
-
-    if (transitionedToArchiveMode) {
-      const date = props.app.selectedDefaultUnl
-        ? props.app.selectedDefaultUnl.date
-        : undefined;
-      const filter = {
-        defaultOnly: true,
-        verifiedOnly: true,
-        mainNetOnly: true,
-        filterWord: ""
-      };
-      this.props.onInitValidators(date, filter);
-    } else if (transitionedToCurrentMode) {
-      this.props.showNotification(
-        `LAST UPDATED: ${dateTime(props.vals.lastUpdated)}`,
-        ""
-      );
+    if (this.props.vals.selectedDefaultUnlId) {
+      if (
+        this.props.vals.selectedDefaultUnlId !== props.vals.selectedDefaultUnlId
+      ) {
+        const date = props.vals.selectedDefaultUnlId;
+        const filter = {
+          defaultOnly: true,
+          verifiedOnly: true,
+          mainNetOnly: true,
+          filterWord: ""
+        };
+        this.props.onInitValidators(date, filter);
+      }
     }
   }
 

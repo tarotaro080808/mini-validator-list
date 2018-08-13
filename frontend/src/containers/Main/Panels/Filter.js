@@ -10,7 +10,9 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import IntegrationAutosuggest from "../../../components/Filter/IntegrationAutosuggest";
-import DefaultUnlSelectButton from "../../../components/Filter/DefaultUnlSelectButton";
+import SelectItemButton from "../../../components/Common/SelectItemButton";
+
+import { t, res } from "../../../services/i18nService";
 
 const styles = theme => ({
   panel: {
@@ -45,6 +47,14 @@ const clearFilter = {
   filterWord: ""
 };
 
+const createDefaultUnlOptions = items => {
+  return items.map(item => ({
+    primaryLabel: item.date,
+    secondaryLabel: item.name,
+    value: item.id
+  }));
+};
+
 class Filter extends React.Component {
   state = {
     shareUrl: urlbase
@@ -70,27 +80,41 @@ class Filter extends React.Component {
     );
   }
 
-  handleSelectDefaultUnl = item => {
-    this.props.onDefaultUnlSelected(item);
-    this.props.showNotification(`DEFAULT UNL ${item.date} SET`, "");
+  handleSelectDefaultUnl = (key, value) => {
+    this.props.onDefaultUnlSelected(value);
+  };
+
+  handleSelectDefaultUnlDialogOpen = () => {
+    const archivesItem = {
+      key: "defaultUnl",
+      primaryLabel: t(res.LOAD_ANOTHER_DEFAULT_UNL),
+      selectedValue: this.props.vals.selectedDefaultUnlId,
+      options: createDefaultUnlOptions(this.props.vals.archives)
+    };
+    this.props.onDefaultUnlSelectOpen(
+      t(res.LOAD_ANOTHER_DEFAULT_UNL),
+      archivesItem,
+      this.handleSelectDefaultUnl
+    );
   };
 
   render() {
-    const { classes, vals, app } = this.props;
+    const { classes, vals } = this.props;
     const { defaultOnly, verifiedOnly, mainNetOnly, filterWord } = vals.filter;
-    const isArchiveMode = app.mode === "ARCHIVE";
+    const isDisabled =
+      vals.archives && vals.selectedDefaultUnlId !== vals.archives[0].id;
 
-    let footer = (
-      <DefaultUnlSelectButton
-        archives={app.archives}
-        handleSelect={this.handleSelectDefaultUnl}
+    const footer = (
+      <SelectItemButton
+        buttonText={t(res.LOAD_ANOTHER_DEFAULT_UNL)}
+        onDialogOpen={this.handleSelectDefaultUnlDialogOpen}
       />
     );
 
     return (
       <ExpandablePanel
         className={classes.panel}
-        title="Filter"
+        title={t(res.FILTER)}
         expanded={true}
         footer={footer}
       >
@@ -102,14 +126,14 @@ class Filter extends React.Component {
                   control={
                     <Switch
                       checked={defaultOnly}
-                      disabled={isArchiveMode}
+                      disabled={isDisabled}
                       onChange={e =>
                         this.handleApplyFilter("defaultOnly", !defaultOnly)
                       }
                       value="defaultOnly"
                     />
                   }
-                  label="Default UNL Only"
+                  label={t(res.DEFAULT_UNL_ONLY)}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -117,14 +141,14 @@ class Filter extends React.Component {
                   control={
                     <Switch
                       checked={verifiedOnly}
-                      disabled={isArchiveMode}
+                      disabled={isDisabled}
                       onChange={e =>
                         this.handleApplyFilter("verifiedOnly", !verifiedOnly)
                       }
                       value="verifiedOnly"
                     />
                   }
-                  label="Verified Domains Only"
+                  label={t(res.VERIFIED_DOMAINS_ONLY)}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -132,14 +156,14 @@ class Filter extends React.Component {
                   control={
                     <Switch
                       checked={mainNetOnly}
-                      disabled={isArchiveMode}
+                      disabled={isDisabled}
                       onChange={e =>
                         this.handleApplyFilter("mainNetOnly", !mainNetOnly)
                       }
                       value="mainNetOnly"
                     />
                   }
-                  label="Main Net Only"
+                  label={t(res.MAIN_NET_ONLY)}
                 />
               </Grid>
               <Grid item xs={12}>
@@ -161,7 +185,7 @@ class Filter extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    app: state.app,
+    vals: state.validators,
     ntf: state.notification
   };
 };
@@ -169,8 +193,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     onApplyFilter: newFilter => dispatch(actions.filterValidators(newFilter)),
-    onDefaultUnlSelected: item => dispatch(actions.selectDefaultUnl(item)),
-    onDefaultUnlUnselected: () => dispatch(actions.unselectDefaultUnl()),
+    onDefaultUnlSelected: date => dispatch(actions.selectDefaultUnl(date)),
+    onDefaultUnlSelectOpen: (title, items, handleSelect) =>
+      dispatch(actions.openDialog(title, items, handleSelect)),
     showNotification: (message, variant) =>
       dispatch(actions.showNotification(message, variant, ""))
   };

@@ -7,6 +7,7 @@ import Typography from "@material-ui/core/Typography";
 
 const styles = theme => ({
   card: {
+    backgroundColor: theme.type === "light" ? "red" : "inherit",
     boxShadow: "none",
     border: "1px solid #ccc"
   }

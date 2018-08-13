@@ -9,6 +9,8 @@ import Paper from "@material-ui/core/Paper";
 import MenuItem from "@material-ui/core/MenuItem";
 import { withStyles } from "@material-ui/core/styles";
 
+import { t, res } from "../../services/i18nService";
+
 let suggestions = [];
 
 function renderInput(inputProps) {
@@ -153,7 +155,7 @@ class IntegrationAutosuggest extends React.Component {
         renderSuggestion={renderSuggestion}
         inputProps={{
           classes,
-          placeholder: "Filter by domain name...",
+          placeholder: t(res.FILTER_BY_DOMAIN_NAME),
           value: this.props.value,
           onChange: this.handleChange
         }}

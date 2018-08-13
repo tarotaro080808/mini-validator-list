@@ -1,8 +1,8 @@
 import * as actionTypes from "../actions/actionTypes";
-import { Response, AnalyticsState, ReferralsList } from "../../types";
+import { Response, ReferralsList, State } from "../../types";
 import { updateObject } from "../utility";
 
-const initialState: AnalyticsState = {
+const initialState: State.Analytics = {
   referres: undefined,
   ready: false
 };

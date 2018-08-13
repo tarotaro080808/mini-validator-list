@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import classNames from "classnames";
 
 import { withStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
 import Divider from "@material-ui/core/Divider";
 import Icon from "@material-ui/core/Icon";
 import IconButton from "@material-ui/core/IconButton";
@@ -30,10 +29,12 @@ function Footer(props) {
   return (
     <footer className={classes.footer}>
       <div className={classes.innerWrapper}>
-        <div>
-          <XRPTipBotButton network="twitter" to="CinnappleFun" amount={0.2} />
-        </div>
-        <Divider />
+        <XRPTipBotButton
+          network="twitter"
+          to="CinnappleFun"
+          size={225}
+          amount={0.2}
+        />
         <IconButton
           aria-label="Twitter"
           component="a"

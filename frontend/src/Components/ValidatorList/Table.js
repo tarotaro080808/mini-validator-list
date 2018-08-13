@@ -7,21 +7,21 @@ import TableCell from "@material-ui/core/TableCell";
 import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import TableSortLabel from "@material-ui/core/TableSortLabel";
-import FormGroup from "@material-ui/core/FormGroup";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
 import Tooltip from "@material-ui/core/Tooltip";
+
+import { t, res } from "../../services/i18nService";
 
 const PrimaryTableCell = withStyles(theme => ({
   body: {
-    textDecorationStyle: "dotted"
+    fontSize: "1rem",
+    cursor: "pointer"
   }
 }))(TableCell);
 
 const ValidationPubkeyTableCell = withStyles(theme => ({
   body: {
     fontSize: "1rem",
-    textDecorationStyle: "dotted"
+    cursor: "pointer"
   }
 }))(TableCell);
 
@@ -32,18 +32,18 @@ function getSorting(order, orderBy) {
         a[orderBy] < b[orderBy] ? -1 : a[orderBy] > b[orderBy] ? 1 : 0;
 }
 
-const columnData = [
+const columnData = () => [
   {
     id: "domain",
     numeric: false,
     disablePadding: false,
-    label: "Domain"
+    label: t(res.VALIDATOR_LIST_COL_DOMAIN)
   },
   {
     id: "pubkey",
     numeric: false,
     disablePadding: false,
-    label: "Validation Public Key"
+    label: t(res.VALIDATOR_LIST_COL_PUBKEY)
   }
 ];
 
@@ -58,7 +58,7 @@ class EnhancedTableHead extends React.Component {
     return (
       <TableHead>
         <TableRow>
-          {columnData.map(column => {
+          {columnData().map(column => {
             return (
               <TableCell
                 key={column.id}
@@ -176,12 +176,12 @@ class EnhancedTable extends React.Component {
                   .sort(getSorting(order, orderBy))
                   .map((v, index) => {
                     const count = index + 1;
-                    let domainElement = "(unverified)";
+                    let domainElement = `${t(res.DOMAIN_UNVERIFIED)}`;
                     if (v.domain) {
                       domainElement = (
                         <span>
                           {v.domain}
-                          {!v.verified ? " " + "(unverified)" : ""}
+                          {!v.verified ? ` ${t(res.DOMAIN_UNVERIFIED)}` : ""}
                         </span>
                       );
                     }
@@ -191,21 +191,24 @@ class EnhancedTable extends React.Component {
                           <TableRow hover tabIndex={-1} key={v.id}>
                             <PrimaryTableCell
                               className={classes.primaryTableCell}
-                              component="a"
+                              onClick={() =>
+                                window.open(`https://${v.domain}`, "_blank")
+                              }
                               scope="row"
-                              href={`https://${v.domain}`}
-                              target="_blank"
                             >
                               {domainElement}
                             </PrimaryTableCell>
                             <ValidationPubkeyTableCell
                               className={classes.secondaryTableCell}
-                              component="a"
+                              onClick={() =>
+                                window.open(
+                                  `https://xrpcharts.ripple.com/#/validators/${
+                                    v.pubkey
+                                  }`,
+                                  "_blank"
+                                )
+                              }
                               scope="row"
-                              href={`https://xrpcharts.ripple.com/#/validators/${
-                                v.pubkey
-                              }`}
-                              target="_blank"
                             >
                               <code>{v.pubkey}</code>
                             </ValidationPubkeyTableCell>

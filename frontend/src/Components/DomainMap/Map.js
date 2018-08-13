@@ -89,7 +89,7 @@ class Map extends React.Component {
 
   componentWillReceiveProps(props) {
     if (this.props.selectedDomain !== props.selectedDomain) {
-      const domain = props.selectedDomain;
+      const domain = this.props.domains.filter(a => a.domain === props.selectedDomain)[0];
       this.setState({
         center: [domain.latitude, domain.longitude],
         zoom: 8
@@ -98,7 +98,7 @@ class Map extends React.Component {
   }
 
   render() {
-    const { classes, positions, selectedDomain, themeType } = this.props;
+    const { classes, positions, themeType } = this.props;
     const { center, zoom } = this.state;
     return (
       <LeafletMap center={center} zoom={zoom}>

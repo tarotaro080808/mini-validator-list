@@ -1,39 +1,12 @@
 import * as actionTypes from "../actions/actionTypes";
 import { updateObject } from "../utility";
-import { webStorage } from "../webStorage";
+import { localStorageService } from "../../services/localStorageService";
+import { i18nService } from "../../services/i18nService";
+import { State, AppMode } from "../../types";
 
-enum AppMode {
-  CURRENT_MODE = "CURRENT",
-  ARCHIVE_MODE = "ARCHIVE"
-}
-
-const initialState: any = {
-  mode: AppMode.CURRENT_MODE,
-  archives: undefined,
-  selectedDefaultUnl: undefined,
-  themeType: webStorage.getAppData().themeType || "light"
-};
-
-const selectDefaultUnl = (state, action) => {
-  return updateObject(state, {
-    mode: AppMode.ARCHIVE_MODE,
-    selectedDefaultUnl: action.data,
-    ready: false
-  });
-};
-
-const unselectDefaultUnl = state => {
-  return updateObject(state, {
-    mode: AppMode.CURRENT_MODE,
-    selectedDefaultUnl: undefined,
-    ready: true
-  });
-};
-
-const setArchivesReducer = (state, action) => {
-  return updateObject(state, {
-    archives: action.data
-  });
+const initialState: State.App = {
+  themeType: localStorageService.getAppData().themeType || "light",
+  lang: localStorageService.getAppData().lang || "en",
 };
 
 const setThemeTypeReducer = (state, action) => {
@@ -42,16 +15,23 @@ const setThemeTypeReducer = (state, action) => {
   });
 };
 
+const setLanguageReducer = (state, action) => {
+  i18nService.setLanguage(action.data);
+  return updateObject(state, {
+    lang: action.data
+  });
+};
+
 const reducer = (state = initialState, action) => {
+  if (!i18nService.isLanguageSet()) {
+    setLanguageReducer(state, { data: initialState.lang });
+  }
+
   switch (action.type) {
-    case actionTypes.DEFAULT_UNL_SELECTED:
-      return selectDefaultUnl(state, action);
-    case actionTypes.DEFAULT_UNL_UNSELECTED:
-      return unselectDefaultUnl(state);
-    case actionTypes.SET_ARCHIVES:
-      return setArchivesReducer(state, action);
     case actionTypes.TOGGLE_THEMETYPE:
       return setThemeTypeReducer(state, action);
+    case actionTypes.SET_LANGUAGE:
+      return setLanguageReducer(state, action);
     default:
       return state;
   }

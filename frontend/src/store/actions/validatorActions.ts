@@ -1,4 +1,4 @@
-import { IFilter } from "../../types";
+import { IFilter, Archive } from "../../types";
 import * as actionTypes from "./actionTypes";
 import axiosInstance from "../../util/axios-api";
 
@@ -18,20 +18,62 @@ export const fetchValidatorsFailed = () => {
 export const initValidators = (date, filter) => {
   return async dispatch => {
     try {
-      const data = await Promise.all([
-        axiosInstance.get<any>(`validators${date ? `/${date}` : ""}`)
-      ]);
-      const validators = data[0].data;
+      const promises = [
+        axiosInstance.get<any>(`validators${date ? `/${date}` : ""}`),
+        axiosInstance.get<any>("/archives")
+      ];
+      const data = await Promise.all(promises);
+      const validators = data[0].data.list;
+      const archives = data[1].data.list.map(archive => ({
+        ...archive,
+        id: archive.date
+      }));
+      archives[0].date += " (Latest)";
       dispatch({
         type: actionTypes.SET_VALIDATORS,
         data: {
           lastUpdated: validators.lastUpdated,
-          validators: validators.list,
+          validators: validators,
+          archives: archives,
+          selectedDefaultUnlId: date || archives[0].id,
           filter: filter
         }
       });
     } catch (e) {
       dispatch(fetchValidatorsFailed());
+    }
+  };
+};
+
+export const fetchArchivesFailed = () => {
+  return {
+    type: actionTypes.FETCH_ARCHIVES_FAILED
+  };
+};
+
+export const selectDefaultUnl = date => {
+  return async dispatch => {
+    try {
+      axiosInstance.post(`/archives/${date}`);
+      dispatch({
+        type: actionTypes.DEFAULT_UNL_SELECTED,
+        data: date
+      });
+    } catch (e) {
+      dispatch(fetchArchivesFailed());
+    }
+  };
+};
+
+export const unselectDefaultUnl = () => {
+  return async dispatch => {
+    try {
+      dispatch({
+        type: actionTypes.DEFAULT_UNL_UNSELECTED,
+        data: undefined
+      });
+    } catch (e) {
+      dispatch(fetchArchivesFailed());
     }
   };
 };

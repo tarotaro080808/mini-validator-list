@@ -1,10 +1,13 @@
 import React from "react";
+import { connect } from "react-redux";
+import * as actions from "../../../store/actions/index";
 
 import { withStyles } from "@material-ui/core/styles";
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import Loader from "../../../components/Common/Loader";
 import Map from "../../../components/DomainMap/Map";
-import DomainSelectButton from "../../../components/DomainMap/DomainSelectButton";
+import SelectItemButton from "../../../components/Common/SelectItemButton";
+import { t, res } from "../../../services/i18nService";
 
 const styles = theme => ({
   panel: {
@@ -15,15 +18,46 @@ const styles = theme => ({
   }
 });
 
+const formatDomainName = domain => {
+  const region =
+    (domain.city ? domain.city + " " : "") +
+    (domain.region_name ? domain.region_name + " " : "");
+  const country = domain.country_name ? domain.country_name : "";
+  const fullName = (region ? region + ", " : "") + country;
+  return fullName || "Unknown";
+};
+
+const createLocateDomainOptions = items => {
+  return items.map(item => ({
+    primaryLabel: item.domain,
+    secondaryLabel: formatDomainName(item.domain),
+    value: item.domain
+  }));
+};
+
 class DomainMap extends React.Component {
   state = {
     selectedDomain: undefined
   };
 
-  handleSelectDomain = domain => {
+  handleSelectDomain = (key, domain) => {
     this.setState({
       selectedDomain: domain
     });
+  };
+
+  handleSelectDomainDialogOpen = () => {
+    const domainItem = {
+      key: "domainMap",
+      primaryLabel: t(res.LOCATE_DOMAIN),
+      selectedValue: undefined,
+      options: createLocateDomainOptions(this.props.vals.uniqueDomains)
+    };
+    this.props.onDomainSelectOpen(
+      t(res.LOCATE_DOMAIN),
+      domainItem,
+      this.handleSelectDomain
+    );
   };
 
   render() {
@@ -42,9 +76,9 @@ class DomainMap extends React.Component {
         />
       );
       footer = (
-        <DomainSelectButton
-          domains={vals.uniqueDomains}
-          handleSelect={this.handleSelectDomain}
+        <SelectItemButton
+          buttonText={t(res.LOCATE_DOMAIN)}
+          onDialogOpen={this.handleSelectDomainDialogOpen}
         />
       );
     }
@@ -52,7 +86,7 @@ class DomainMap extends React.Component {
     return (
       <ExpandablePanel
         className={classes.panel}
-        title="Domain Map"
+        title={t(res.DOMAIN_MAP)}
         expanded={false}
         footer={footer}
       >
@@ -63,5 +97,20 @@ class DomainMap extends React.Component {
     );
   }
 }
+const mapStateToProps = state => {
+  return {
+    vals: state.validators
+  };
+};
 
-export default withStyles(styles, { withTheme: true })(DomainMap);
+const mapDispatchToProps = dispatch => {
+  return {
+    onDomainSelectOpen: (title, items, handleSelect) =>
+      dispatch(actions.openDialog(title, items, handleSelect))
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles, { withTheme: true })(DomainMap));
