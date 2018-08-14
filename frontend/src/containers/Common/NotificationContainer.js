@@ -1,11 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-import { withStyles } from "@material-ui/core/styles";
-
 import MessageSnackbar from "../../components/Common/MessageSnackbar";
-
-const styles = theme => ({});
 
 class NotificationContainer extends React.Component {
   render() {
@@ -25,4 +21,4 @@ const mapStateToProps = state => {
 export default connect(
   mapStateToProps,
   null
-)(withStyles(styles)(NotificationContainer));
+)(NotificationContainer);

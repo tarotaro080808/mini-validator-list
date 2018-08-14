@@ -5,24 +5,28 @@ let pendingRequestCount = 0;
 const withErrorHandler = (WrappedComponent, axios) => {
   return class extends React.Component {
     state = {
-      loading: false
+      isLoading: false
     };
 
     componentWillMount() {
       this.reqInterceptor = axios.interceptors.request.use(req => {
         pendingRequestCount++;
-        this.setState({
-          loading: pendingRequestCount > 0
-        });
+        if (pendingRequestCount > 0 && !this.state.isLoading) {
+          this.setState({
+            isLoading: true
+          });
+        }
         return req;
       });
       this.resInterceptor = axios.interceptors.response.use(
         res => {
+          pendingRequestCount--;
           setTimeout(() => {
-            pendingRequestCount--;
-            this.setState({
-              loading: pendingRequestCount > 0
-            });
+            if (pendingRequestCount === 0 && this.state.isLoading) {
+              this.setState({
+                isLoading: false
+              });
+            }
           }, 500);
           return res;
         },
@@ -43,7 +47,7 @@ const withErrorHandler = (WrappedComponent, axios) => {
 
     render() {
       return (
-        <WrappedComponent {...this.props} isLoading={this.state.loading} />
+        <WrappedComponent {...this.props} isLoading={this.state.isLoading} />
       );
     }
   };

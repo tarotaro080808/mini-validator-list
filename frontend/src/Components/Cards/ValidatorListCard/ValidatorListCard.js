@@ -9,7 +9,9 @@ import Table from "../../../components/ValidatorList/Table";
 const styles = theme => ({
   wrapper: {
     width: "100%"
-  }
+  },
+  loaderPrimaryColor: "#f3f3f3",
+  loaderSecondaryColor: "#ecebeb"
 });
 
 const Loader = props => (

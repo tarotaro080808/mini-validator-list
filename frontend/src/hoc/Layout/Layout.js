@@ -19,6 +19,7 @@ const styles = theme => ({
     padding: theme.spacing.unit * 3,
     overflow: "auto",
     maxHeight: "100vh",
+    paddingBottom: theme.spacing.unit * 6,
     minWidth: 0 // So the Typography noWrap works
   },
   toolbar: theme.mixins.toolbar,

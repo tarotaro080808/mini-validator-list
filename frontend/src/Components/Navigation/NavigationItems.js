@@ -5,14 +5,11 @@ import { withStyles } from "@material-ui/core/styles";
 import Typography from "@material-ui/core/Typography";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
-import ListItemIcon from "@material-ui/core/ListItemIcon";
-import ListSubheader from "@material-ui/core/ListSubheader";
+import Collapse from "@material-ui/core/Collapse";
 import Divider from "@material-ui/core/Divider";
 
 import { t, res } from "../../services/i18nService";
 import { links } from "../../menu";
-import classNames from "classnames";
-import Icon from "@material-ui/core/Icon";
 
 import List from "@material-ui/core/List";
 import XRPTipBotButton from "../Common/XRPTipBotButton";
@@ -27,17 +24,18 @@ const styles = theme => ({
     fontWeight: "bold"
   },
   nested: {
-    paddingLeft: theme.spacing.unit * 10
+    paddingLeft: theme.spacing.unit * 4
   },
   bottom: {
     position: "absolute",
     width: "100%",
-    bottom: 0
+    bottom: 0,
+    paddingBottom: theme.spacing.unit * 5
   }
 });
 
 class NavigationItems extends React.Component {
-  state = { externalLinkOpen: true };
+  state = { externalLinkOpen: false };
   handleClick = () => {
     this.setState(state => ({ externalLinkOpen: !state.externalLinkOpen }));
   };
@@ -57,9 +55,9 @@ class NavigationItems extends React.Component {
               }
             />
           </ListItem>
+          <Divider />
           {links.map((link, index) => (
             <React.Fragment key={`nav-${index}`}>
-              <Divider />
               <ListItem
                 button
                 component={link.path.startsWith("http") ? "a" : Link}
@@ -68,14 +66,6 @@ class NavigationItems extends React.Component {
                 target={link.path.startsWith("http") ? "_blank" : undefined}
                 onClick={handleDrawerToggle}
               >
-                <ListItemIcon>
-                  <Icon
-                    className={classNames(link.icon)}
-                    color={
-                      location.pathname === link.path ? "secondary" : undefined
-                    }
-                  />
-                </ListItemIcon>
                 {location.pathname === link.path ? (
                   <ListItemText
                     disableTypography
@@ -94,47 +84,51 @@ class NavigationItems extends React.Component {
               </ListItem>
             </React.Fragment>
           ))}
-          <Divider />
-          <List
-            component="div"
-            disablePadding
-            className={classes.bottom}
-            subheader={
-              <ListSubheader component="div">
-                {t(res.MENU_GET_IN_TOUCH)}
-              </ListSubheader>
-            }
+          <ListItem button onClick={this.handleClick}>
+            <ListItemText
+              disableTypography
+              primary={
+                <Typography
+                  className={this.state.externalLinkOpen ? classes.link : ""}
+                >
+                  {t(res.MENU_GET_IN_TOUCH)}
+                </Typography>
+              }
+            />
+          </ListItem>
+          <Collapse
+            in={this.state.externalLinkOpen}
+            timeout="auto"
+            unmountOnExit
           >
-            <Divider />
-            <ListItem
-              button
-              component="a"
-              href="https://twitter.com/CinnappleFun"
-              target="_blank"
-            >
-              <ListItemIcon>
-                <Icon className={classNames("fab fa-twitter")} />
-              </ListItemIcon>
-              <ListItemText
-                disableTypography
-                primary={<Typography>@CinnappleFun</Typography>}
-              />
-            </ListItem>
-            <ListItem
-              button
-              component="a"
-              href="https://github.com/cinnapple/mini-validator-list"
-              target="_blank"
-            >
-              <ListItemIcon>
-                <Icon className={classNames("fab fa-github")} />
-              </ListItemIcon>
-              <ListItemText
-                disableTypography
-                primary={<Typography>Source</Typography>}
-              />
-            </ListItem>
-            <Divider />
+            <List component="div" disablePadding>
+              <ListItem
+                className={classes.nested}
+                button
+                component="a"
+                href="https://twitter.com/CinnappleFun"
+                target="_blank"
+              >
+                <ListItemText
+                  disableTypography
+                  primary={<Typography>@CinnappleFun</Typography>}
+                />
+              </ListItem>
+              <ListItem
+                className={classes.nested}
+                button
+                component="a"
+                href="https://github.com/cinnapple/mini-validator-list"
+                target="_blank"
+              >
+                <ListItemText
+                  disableTypography
+                  primary={<Typography>Source</Typography>}
+                />
+              </ListItem>
+            </List>
+          </Collapse>
+          <List component="div" disablePadding className={classes.bottom}>
             <ListItem>
               <ListItemText
                 primary={

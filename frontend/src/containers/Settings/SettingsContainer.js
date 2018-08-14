@@ -2,8 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 
-import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";
 import axios from "../../util/axios-api";
+import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";
+
 import { t, res, i18nService } from "../../services/i18nService";
 import SelectableListPanel from "../../components/Panels/SelectableListPanel";
 

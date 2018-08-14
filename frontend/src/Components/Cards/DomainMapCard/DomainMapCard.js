@@ -5,7 +5,7 @@ import { withStyles } from "@material-ui/core/styles";
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import Loader from "../../../components/Common/Loader";
 import Map from "../../../components/DomainMap/Map";
-import SelectItemButton from "../../../components/Common/SelectItemButton";
+import Button from "../../../components/Common/Button";
 import { t, res } from "../../../services/i18nService";
 
 const styles = theme => ({
@@ -75,10 +75,12 @@ class DomainMap extends React.Component {
         />
       );
       footer = (
-        <SelectItemButton
-          buttonText={t(res.LOCATE_DOMAIN)}
-          onDialogOpen={this.handleSelectDomainDialogOpen}
-        />
+        <div style={{ width: "100%", textAlign: "right" }}>
+          <Button
+            buttonText={t(res.LOCATE_DOMAIN)}
+            onClick={this.handleSelectDomainDialogOpen}
+          />
+        </div>
       );
     }
 

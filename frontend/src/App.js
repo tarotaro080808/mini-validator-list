@@ -5,11 +5,13 @@ import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
+import { t, res } from "./services/i18nService";
 import Layout from "./hoc/Layout/Layout";
+
 import MainContainer from "./containers/Main/MainContainer";
 import SettingsContainer from "./containers/Settings/SettingsContainer";
 import SelectDialogContainer from "./containers/Common/SelectDialogContainer";
-import { t, res } from "./services/i18nService";
+import NetworkProgressContainer from "./containers/Common/NetworkProgressContainer";
 
 const createDynamicMuiTheme = type => {
   return createMuiTheme({
@@ -43,6 +45,7 @@ class App extends React.Component {
     return (
       <MuiThemeProvider theme={createDynamicMuiTheme(app.themeType)}>
         <CssBaseline />
+        <NetworkProgressContainer />
         <Layout title={t(res.APP_TITLE)} pathname={location.pathname}>
           {routes}
         </Layout>

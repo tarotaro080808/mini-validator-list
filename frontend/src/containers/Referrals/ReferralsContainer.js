@@ -16,7 +16,7 @@ class Component extends React.Component {
   }
 
   render() {
-    const { classes, an } = this.props;
+    const { an } = this.props;
 
     return (
       <React.Fragment>

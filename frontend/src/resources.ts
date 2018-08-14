@@ -5,7 +5,7 @@ const res = {
   },
   HOME: { en: "Home", ja: "ホーム" },
   DONATE: { en: "Donate", ja: "寄付" },
-  FILTER: { en: "Filter", ja: "絞り込み" },
+  FILTER: { en: "Filter", ja: "フィルター" },
   DEFAULT_UNL_ONLY: { en: "Default UNL Only", ja: "デフォルトUNLのみ表示" },
   VERIFIED_DOMAINS_ONLY: {
     en: "Verified Domains Only",
@@ -13,6 +13,10 @@ const res = {
   },
   MAIN_NET_ONLY: { en: "Main Net Only", ja: "メインネットのみ表示" },
   FILTER_BY_DOMAIN_NAME: { en: "Filter by domain", ja: "ドメイン名で絞り込む" },
+  CLEAR_FILTER: {
+    en: "Reset",
+    ja: "リセット"
+  },
   LOAD_ANOTHER_DEFAULT_UNL: {
     en: "Load Another Default UNL",
     ja: "他のデフォルトUNLを読み込む"

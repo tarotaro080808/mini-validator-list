@@ -8,7 +8,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 
 import ExpandablePanel from "../../Common/ExpandablePanel";
 import IntegrationAutosuggest from "../../Filter/IntegrationAutosuggest";
-import SelectItemButton from "../../Common/SelectItemButton";
+import Button from "../../Common/Button";
 import { t, res } from "../../../services/i18nService";
 
 const styles = theme => ({
@@ -32,6 +32,9 @@ const styles = theme => ({
   },
   iconSmall: {
     fontSize: 20
+  },
+  clearFilterButton: {
+    color: theme.palette.primary
   }
 });
 
@@ -65,17 +68,14 @@ class Filter extends React.Component {
     this.props.onApplyFilter(newFilter);
   };
 
-  handleClear() {
-    this.setState(
-      {
-        ...clearFilter,
-        shareUrl: urlbase
-      },
-      () => {
-        this.props.onApplyFilter(clearFilter);
-      }
-    );
-  }
+  handleClear = () => {
+    this.props.onApplyFilter(clearFilter);
+    if (
+      this.props.vals.selectedDefaultUnlId !== this.props.vals.archives[0].id
+    ) {
+      this.props.onDefaultUnlSelected(this.props.vals.archives[0].id);
+    }
+  };
 
   handleSelectDefaultUnl = (key, value) => {
     this.props.onDefaultUnlSelected(value);
@@ -96,16 +96,30 @@ class Filter extends React.Component {
   };
 
   render() {
-    const { classes, vals } = this.props;
+    const { classes, vals, isLoading } = this.props;
     const { defaultOnly, verifiedOnly, mainNetOnly, filterWord } = vals.filter;
     const isDisabled =
-      vals.archives && vals.selectedDefaultUnlId !== vals.archives[0].id;
+      isLoading ||
+      (vals.archives && vals.selectedDefaultUnlId !== vals.archives[0].id);
 
     const footer = (
-      <SelectItemButton
-        buttonText={t(res.LOAD_ANOTHER_DEFAULT_UNL)}
-        onDialogOpen={this.handleSelectDefaultUnlDialogOpen}
-      />
+      <Grid container spacing={0}>
+        <Grid item xs={3}>
+          <Button
+            disabled={isLoading}
+            className={classes.clearFilterButton}
+            buttonText={t(res.CLEAR_FILTER)}
+            onClick={this.handleClear}
+          />
+        </Grid>
+        <Grid item xs={9} style={{ textAlign: "right" }}>
+          <Button
+            disabled={isLoading}
+            buttonText={t(res.LOAD_ANOTHER_DEFAULT_UNL)}
+            onClick={this.handleSelectDefaultUnlDialogOpen}
+          />
+        </Grid>
+      </Grid>
     );
 
     return (
