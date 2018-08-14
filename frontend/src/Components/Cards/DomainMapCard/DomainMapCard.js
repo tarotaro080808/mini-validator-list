@@ -1,8 +1,7 @@
 import React from "react";
-import { connect } from "react-redux";
-import * as actions from "../../../store/actions/index";
 
 import { withStyles } from "@material-ui/core/styles";
+
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import Loader from "../../../components/Common/Loader";
 import Map from "../../../components/DomainMap/Map";
@@ -97,20 +96,5 @@ class DomainMap extends React.Component {
     );
   }
 }
-const mapStateToProps = state => {
-  return {
-    vals: state.validators
-  };
-};
 
-const mapDispatchToProps = dispatch => {
-  return {
-    onDomainSelectOpen: (title, items, handleSelect) =>
-      dispatch(actions.openDialog(title, items, handleSelect))
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles, { withTheme: true })(DomainMap));
+export default withStyles(styles, { withTheme: true })(DomainMap);

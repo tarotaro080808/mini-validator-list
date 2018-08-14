@@ -2,21 +2,14 @@ import React from "react";
 import { connect } from "react-redux";
 import * as actions from "../../store/actions/index";
 
-import { withStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
-
-import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";
 import axios from "../../util/axios-api";
-import Filter from "./Panels/Filter";
-import Stats from "./Panels/Stats";
-import DomainMap from "./Panels/DomainMap";
-import ValidatorList from "./Panels/ValidatorList";
+import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";
+import GridLayout from "../../hoc/Layout/GridLayout";
 
-const styles = theme => ({
-  gridItem: {
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+import FilterCard from "../../components/Cards/FilterCard/FilterCard";
+import StatsCard from "../../components/Cards/StatsCard/StatsCard";
+import DomainMapCard from "../../components/Cards/DomainMapCard/DomainMapCard";
+import ValidatorListCard from "../../components/Cards/ValidatorListCard/ValidatorListCard";
 
 class MainContainer extends React.Component {
   componentDidMount() {
@@ -41,25 +34,34 @@ class MainContainer extends React.Component {
   }
 
   render() {
-    const { classes, vals, app, isLoading } = this.props;
+    const {
+      vals,
+      app,
+      isLoading,
+      onApplyFilter,
+      onDefaultUnlSelected,
+      onSelectItemPanelOpen
+    } = this.props;
 
     return (
-      <React.Fragment>
-        <Grid container spacing={0}>
-          <Grid item xs={12} className={classes.gridItem}>
-            <Filter vals={vals} app={app} isLoading={isLoading} />
-          </Grid>
-          <Grid item xs={12} className={classes.gridItem}>
-            <Stats vals={vals} isLoading={isLoading} />
-          </Grid>
-          <Grid item xs={12} className={classes.gridItem}>
-            <DomainMap vals={vals} app={app} isLoading={isLoading} />
-          </Grid>
-          <Grid item xs={12}>
-            <ValidatorList vals={vals} isLoading={isLoading} />
-          </Grid>
-        </Grid>
-      </React.Fragment>
+      <GridLayout>
+        <FilterCard
+          vals={vals}
+          app={app}
+          isLoading={isLoading}
+          onApplyFilter={onApplyFilter}
+          onDefaultUnlSelected={onDefaultUnlSelected}
+          onDefaultUnlSelectOpen={onSelectItemPanelOpen}
+        />
+        <StatsCard vals={vals} isLoading={isLoading} />
+        <DomainMapCard
+          vals={vals}
+          app={app}
+          isLoading={isLoading}
+          onDomainSelectOpen={onSelectItemPanelOpen}
+        />
+        <ValidatorListCard vals={vals} isLoading={isLoading} />
+      </GridLayout>
     );
   }
 }
@@ -76,11 +78,15 @@ const mapDispatchToProps = dispatch => {
     onInitValidators: (date, filter) =>
       dispatch(actions.initValidators(date, filter)),
     showNotification: (message, variant) =>
-      dispatch(actions.showNotification(message, variant, ""))
+      dispatch(actions.showNotification(message, variant, "")),
+    onSelectItemPanelOpen: (title, items, handleSelect) =>
+      dispatch(actions.openDialog(title, items, handleSelect)),
+    onApplyFilter: newFilter => dispatch(actions.filterValidators(newFilter)),
+    onDefaultUnlSelected: date => dispatch(actions.selectDefaultUnl(date))
   };
 };
 
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(withNetworkHandler(MainContainer, axios)));
+)(withNetworkHandler(MainContainer, axios));

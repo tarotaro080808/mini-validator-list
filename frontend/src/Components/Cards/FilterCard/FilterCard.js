@@ -1,6 +1,4 @@
 import React from "react";
-import { connect } from "react-redux";
-import * as actions from "../../../store/actions/index";
 
 import { withStyles } from "@material-ui/core/styles";
 import Grid from "@material-ui/core/Grid";
@@ -8,10 +6,9 @@ import Switch from "@material-ui/core/Switch";
 import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 
-import ExpandablePanel from "../../../components/Common/ExpandablePanel";
-import IntegrationAutosuggest from "../../../components/Filter/IntegrationAutosuggest";
-import SelectItemButton from "../../../components/Common/SelectItemButton";
-
+import ExpandablePanel from "../../Common/ExpandablePanel";
+import IntegrationAutosuggest from "../../Filter/IntegrationAutosuggest";
+import SelectItemButton from "../../Common/SelectItemButton";
 import { t, res } from "../../../services/i18nService";
 
 const styles = theme => ({
@@ -183,25 +180,4 @@ class Filter extends React.Component {
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    vals: state.validators,
-    ntf: state.notification
-  };
-};
-
-const mapDispatchToProps = dispatch => {
-  return {
-    onApplyFilter: newFilter => dispatch(actions.filterValidators(newFilter)),
-    onDefaultUnlSelected: date => dispatch(actions.selectDefaultUnl(date)),
-    onDefaultUnlSelectOpen: (title, items, handleSelect) =>
-      dispatch(actions.openDialog(title, items, handleSelect)),
-    showNotification: (message, variant) =>
-      dispatch(actions.showNotification(message, variant, ""))
-  };
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles, { withTheme: true })(Filter));
+export default withStyles(styles, { withTheme: true })(Filter);

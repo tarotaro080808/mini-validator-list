@@ -3,9 +3,8 @@ import React from "react";
 import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 
-import ExpandablePanel from "../../../components/Common/ExpandablePanel";
-import ResultStatsPanel from "../../../components/Stats/ResultStatsPanel";
-
+import ExpandablePanel from "../../Common/ExpandablePanel";
+import ResultStatsPanel from "../../Stats/ResultStatsPanel";
 import { t, res } from "../../../services/i18nService";
 
 const styles = theme => ({
