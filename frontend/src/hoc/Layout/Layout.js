@@ -6,25 +6,20 @@ import SideDrawer from "../../components/Navigation/SideDrawer";
 
 const styles = theme => ({
   root: {
-    flexGrow: 1,
-    zIndex: 1,
-    overflow: "hidden",
-    position: "relative",
-    display: "flex",
-    width: "100%"
+    flexGrow: 1
   },
   content: {
     flexGrow: 1,
     backgroundColor: theme.palette.background.default,
-    padding: theme.spacing.unit * 3,
-    overflow: "auto",
-    maxHeight: "100vh",
-    paddingBottom: theme.spacing.unit * 6,
-    minWidth: 0 // So the Typography noWrap works
+    padding: theme.spacing.unit * 1,
+    paddingBottom: theme.spacing.unit * 3,
+    [theme.breakpoints.up("md")]: {
+      marginLeft: theme.drawerWidth
+    }
   },
   toolbar: theme.mixins.toolbar,
   innerContent: {
-    maxWidth: "900px",
+    maxWidth: "724px",
     margin: "0 auto"
   }
 });
@@ -44,11 +39,6 @@ class Layout extends React.Component {
 
     return (
       <div className={classes.root}>
-        <Toolbar
-          title={title}
-          handleDrawerToggle={this.handleDrawerToggle}
-          pathname={pathname}
-        />
         <SideDrawer
           title={title}
           open={drawerOpen}
@@ -56,6 +46,11 @@ class Layout extends React.Component {
         />
         <main className={classes.content}>
           <div className={classes.toolbar} />
+          <Toolbar
+            title={title}
+            handleDrawerToggle={this.handleDrawerToggle}
+            pathname={pathname}
+          />
           <div className={classes.innerContent}>{children}</div>
         </main>
       </div>

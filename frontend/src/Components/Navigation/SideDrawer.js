@@ -6,14 +6,11 @@ import Drawer from "@material-ui/core/Drawer";
 import Hidden from "@material-ui/core/Hidden";
 import NavigationItems from "./NavigationItems";
 
-const drawerWidth = 250;
-
 const styles = theme => ({
   drawerPaper: {
-    width: drawerWidth,
-    [theme.breakpoints.up("md")]: {
-      position: "relative"
-    }
+    width: theme.drawerWidth,
+    zIndex: 1002,
+    overflowX: "hidden"
   }
 });
 

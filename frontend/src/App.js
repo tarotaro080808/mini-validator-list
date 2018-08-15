@@ -26,7 +26,8 @@ const createDynamicMuiTheme = type => {
     },
     typography: {
       fontFamily: ["'Roboto'", "sans-serif"].join(",")
-    }
+    },
+    drawerWidth: 250
   });
 };
 

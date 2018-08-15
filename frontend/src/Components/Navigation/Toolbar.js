@@ -11,14 +11,19 @@ import { links } from "../../menu";
 import { t } from "../../services/i18nService";
 
 const styles = theme => ({
-  appBar: {},
+  appBar: {
+    zIndex: 1001,
+    [theme.breakpoints.up("md")]: {
+      width: `calc(100% - ${theme.drawerWidth}px)`
+    }
+  },
   navIconHide: {
     [theme.breakpoints.up("md")]: {
       display: "none"
     }
   },
   subTitle: {
-    fontSize: "130%",
+    fontSize: "110%",
     marginLeft: "1rem"
   }
 });
@@ -38,26 +43,28 @@ class MyToolbar extends React.Component {
     const currentRouteName = getCurrentRouteName(pathname);
 
     return (
-      <AppBar position="absolute" className={classes.appBar}>
-        <Toolbar>
-          <IconButton
-            color="inherit"
-            aria-label="Open drawer"
-            onClick={handleDrawerToggle}
-            className={classes.navIconHide}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Typography
-            variant="title"
-            color="inherit"
-            noWrap
-            className={classes.subTitle}
-          >
-            {currentRouteName}
-          </Typography>
-        </Toolbar>
-      </AppBar>
+      <div className={classes.root}>
+        <AppBar position="fixed" className={classes.appBar}>
+          <Toolbar>
+            <IconButton
+              color="inherit"
+              aria-label="Open drawer"
+              onClick={handleDrawerToggle}
+              className={classes.navIconHide}
+            >
+              <MenuIcon />
+            </IconButton>
+            <Typography
+              variant="title"
+              color="inherit"
+              noWrap
+              className={classes.subTitle}
+            >
+              {currentRouteName}
+            </Typography>
+          </Toolbar>
+        </AppBar>
+      </div>
     );
   }
 }
