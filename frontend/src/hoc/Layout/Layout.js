@@ -34,7 +34,15 @@ class Layout extends React.Component {
   };
 
   render() {
-    const { classes, title, children, pathname } = this.props;
+    const {
+      classes,
+      app,
+      title,
+      children,
+      pathname,
+      onChangeLanguage,
+      onDialogOpen
+    } = this.props;
     const { drawerOpen } = this.state;
 
     return (
@@ -47,8 +55,11 @@ class Layout extends React.Component {
         <main className={classes.content}>
           <div className={classes.toolbar} />
           <Toolbar
+            app={app}
             title={title}
-            handleDrawerToggle={this.handleDrawerToggle}
+            onChangeLanguage={onChangeLanguage}
+            onDrawerToggle={this.handleDrawerToggle}
+            onDialogOpen={onDialogOpen}
             pathname={pathname}
           />
           <div className={classes.innerContent}>{children}</div>

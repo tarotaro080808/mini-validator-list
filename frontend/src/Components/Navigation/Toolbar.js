@@ -10,6 +10,8 @@ import Typography from "@material-ui/core/Typography";
 import { links } from "../../menu";
 import { t } from "../../services/i18nService";
 
+import LanguageSettingButton from "./LanguageSettingButton";
+
 const styles = theme => ({
   appBar: {
     zIndex: 1001,
@@ -21,6 +23,10 @@ const styles = theme => ({
     [theme.breakpoints.up("md")]: {
       display: "none"
     }
+  },
+  languageIcon: {
+    position: "absolute",
+    right: "1rem"
   },
   subTitle: {
     fontSize: "110%",
@@ -38,7 +44,14 @@ const getCurrentRouteName = pathname => {
 
 class MyToolbar extends React.Component {
   render() {
-    const { classes, handleDrawerToggle, pathname } = this.props;
+    const {
+      classes,
+      app,
+      onDrawerToggle,
+      onChangeLanguage,
+      onDialogOpen,
+      pathname
+    } = this.props;
 
     const currentRouteName = getCurrentRouteName(pathname);
 
@@ -49,7 +62,7 @@ class MyToolbar extends React.Component {
             <IconButton
               color="inherit"
               aria-label="Open drawer"
-              onClick={handleDrawerToggle}
+              onClick={onDrawerToggle}
               className={classes.navIconHide}
             >
               <MenuIcon />
@@ -62,6 +75,14 @@ class MyToolbar extends React.Component {
             >
               {currentRouteName}
             </Typography>
+            <div className={classes.languageIcon}>
+              <LanguageSettingButton
+                selectedValue={app.lang}
+                onItemClick={(title, items) =>
+                  onDialogOpen(title, items, app.lang, onChangeLanguage)
+                }
+              />
+            </div>
           </Toolbar>
         </AppBar>
       </div>

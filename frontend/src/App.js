@@ -1,5 +1,6 @@
 import React from "react";
 import { connect } from "react-redux";
+import * as actions from "./store/actions/index";
 import { Switch, Route, Redirect, withRouter } from "react-router-dom";
 
 import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
@@ -33,7 +34,7 @@ const createDynamicMuiTheme = type => {
 
 class App extends React.Component {
   render() {
-    const { app, location } = this.props;
+    const { app, location, onChangeLanguage, onDialogOpen } = this.props;
 
     const routes = (
       <Switch>
@@ -47,7 +48,13 @@ class App extends React.Component {
       <MuiThemeProvider theme={createDynamicMuiTheme(app.themeType)}>
         <CssBaseline />
         <NetworkProgressContainer />
-        <Layout title={t(res.APP_TITLE)} pathname={location.pathname}>
+        <Layout
+          app={app}
+          title={t(res.APP_TITLE)}
+          pathname={location.pathname}
+          onChangeLanguage={onChangeLanguage}
+          onDialogOpen={onDialogOpen}
+        >
           {routes}
         </Layout>
         <SelectDialogContainer />
@@ -63,9 +70,24 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = dispatch => {
+  return {
+    onChangeLanguage: lang => dispatch(actions.setLanguage(lang)),
+    onDialogOpen: (title, items, selectedValue, handleSelect) =>
+      dispatch(
+        actions.openDialog({
+          title,
+          items,
+          handleSelect,
+          selectedValue
+        })
+      )
+  };
+};
+
 export default withRouter(
   connect(
     mapStateToProps,
-    null
+    mapDispatchToProps
   )(App)
 );

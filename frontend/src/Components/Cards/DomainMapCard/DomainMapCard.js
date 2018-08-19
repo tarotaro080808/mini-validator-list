@@ -6,6 +6,7 @@ import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import Loader from "../../../components/Common/Loader";
 import Map from "../../../components/DomainMap/Map";
 import Button from "../../../components/Common/Button";
+import SelectDomainButton from "./SelectDomainButton";
 import { t, res } from "../../../services/i18nService";
 
 const styles = theme => ({
@@ -17,68 +18,41 @@ const styles = theme => ({
   }
 });
 
-const formatDomainName = domain => {
-  const region =
-    (domain.city ? domain.city + " " : "") +
-    (domain.region_name ? domain.region_name + " " : "");
-  const country = domain.country_name ? domain.country_name : "";
-  const fullName = (region ? region + ", " : "") + country;
-  return fullName || "Unknown";
-};
-
-const createLocateDomainOptions = items => {
-  return items.map(item => ({
-    primaryLabel: item.domain,
-    secondaryLabel: formatDomainName(item),
-    value: item.domain
-  }));
-};
-
 class DomainMap extends React.Component {
   state = {
     selectedDomain: undefined
   };
 
-  handleSelectDomain = (key, domain) => {
+  handleSelectDomain = domain => {
     this.setState({
       selectedDomain: domain
     });
   };
 
-  handleSelectDomainDialogOpen = () => {
-    const domainItem = {
-      key: "domainMap",
-      primaryLabel: t(res.LOCATE_DOMAIN),
-      selectedValue: undefined,
-      options: createLocateDomainOptions(this.props.vals.uniqueDomains)
-    };
-    this.props.onDomainSelectOpen(
-      t(res.LOCATE_DOMAIN),
-      domainItem,
-      this.handleSelectDomain
-    );
-  };
-
   render() {
-    const { classes, vals, app, isLoading } = this.props;
+    const { classes, vals, app, isLoading, onDialogOpen } = this.props;
+    const { uniqueDomains, positions } = vals;
     const { selectedDomain } = this.state;
     let content = <Loader speed={2} height={230} />;
     let footer = <React.Fragment />;
 
-    if (!isLoading && vals.uniqueDomains) {
+    if (!isLoading && uniqueDomains) {
       content = (
         <Map
-          domains={vals.uniqueDomains}
+          domains={uniqueDomains}
           selectedDomain={selectedDomain}
-          positions={vals.positions}
+          positions={positions}
           themeType={app.themeType}
         />
       );
       footer = (
         <div style={{ width: "100%", textAlign: "right" }}>
-          <Button
-            buttonText={t(res.LOCATE_DOMAIN)}
-            onClick={this.handleSelectDomainDialogOpen}
+          <SelectDomainButton
+            isLoading={isLoading}
+            domains={uniqueDomains}
+            onClick={(title, items) =>
+              onDialogOpen(title, items, undefined, this.handleSelectDomain)
+            }
           />
         </div>
       );
@@ -87,7 +61,7 @@ class DomainMap extends React.Component {
     return (
       <ExpandablePanel
         className={classes.panel}
-        title={t(res.DOMAIN_MAP)}
+        title={t(res.DOMAINMAP)}
         expanded={false}
         footer={footer}
       >

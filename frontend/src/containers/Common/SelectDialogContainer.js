@@ -5,11 +5,20 @@ import * as actions from "../../store/actions/index";
 import SelectorDialog from "../../components/Common/SelectorDialog";
 
 class SelectDialogContainer extends React.Component {
+  handleSelect = item => {
+    this.props.dia.handleSelect(item.value);
+    this.props.onClose();
+  };
+
   render() {
-    const { dia, onClose, onSelectItem } = this.props;
+    const { dia, onClose } = this.props;
 
     return (
-      <SelectorDialog dia={dia} onClose={onClose} onSelectItem={onSelectItem} />
+      <SelectorDialog
+        dia={dia}
+        onClose={onClose}
+        onSelectItem={this.handleSelect}
+      />
     );
   }
 }
@@ -22,8 +31,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
   return {
-    onSelectItem: item => dispatch(actions.selectDialogItem(item)),
-    onClose: item => dispatch(actions.closeDialog(item))
+    onClose: () => dispatch(actions.closeDialog())
   };
 };
 

@@ -2,18 +2,17 @@ import React from "react";
 
 import { withStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
-import ListItemText from "@material-ui/core/ListItemText";
-import ListItem from "@material-ui/core/ListItem";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import IconButton from "@material-ui/core/IconButton";
 import Typography from "@material-ui/core/Typography";
+import ArrowBackIcon from "@material-ui/icons/ArrowBackRounded";
 import Slide from "@material-ui/core/Slide";
 import withMobileDialog from "@material-ui/core/withMobileDialog";
 
-import FaIcon from "./FaIcon";
+import SelectableListItem from "./SelectableListItem";
 
 const styles = theme => ({
   appBar: {},
@@ -27,9 +26,6 @@ const styles = theme => ({
   },
   list: {
     minWidth: "30rem"
-  },
-  selectedItemCheckIcon: {
-    color: theme.palette.primary.contrastText
   },
   content: {
     flexGrow: 1,
@@ -45,14 +41,9 @@ function Transition(props) {
 }
 
 class SelectorDialog extends React.Component {
-  handleSelect = (key, item) => {
-    this.props.onSelectItem(item);
-    this.props.dia.handleSelect(key, item.value);
-  };
-
   render() {
-    const { classes, fullScreen, dia, onClose } = this.props;
-    const { items, title, open } = dia;
+    const { classes, fullScreen, dia, onSelectItem, onClose } = this.props;
+    const { items, selectedValue, title, open } = dia;
 
     return (
       <div className={classes.root}>
@@ -67,7 +58,7 @@ class SelectorDialog extends React.Component {
             <Toolbar>
               {fullScreen && (
                 <IconButton color="inherit" onClick={onClose} aria-label="Back">
-                  <FaIcon icon="fas fa-arrow-left" />
+                  <ArrowBackIcon />
                 </IconButton>
               )}
               <Typography
@@ -83,22 +74,16 @@ class SelectorDialog extends React.Component {
           <div className={classes.content}>
             <List className={!fullScreen ? classes.list : undefined}>
               {items &&
-                items.options.map((item, i) => (
-                  <div key={i}>
-                    <ListItem
-                      button
-                      onClick={() => this.handleSelect(items.key, item)}
-                    >
-                      <ListItemText
-                        primary={item.primaryLabel}
-                        secondary={item.secondaryLabel}
-                      />
-                      {items.selectedValue === item.value && (
-                        <FaIcon icon="fas fa-check" color="secondary" />
-                      )}
-                    </ListItem>
+                items.map((item, i) => (
+                  <React.Fragment key={i}>
+                    <SelectableListItem
+                      leftPrimaryLabel={item.primaryLabel}
+                      leftSecondaryLabel={item.secondaryLabel}
+                      isChecked={selectedValue === item.value}
+                      onItemSelect={() => onSelectItem(item)}
+                    />
                     <Divider />
-                  </div>
+                  </React.Fragment>
                 ))}
             </List>
           </div>

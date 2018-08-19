@@ -1,11 +1,5 @@
 import * as actionTypes from "./actionTypes";
-
-export const selectDialogItem = item => {
-  return {
-    type: actionTypes.SELECT_DIALOG_ITEM,
-    data: { selectedItem: item, open: false }
-  };
-};
+import { State } from "../../types";
 
 export const closeDialog = () => {
   return {
@@ -16,14 +10,9 @@ export const closeDialog = () => {
   };
 };
 
-export const openDialog = (title, items, handleSelect) => {
+export const openDialog = (newState: State.SelectDialogState) => {
   return {
     type: actionTypes.OPEN_DIALOG,
-    data: {
-      title,
-      items,
-      handleSelect,
-      open: true
-    }
+    data: { ...newState, open: true }
   };
 };

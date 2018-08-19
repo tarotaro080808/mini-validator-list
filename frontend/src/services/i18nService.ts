@@ -1,10 +1,9 @@
 import { localStorageService } from "./localStorageService";
-import { res } from "../resources";
+import { LanguageKeys } from "../types";
+const res = <LanguageKeys>require("../resources.json");
 
 class InternationalizationService {
-  private _availableLanguages = { en: "English", ja: "日本語" };
-
-  getAvailableLanguages = () => this._availableLanguages;
+  getAvailableLanguages = () => res._AvailableLanguages;
 
   setLanguage = (lang: string) => {
     localStorageService.setAppData({ lang: lang });
@@ -16,6 +15,9 @@ class InternationalizationService {
 
   translate = (resource: string, params?: { [key: string]: string }) => {
     const lang = localStorageService.getAppData().lang;
+    if (!resource["en"]) {
+      throw Error(`No English definition found for ${resource}`);
+    }
     return resource[lang] || resource["en"];
   };
 }

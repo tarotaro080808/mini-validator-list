@@ -4,84 +4,35 @@ import * as actions from "../../store/actions/index";
 
 import axios from "../../util/axios-api";
 import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";
+import { t, res } from "../../services/i18nService";
 
-import { t, res, i18nService } from "../../services/i18nService";
-import SelectableListPanel from "../../components/Panels/SelectableListPanel";
-
-const createLanguageOptions = () => {
-  const langs = i18nService.getAvailableLanguages();
-  return Object.keys(langs).map(key => ({
-    primaryLabel: langs[key],
-    value: key
-  }));
-};
-
-const createThemeTypeOptions = () => {
-  return [
-    {
-      primaryLabel: t(res.THEME_LIGHT),
-      value: "light"
-    },
-    {
-      primaryLabel: t(res.THEME_DARK),
-      value: "dark"
-    }
-  ];
-};
+import ListPanel from "../../components/Common/ListPanel";
+import LanguageSettingListItem from "../../components/Settings/LanguageSettingListItem";
+import ThemeTypeSettingListItem from "../../components/Settings/ThemeTypeSettingListItem";
 
 class SettingsContainer extends React.Component {
-  handleSelectItem = (key, item) => {
-    switch (key) {
-      case "lang":
-        this.props.onChangeLanguage(item);
-        break;
-      case "themeType":
-        this.props.onChangeThemeType(item);
-        break;
-    }
-  };
-
-  handleDialogOpen = settingItem => {
-    switch (settingItem.key) {
-      case "lang":
-        this.props.onOpen(
-          t(res.LANGUAGE_SETTINGS),
-          settingItem,
-          this.handleSelectItem
-        );
-        break;
-      case "themeType":
-        this.props.onOpen(
-          t(res.SETTINGS_THEME),
-          settingItem,
-          this.handleSelectItem
-        );
-        break;
-    }
-  };
-
   render() {
-    const { app } = this.props;
-    const items = [
-      {
-        key: "lang",
-        primaryLabel: t(res.LANGUAGE_SETTINGS),
-        selectedValue: app.lang,
-        options: createLanguageOptions()
-      },
-      {
-        key: "themeType",
-        primaryLabel: t(res.SETTINGS_THEME),
-        selectedValue: app.themeType,
-        options: createThemeTypeOptions()
-      }
-    ];
+    const {
+      app,
+      onDialogOpen,
+      onChangeLanguage,
+      onChangeThemeType
+    } = this.props;
     return (
-      <SelectableListPanel
-        items={items}
-        title={t(res.SETTINGS_APPEARANCE)}
-        onDialogOpen={this.handleDialogOpen}
-      />
+      <ListPanel title={t(res.SETTINGS_APPEARANCE)}>
+        <LanguageSettingListItem
+          selectedValue={app.lang}
+          onItemClick={(title, items) =>
+            onDialogOpen(title, items, app.lang, onChangeLanguage)
+          }
+        />
+        <ThemeTypeSettingListItem
+          selectedValue={app.themeType}
+          onItemClick={(title, items) =>
+            onDialogOpen(title, items, app.themeType, onChangeThemeType)
+          }
+        />
+      </ListPanel>
     );
   }
 }
@@ -97,8 +48,15 @@ const mapDispatchToProps = dispatch => {
     onChangeLanguage: lang => dispatch(actions.setLanguage(lang)),
     onChangeThemeType: themeType =>
       dispatch(actions.toggleThemeType(themeType)),
-    onOpen: (title, items, handleSelect) =>
-      dispatch(actions.openDialog(title, items, handleSelect))
+    onDialogOpen: (title, items, selectedValue, handleSelect) =>
+      dispatch(
+        actions.openDialog({
+          title,
+          items,
+          handleSelect,
+          selectedValue
+        })
+      )
   };
 };
 

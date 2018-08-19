@@ -40,7 +40,8 @@ class MainContainer extends React.Component {
       isLoading,
       onApplyFilter,
       onDefaultUnlSelected,
-      onSelectItemPanelOpen
+      onSelectItemPanelOpen,
+      onDialogOpen
     } = this.props;
 
     return (
@@ -52,6 +53,7 @@ class MainContainer extends React.Component {
           onApplyFilter={onApplyFilter}
           onDefaultUnlSelected={onDefaultUnlSelected}
           onDefaultUnlSelectOpen={onSelectItemPanelOpen}
+          onDialogOpen={onDialogOpen}
         />
         <StatsCard vals={vals} isLoading={isLoading} />
         <DomainMapCard
@@ -59,6 +61,7 @@ class MainContainer extends React.Component {
           app={app}
           isLoading={isLoading}
           onDomainSelectOpen={onSelectItemPanelOpen}
+          onDialogOpen={onDialogOpen}
         />
         <ValidatorListCard vals={vals} isLoading={isLoading} />
       </GridLayout>
@@ -82,7 +85,16 @@ const mapDispatchToProps = dispatch => {
     onSelectItemPanelOpen: (title, items, handleSelect) =>
       dispatch(actions.openDialog(title, items, handleSelect)),
     onApplyFilter: newFilter => dispatch(actions.filterValidators(newFilter)),
-    onDefaultUnlSelected: date => dispatch(actions.selectDefaultUnl(date))
+    onDefaultUnlSelected: date => dispatch(actions.selectDefaultUnl(date)),
+    onDialogOpen: (title, items, selectedValue, handleSelect) =>
+      dispatch(
+        actions.openDialog({
+          title,
+          items,
+          handleSelect,
+          selectedValue
+        })
+      )
   };
 };
 

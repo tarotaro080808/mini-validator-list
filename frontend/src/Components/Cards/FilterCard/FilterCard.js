@@ -9,6 +9,7 @@ import FormControlLabel from "@material-ui/core/FormControlLabel";
 import ExpandablePanel from "../../Common/ExpandablePanel";
 import IntegrationAutosuggest from "../../Filter/IntegrationAutosuggest";
 import Button from "../../Common/Button";
+import SelectDefaultUnlButton from "./SelectDefaultUnlButton";
 import { t, res } from "../../../services/i18nService";
 
 const styles = theme => ({
@@ -47,14 +48,6 @@ const clearFilter = {
   filterWord: ""
 };
 
-const createDefaultUnlOptions = items => {
-  return items.map(item => ({
-    primaryLabel: item.date,
-    secondaryLabel: item.name,
-    value: item.id
-  }));
-};
-
 class Filter extends React.Component {
   state = {
     shareUrl: urlbase
@@ -77,27 +70,16 @@ class Filter extends React.Component {
     }
   };
 
-  handleSelectDefaultUnl = (key, value) => {
-    this.props.onDefaultUnlSelected(value);
-  };
-
-  handleSelectDefaultUnlDialogOpen = () => {
-    const archivesItem = {
-      key: "defaultUnl",
-      primaryLabel: t(res.LOAD_ANOTHER_DEFAULT_UNL),
-      selectedValue: this.props.vals.selectedDefaultUnlId,
-      options: createDefaultUnlOptions(this.props.vals.archives)
-    };
-    this.props.onDefaultUnlSelectOpen(
-      t(res.LOAD_ANOTHER_DEFAULT_UNL),
-      archivesItem,
-      this.handleSelectDefaultUnl
-    );
-  };
-
   render() {
-    const { classes, vals, isLoading } = this.props;
-    const { defaultOnly, verifiedOnly, mainNetOnly, filterWord } = vals.filter;
+    const {
+      classes,
+      vals,
+      isLoading,
+      onDefaultUnlSelected,
+      onDialogOpen
+    } = this.props;
+    const { archives, selectedDefaultUnlId, filter } = vals;
+    const { defaultOnly, verifiedOnly, mainNetOnly, filterWord } = filter;
     const isDisabled =
       isLoading ||
       (vals.archives && vals.selectedDefaultUnlId !== vals.archives[0].id);
@@ -108,15 +90,22 @@ class Filter extends React.Component {
           <Button
             disabled={isLoading}
             className={classes.clearFilterButton}
-            buttonText={t(res.CLEAR_FILTER)}
+            buttonText={t(res.FILTER_CLEAR)}
             onClick={this.handleClear}
           />
         </Grid>
         <Grid item xs={9} style={{ textAlign: "right" }}>
-          <Button
-            disabled={isLoading}
-            buttonText={t(res.LOAD_ANOTHER_DEFAULT_UNL)}
-            onClick={this.handleSelectDefaultUnlDialogOpen}
+          <SelectDefaultUnlButton
+            isLoading={isLoading}
+            archives={archives}
+            onClick={(title, items) =>
+              onDialogOpen(
+                title,
+                items,
+                selectedDefaultUnlId,
+                onDefaultUnlSelected
+              )
+            }
           />
         </Grid>
       </Grid>
@@ -144,7 +133,7 @@ class Filter extends React.Component {
                       value="defaultOnly"
                     />
                   }
-                  label={t(res.DEFAULT_UNL_ONLY)}
+                  label={t(res.FILTER_BY_DEFAULT_UNL_ONLY)}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -159,7 +148,7 @@ class Filter extends React.Component {
                       value="verifiedOnly"
                     />
                   }
-                  label={t(res.VERIFIED_DOMAINS_ONLY)}
+                  label={t(res.FILTER_BY_VERIFIED_DOMAINS_ONLY)}
                 />
               </Grid>
               <Grid item xs={12} sm={4}>
@@ -174,7 +163,7 @@ class Filter extends React.Component {
                       value="mainNetOnly"
                     />
                   }
-                  label={t(res.MAIN_NET_ONLY)}
+                  label={t(res.FILTER_BY_MAIN_NET_ONLY)}
                 />
               </Grid>
               <Grid item xs={12}>
