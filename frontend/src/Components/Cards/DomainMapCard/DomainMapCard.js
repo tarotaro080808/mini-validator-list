@@ -1,6 +1,6 @@
 import React from "react";
 
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import Loader from "../../../components/Common/Loader";
