@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import SelectableListItem from "../Common/SelectableListItem";
 import { t, res, i18nService } from "../../services/i18nService";

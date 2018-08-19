@@ -1,7 +1,7 @@
 import React from "react";
-import { connect } from "react-redux";
+import connect from "react-redux/es/connect/connect";
 
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 
 import axios from "../../util/axios-api";
 import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";

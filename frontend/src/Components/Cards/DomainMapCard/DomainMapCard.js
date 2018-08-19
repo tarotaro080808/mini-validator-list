@@ -5,7 +5,6 @@ import { withStyles } from "@material-ui/core/styles";
 import ExpandablePanel from "../../../components/Common/ExpandablePanel";
 import Loader from "../../../components/Common/Loader";
 import Map from "../../../components/DomainMap/Map";
-import Button from "../../../components/Common/Button";
 import SelectDomainButton from "./SelectDomainButton";
 import { t, res } from "../../../services/i18nService";
 

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import Toolbar from "../../components/Navigation/Toolbar";
 import SideDrawer from "../../components/Navigation/SideDrawer";
 

@@ -1,8 +1,8 @@
 import React from "react";
-import { connect } from "react-redux";
+import connect from "react-redux/es/connect/connect";
 import * as actions from "../../store/actions/index";
 
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import LinearProgress from "@material-ui/core/LinearProgress";
 import Grid from "@material-ui/core/Grid";
 

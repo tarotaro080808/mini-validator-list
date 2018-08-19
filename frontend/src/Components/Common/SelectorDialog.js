@@ -1,6 +1,6 @@
 import React from "react";
 
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import Dialog from "@material-ui/core/Dialog";
 import List from "@material-ui/core/List";
 import Divider from "@material-ui/core/Divider";
