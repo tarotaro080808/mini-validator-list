@@ -1,5 +1,5 @@
 import React from "react";
-import { withStyles } from "@material-ui/core/styles";
+import withStyles from "@material-ui/core/styles/withStyles";
 import IconButton from "@material-ui/core/IconButton";
 import LanguageIcon from "@material-ui/icons/LanguageRounded";
 import { t, res, i18nService } from "../../services/i18nService";

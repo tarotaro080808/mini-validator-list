@@ -1,5 +1,5 @@
 import React from "react";
-import { connect } from "react-redux";
+import connect from "react-redux/es/connect/connect";
 import * as actions from "../../store/actions/index";
 
 import SelectorDialog from "../../components/Common/SelectorDialog";

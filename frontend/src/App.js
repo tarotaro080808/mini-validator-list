@@ -1,9 +1,13 @@
 import React from "react";
-import { connect } from "react-redux";
+import connect from "react-redux/es/connect/connect";
 import * as actions from "./store/actions/index";
-import { Switch, Route, Redirect, withRouter } from "react-router-dom";
+import Switch from "react-router-dom/es/Switch";
+import Route from "react-router-dom/es/Route";
+import Redirect from "react-router-dom/es/Redirect";
+import withRouter from "react-router-dom/es/withRouter";
 
-import { MuiThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import MuiThemeProvider from "@material-ui/core/styles/MuiThemeProvider";
+import createMuiTheme from "@material-ui/core/styles/createMuiTheme";
 import CssBaseline from "@material-ui/core/CssBaseline";
 
 import { t, res } from "./services/i18nService";
