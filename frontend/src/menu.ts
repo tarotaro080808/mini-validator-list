@@ -1,4 +1,4 @@
-import { res } from "./resources";
+import { res } from "./services/i18nService";
 
 const links = [
   {

@@ -46,7 +46,7 @@ class Stats extends React.Component {
       size
     });
     statsList.push({
-      description: t(res.STATS_RIPPLE),
+      description: t(res.STATS_RUN_BY_RIPPLE),
       value: createCircle(classes),
       size
     });
