@@ -5,22 +5,26 @@
   "DOMAINMAP": {
     "en": "Domain Map",
     "ja": "ドメイン・マップ",
-    "ru": "Карта адресов"
+    "ru": "Карта адресов",
+    "de": "Domain Landkarte"   
   },
   "DOMAINMAP_LOCATE_DOMAIN": {
     "en": "Locate Domain",
     "ja": "ドメイン名から場所を特定する",
-    "ru": "Выбрать домен"
+    "ru": "Выбрать домен",
+    "de": "Lokalisiere Domain"    
   },
   "DOMAIN_UNVERIFIED": {
     "en": "unverified",
     "ja": "未承認ドメイン",
-    "ru": "Не подтвержден"
+    "ru": "Не подтвержден",
+    "de": "ungeprüft"   
   },
   "DONATE": {
     "en": "Donate",
     "ja": "寄付",
-    "ru": "Помочь проекту"
+    "ru": "Помочь проекту",
+    "de": "Spenden"    
   },
   "DONATION_LINK": {
     "en": "https://www.xrptipbot.com/u:CinnappleFun/n:twitter"
@@ -28,115 +32,134 @@
   "FILTER": {
     "en": "Filter",
     "ja": "フィルター",
-    "ru": "Фильтр"
+    "ru": "Фильтр"  
   },
   "FILTER_BY_DEFAULT_UNL_ONLY": {
     "en": "Default UNL Only",
     "ja": "デフォルトUNLのみ",
-    "ru": "Только узлы по умолчанию"
+    "ru": "Только узлы по умолчанию",
+    "de": "Nur Default UNL"   
   },
   "FILTER_BY_DOMAIN_NAME": {
     "en": "Filter by domain",
     "ja": "ドメイン名で絞り込む",
-    "ru": "Фильтр доменов"
+    "ru": "Фильтр доменов",
+    "de": "Nach Domain filtern"   
   },
   "FILTER_BY_MAIN_NET_ONLY": {
     "en": "Main Net Only",
     "ja": "メイン・ネットのみ",
-    "ru": "Только рабочая сеть"
+    "ru": "Только рабочая сеть",
+    "de": "Nur Main Net"   
   },
   "FILTER_BY_VERIFIED_DOMAINS_ONLY": {
     "en": "Verified Domains Only",
     "ja": "承認済みドメインのみ",
-    "ru": "Только проверенные домены"
+    "ru": "Только проверенные домены",
+    "de": "Nur verifizierte Domains"    
   },
   "FILTER_CLEAR": {
     "en": "Reset",
     "ja": "リセット",
-    "ru": "Сброс"
+    "ru": "Сброс",
+    "de": "Zurücksetzen"    
   },
   "HOME": {
     "en": "Home",
     "ja": "ホーム",
-    "ru": "Главная"
+    "ru": "Главная"    
   },
   "LOAD_ANOTHER_DEFAULT_UNL": {
     "en": "Load Another Default UNL",
     "ja": "他のデフォルトUNLを読み込む",
-    "ru": "Прошлые списки узлов"
+    "ru": "Прошлые списки узлов",
+    "de": "Andere Default UNL laden"  
   },
   "MENU_GET_IN_TOUCH": {
     "en": "Get in touch",
     "ja": "作者にコンタクト",
-    "ru": "Контакты"
+    "ru": "Контакты",
+    "de": "Kontakt aufnehmen"  
   },
   "SETTINGS": {
     "en": "Settings",
     "ja": "設定",
-    "ru": "Настройки"
+    "ru": "Настройки",
+    "de": "Einstellungen"
   },
   "SETTINGS_APPEARANCE": {
     "en": "Appearance",
     "ja": "外観の設定",
-    "ru": "Интерфейс"
+    "ru": "Интерфейс",
+    "de": "Bildschirmeinstellungen"    
   },
   "SETTINGS_LANGUAGE": {
     "en": "Language / 言語",
     "ja": "言語 / Language",
-    "ru": "Язык / Language"
+    "ru": "Язык / Language",
+    "de": "Sprache"   
   },
   "SETTINGS_THEME": {
     "en": "Current Theme",
     "ja": "現在のテーマ",
-    "ru": "Текущая тема"
+    "ru": "Текущая тема",
+    "de": "Aktuelles Farbmotiv"   
   },
   "STATS": {
     "en": "Stats",
     "ja": "統計情報",
-    "ru": "Статистика"
+    "ru": "Статистика",
+    "de": "Statistiken"    
   },
   "STATS_DOMINANCE": {
     "en": "dominance",
     "ja": "ドミナンス",
-    "ru": "Доминирование"
+    "ru": "Доминирование",
+    "de": "Dominanz"  
   },
   "STATS_IN_DEFAULT_UNL": {
     "en": "in default UNL",
     "ja": "デフォルトUNL",
-    "ru": "Узлы по умолчанию"
+    "ru": "Узлы по умолчанию",
+    "de": "als default UNL" 
   },
   "STATS_RUN_BY_RIPPLE": {
     "en": "ripple.com",
-    "ja": "リップル社運営"
+    "ja": "リップル社運営"    
   },
   "STATS_VALIDATORS": {
     "en": "validators",
     "ja": "バリデータ",
-    "ru": "Валидаторы"
+    "ru": "Валидаторы",
+    "de": "Validators"
   },
   "THEME_DARK": {
     "en": "Dark",
     "ja": "ダーク",
-    "ru": "Темная"
+    "ru": "Темная",
+    "de": "Dunkel"    
   },
   "THEME_LIGHT": {
     "en": "Light",
     "ja": "ライト",
-    "ru": "Светлая"
+    "ru": "Светлая",
+    "de": "Hell"  
   },
   "VALIDATOR_LIST_COL_DOMAIN": {
     "en": "Domain",
     "ja": "ドメイン",
-    "ru": "Домен"
+    "ru": "Домен"  
   },
   "VALIDATOR_LIST_COL_PUBKEY": {
     "en": "Validation Public Key",
     "ja": "バリデータ 公開鍵",
-    "ru": "Публичный ключ валидатора"
+    "ru": "Публичный ключ валидатора",
+    "de": "Validierung Public Key"    
   },
   "_AvailableLanguages": {
     "en": "English",
     "ja": "日本語",
-    "ru": "Русский язык"
+    "ru": "Русский язык",
+    "de": "Deutsch"
   }
 }
