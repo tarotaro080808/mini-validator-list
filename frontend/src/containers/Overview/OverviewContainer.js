@@ -5,10 +5,16 @@ import * as actions from "../../store/actions/index";
 import axios from "../../util/axios-api";
 import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";
 import CardLayout from "../../hoc/Layout/CardLayout";
+import CardLayoutItem from "../../hoc/Layout/CardLayoutItem";
 
 import ValidatorOverviewCard from "../../components/Cards/ValidatorOverviewCard/ValidatorOverviewCard";
 import DefaultUnlOverviewCard from "../../components/Cards/DefaultUnlOverviewCard/DefaultUnlOverviewCard";
 import CountryOverviewCard from "../../components/Cards/CountryOverviewCard/CountryOverviewCard";
+
+const SIZE_XS = 3;
+const SIZE_SM = 6;
+const SIZE_MD = 9;
+const SIZE_LG = 6;
 
 class OverviewContainer extends React.Component {
   componentDidMount() {
@@ -20,10 +26,16 @@ class OverviewContainer extends React.Component {
     const { summary } = sum;
 
     return (
-      <CardLayout sm={6}>
-        <ValidatorOverviewCard summary={summary} isLoading={isLoading} />
-        <DefaultUnlOverviewCard summary={summary} isLoading={isLoading} />
-        <CountryOverviewCard summary={summary} isLoading={isLoading} />
+      <CardLayout>
+        <CardLayoutItem isTop={true} sm={SIZE_SM}>
+          <ValidatorOverviewCard summary={summary} isLoading={isLoading} />
+        </CardLayoutItem>
+        <CardLayoutItem sm={SIZE_SM}>
+          <DefaultUnlOverviewCard summary={summary} isLoading={isLoading} />
+        </CardLayoutItem>
+        <CardLayoutItem sm={SIZE_MD}>
+          <CountryOverviewCard summary={summary} isLoading={isLoading} />
+        </CardLayoutItem>
       </CardLayout>
     );
   }

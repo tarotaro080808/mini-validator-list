@@ -37,6 +37,13 @@ const _isRippleValidator = (validator: Lib.RippleData.ValidatorRawResponse) => {
   return isWellKnown || endsWith;
 };
 
+const _takeLastNHours = (
+  threshould: moment.Moment,
+  validator: Cache.MergedData
+) => moment(validator.last_datetime).diff(threshould) > 0;
+
+const _takeMainNetOnly = (validator: Cache.MergedData) => !validator.is_alt_net;
+
 @injectable()
 export default class RippleService implements IRippleService {
   constructor(
@@ -334,9 +341,3 @@ export default class RippleService implements IRippleService {
     });
   };
 }
-
-const _takeLastNHours = (
-  threshould: moment.Moment,
-  validator: Cache.MergedData
-) => moment(validator.last_datetime).diff(threshould) > 0;
-const _takeMainNetOnly = (validator: Cache.MergedData) => !validator.is_alt_net;

@@ -79,7 +79,12 @@ export default class Memoizer implements Memoize.IMemoizer {
     if (paramItem.interval && !paramItem.intervalKey) {
       paramItem.intervalKey = setInterval(async () => {
         // delete all variants
-        delete this._cache[name].subordinateCache;
+        if (this._cache[name].subordinateCache) {
+          delete this._cache[name].subordinateCache;
+          this._logger.info(
+            `DELETE ${name} subordinateCache has been deleted.`
+          );
+        }
         // update the base cache
         await this._update(name, params);
       }, paramItem.interval);

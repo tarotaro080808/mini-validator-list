@@ -1,7 +1,7 @@
-# create .env file
-echo "creating .env file if it does not exist..."
-cp -R -u -p .env.example .env
-echo
+if [[ ! -f .env ]] ; then
+    echo 'File ".env" does not exist. Please create the file by copying ".env.example" to ".env"'
+    exit
+fi
 
 # build backend
 echo "building backend..."

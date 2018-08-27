@@ -5,6 +5,7 @@ import * as actions from "../../store/actions/index";
 import axios from "../../util/axios-api";
 import withNetworkHandler from "../../hoc/withNetworkHandler/withNetworkHandler";
 import CardLayout from "../../hoc/Layout/CardLayout";
+import CardLayoutItem from "../../hoc/Layout/CardLayoutItem";
 
 import FilterCard from "../../components/Cards/FilterCard/FilterCard";
 import StatsCard from "../../components/Cards/StatsCard/StatsCard";
@@ -46,24 +47,32 @@ class MainContainer extends React.Component {
 
     return (
       <CardLayout>
-        <FilterCard
-          vals={vals}
-          app={app}
-          isLoading={isLoading}
-          onApplyFilter={onApplyFilter}
-          onDefaultUnlSelected={onDefaultUnlSelected}
-          onDefaultUnlSelectOpen={onSelectItemPanelOpen}
-          onDialogOpen={onDialogOpen}
-        />
-        <StatsCard vals={vals} isLoading={isLoading} />
-        <DomainMapCard
-          vals={vals}
-          app={app}
-          isLoading={isLoading}
-          onDomainSelectOpen={onSelectItemPanelOpen}
-          onDialogOpen={onDialogOpen}
-        />
-        <ValidatorListCard vals={vals} isLoading={isLoading} />
+        <CardLayoutItem isTop={true}>
+          <FilterCard
+            vals={vals}
+            app={app}
+            isLoading={isLoading}
+            onApplyFilter={onApplyFilter}
+            onDefaultUnlSelected={onDefaultUnlSelected}
+            onDefaultUnlSelectOpen={onSelectItemPanelOpen}
+            onDialogOpen={onDialogOpen}
+          />
+        </CardLayoutItem>
+        <CardLayoutItem>
+          <StatsCard vals={vals} isLoading={isLoading} />
+        </CardLayoutItem>
+        <CardLayoutItem>
+          <DomainMapCard
+            vals={vals}
+            app={app}
+            isLoading={isLoading}
+            onDomainSelectOpen={onSelectItemPanelOpen}
+            onDialogOpen={onDialogOpen}
+          />
+        </CardLayoutItem>
+        <CardLayoutItem>
+          <ValidatorListCard vals={vals} isLoading={isLoading} />
+        </CardLayoutItem>
       </CardLayout>
     );
   }
