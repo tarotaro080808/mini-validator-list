@@ -13,11 +13,10 @@ import CountryOverviewCard from "../../components/Cards/CountryOverviewCard/Coun
 class OverviewContainer extends React.Component {
   componentDidMount() {
     this.props.onInitSummary();
-    this.props.onInitReferrals();
   }
 
   render() {
-    const { sum, ana, isLoading } = this.props;
+    const { sum, isLoading } = this.props;
     const { summary } = sum;
 
     return (
@@ -32,15 +31,13 @@ class OverviewContainer extends React.Component {
 
 const mapStateToProps = state => {
   return {
-    sum: state.summary,
-    ana: state.analytics
+    sum: state.summary
   };
 };
 
 const mapDispatchToProps = dispatch => {
   return {
     onInitSummary: () => dispatch(actions.initSummary()),
-    onInitReferrals: () => dispatch(actions.initReferrals()),
     showNotification: (message, variant) =>
       dispatch(actions.showNotification(message, variant, ""))
   };
