@@ -19,7 +19,7 @@ export const Cache = {
   },
   RIPPLE_VALIDATORS: {
     key: "ripple.dataapi.validators",
-    interval: Frequency.Never
+    interval: Frequency.Often
   },
   IPSTACK_GEO: {
     key: "ipstack",
