@@ -2,8 +2,6 @@ import { Container } from "inversify";
 import {
   ICrypto,
   IWebClient,
-  IThirdPartyLibFactory,
-  GitHubClient,
   IProcessEnv,
   IConfiguration,
   ICache,
@@ -15,7 +13,6 @@ import TYPES from "./";
 import Configuration from "./util/configuration";
 import Crypto from "./crypto/crypto";
 import WebClient from "./external/webClient";
-import ThirdPartyLibFactory from "./external/thirdPartyLibFactory";
 import Cache from "./cache/cache";
 import LoggerFactory from "./logger/loggerFactory";
 
@@ -43,19 +40,4 @@ export default (container: Container) => {
     .bind<ILoggerFactory>(TYPES.Lib.LoggerFactory)
     .to(LoggerFactory)
     .inSingletonScope();
-  container
-    .bind<IThirdPartyLibFactory>(TYPES.Lib.ThirdPartyFactory)
-    .to(ThirdPartyLibFactory)
-    .inSingletonScope();
-
-  // build third party libraries
-  const thirdPartyLibFactory = container.get<IThirdPartyLibFactory>(
-    TYPES.Lib.ThirdPartyFactory
-  );
-  container
-    .bind<GitHubClient>(TYPES.Lib.GitHubClient)
-    .toConstantValue(thirdPartyLibFactory.createGitHubApi());
-  // container
-  //   .bind<Promise<Lib.Google.IApi>>(TYPES.Lib.GoogleApi)
-  //   .toConstantValue(thirdPartyLibFactory.createGAReportingApi());
 };

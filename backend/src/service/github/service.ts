@@ -1,7 +1,8 @@
 import "reflect-metadata";
+import * as Octokit from "@octokit/rest";
 import { injectable, inject, TYPES } from "../../inversify";
 import { IGitHubService } from "../types";
-import { GitHubClient, ILogger, ILoggerFactory } from "../../lib/types";
+import { ILogger, ILoggerFactory, IConfiguration } from "../../lib/types";
 
 const fileNameRegexp = new RegExp(/^index\..*\.json$/);
 const dateRegexp = new RegExp(/index\.([\d-]{1,})\.json/);
@@ -21,13 +22,29 @@ const getDate = file => {
 @injectable()
 export default class GitHubService implements IGitHubService {
   private _logger: ILogger;
+  private _githubClient: Octokit;
 
   constructor(
     @inject(TYPES.Lib.LoggerFactory) _loggerFactory: ILoggerFactory,
-    @inject(TYPES.Lib.GitHubClient) private _githubClient: GitHubClient
+    @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration
   ) {
     this._logger = _loggerFactory.create("Service.GitHubService");
+    this._githubClient = this._createGitHubClient();
   }
+
+  private _createGitHubClient = () => {
+    const oktokit = new Octokit();
+    const token = this._configuration.getGitHubPersonalToken();
+    // using a token can increase the rate limit
+    if (token) {
+      oktokit.authenticate({
+        type: "token",
+        token: token
+      });
+      this._logger.info(`Authenticated with GitHub.`);
+    }
+    return oktokit;
+  };
 
   getDefaultUnlArchives = async () => {
     this._logger.info(`Fetching archives from GitHub page...`);

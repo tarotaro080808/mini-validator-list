@@ -73,7 +73,7 @@ export default class Configuration implements IConfiguration {
     return this.getFromProcessEnv("NODE_ENV") === "production";
   }
 
-  getLoggingServiceToken(): string {
-    return this.getFromProcessEnv("LOGGING_SERVICE_TOKEN");
+  getGitHubPersonalToken(): string {
+    return this.getFromProcessEnv("GITHUB_PERSONAL_TOKEN");
   }
 }

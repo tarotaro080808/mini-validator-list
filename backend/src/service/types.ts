@@ -1,23 +1,17 @@
 export interface IDefaultUnlService {
-  getDefaultUnl: () => Promise<
-    Service.RippleDataApi.DefaultUnlResponse
-  >;
+  getDefaultUnl: () => Promise<Service.RippleDataApi.DefaultUnlResponse>;
   getDefaultUnlByUrl: (
     url: string
   ) => Promise<Service.RippleDataApi.DefaultUnlResponse>;
 }
 
 export interface IGeoService {
-  getGeoData: (
-    domainOrIp: string
-  ) => Promise<Service.Geo.GeoResponseData>;
+  getGeoData: (domainOrIp: string) => Promise<Service.Geo.GeoResponseData>;
   getIpFromDomain: (domain: string) => Promise<string>;
 }
 
 export interface IRippleDataService {
-  getValidators: () => Promise<
-    Service.RippleDataApi.GetValidatorsResponse
-  >;
+  getValidators: () => Promise<Service.RippleDataApi.GetValidatorsResponse>;
   getValidatorDailyReports: () => Promise<
     Service.RippleDataApi.GetDailyReportResponse
   >;
@@ -27,6 +21,10 @@ export interface IGitHubService {
   getDefaultUnlArchives: () => Promise<
     Service.GitHubService.RepositoryContentResponse
   >;
+}
+
+export interface IGoogleAnalyticsService {
+  getReferrals: () => Promise<Service.GitHubService.RepositoryContentResponse>;
 }
 
 export namespace Service {

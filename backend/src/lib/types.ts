@@ -1,7 +1,3 @@
-import * as Octokit from "@octokit/rest";
-
-// import { analyticsreporting_v4 } from "../../node_modules/googleapis";
-
 export type HashMap<TType> = { [key: string]: TType };
 
 export interface IProcessEnv extends HashMap<string> {}
@@ -21,12 +17,7 @@ export interface IConfiguration {
   getGAExcludedReferralDomainsRegex(): RegExp;
   getGoogleJwtJsonFilePath(): string;
   isProduction(): boolean;
-  getLoggingServiceToken(): string;
-}
-
-export interface IThirdPartyLibFactory {
-  createGitHubApi(): Octokit;
-  // createGAReportingApi(): Promise<Google.IApi>;
+  getGitHubPersonalToken(): string;
 }
 
 export interface ILogger {
@@ -46,30 +37,6 @@ export interface IWebClient {
 export interface ICrypto {
   parseDefaultUNLBlob: (blob: string) => string[];
 }
-
-// export namespace Google {
-//   export type JwtJson = {
-//     web: {
-//       client_id: string;
-//       project_id: string;
-//       auth_uri: string;
-//       token_uri: string;
-//       auth_provider_x509_cert_url: string;
-//       client_secret: string;
-//     };
-//   };
-//   export interface IApi extends analyticsreporting_v4.Analyticsreporting {}
-//   export interface IApiResponse {
-//     fullReferral: string;
-//     domain: string;
-//     views: string;
-//     url: string;
-//     title: string;
-//   }
-//   [];
-// }
-
-export type GitHubClient = Octokit;
 
 /**
  * API Handlers
