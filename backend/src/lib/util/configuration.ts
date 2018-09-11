@@ -72,4 +72,8 @@ export default class Configuration implements IConfiguration {
   isProduction(): boolean {
     return this.getFromProcessEnv("NODE_ENV") === "production";
   }
+
+  getLoggingServiceToken(): string {
+    return this.getFromProcessEnv("LOGGING_SERVICE_TOKEN");
+  }
 }

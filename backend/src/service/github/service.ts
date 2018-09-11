@@ -1,7 +1,7 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
 import { IGitHubService } from "../types";
-import { GitHubClient, ILogger } from "../../lib/types";
+import { GitHubClient, ILogger, ILoggerFactory } from "../../lib/types";
 
 const fileNameRegexp = new RegExp(/^index\..*\.json$/);
 const dateRegexp = new RegExp(/index\.([\d-]{1,})\.json/);
@@ -20,12 +20,18 @@ const getDate = file => {
 
 @injectable()
 export default class GitHubService implements IGitHubService {
+  private _logger: ILogger;
+
   constructor(
-    @inject(TYPES.Lib.Logger) protected _logger: ILogger,
+    @inject(TYPES.Lib.LoggerFactory) _loggerFactory: ILoggerFactory,
     @inject(TYPES.Lib.GitHubClient) private _githubClient: GitHubClient
-  ) {}
+  ) {
+    this._logger = _loggerFactory.create("Service.GitHubService");
+  }
 
   getDefaultUnlArchives = async () => {
+    this._logger.info(`Fetching archives from GitHub page...`);
+
     const res = await this._githubClient.repos.getContent({
       owner: "ripple",
       repo: "vl",

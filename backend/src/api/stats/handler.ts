@@ -1,13 +1,11 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { ILogger } from "../../lib/types";
 import { Domains } from "../../domain/types";
 import { Handlers } from "../types";
 
 @injectable()
 export default class StatsHandler implements Handlers.IStatsHandler {
   constructor(
-    @inject(TYPES.Lib.Logger) protected _logger: ILogger,
     @inject(TYPES.Proxy.DefaultUnl) private _defaultUnl: Domains.IDefaultUnl,
     @inject(TYPES.Proxy.Validators) private _validators: Domains.IValidators,
     @inject(TYPES.Proxy.Geo) private _geo: Domains.IGeo,

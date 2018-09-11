@@ -4,10 +4,10 @@ import {
   IWebClient,
   IThirdPartyLibFactory,
   GitHubClient,
-  ILogger,
   IProcessEnv,
   IConfiguration,
-  ICache
+  ICache,
+  ILoggerFactory
 } from "./types";
 
 import TYPES from "./";
@@ -17,6 +17,7 @@ import Crypto from "./crypto/crypto";
 import WebClient from "./external/webClient";
 import ThirdPartyLibFactory from "./external/thirdPartyLibFactory";
 import Cache from "./cache/cache";
+import LoggerFactory from "./logger/loggerFactory";
 
 export default (container: Container) => {
   container
@@ -39,6 +40,10 @@ export default (container: Container) => {
     .to(WebClient)
     .inSingletonScope();
   container
+    .bind<ILoggerFactory>(TYPES.Lib.LoggerFactory)
+    .to(LoggerFactory)
+    .inSingletonScope();
+  container
     .bind<IThirdPartyLibFactory>(TYPES.Lib.ThirdPartyFactory)
     .to(ThirdPartyLibFactory)
     .inSingletonScope();
@@ -47,9 +52,6 @@ export default (container: Container) => {
   const thirdPartyLibFactory = container.get<IThirdPartyLibFactory>(
     TYPES.Lib.ThirdPartyFactory
   );
-  container
-    .bind<ILogger>(TYPES.Lib.Logger)
-    .toConstantValue(thirdPartyLibFactory.createLogger());
   container
     .bind<GitHubClient>(TYPES.Lib.GitHubClient)
     .toConstantValue(thirdPartyLibFactory.createGitHubApi());

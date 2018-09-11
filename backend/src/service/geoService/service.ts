@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IWebClient, ILogger, IConfiguration } from "../../lib/types";
+import { IWebClient, IConfiguration } from "../../lib/types";
 import { Service, IGeoService } from "../types";
 
 import * as dns from "dns";
@@ -11,7 +11,6 @@ export default class GeoService implements IGeoService {
   private _lookupAsync = bluebird.promisify(dns.lookup);
 
   constructor(
-    @inject(TYPES.Lib.Logger) protected _logger: ILogger,
     @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration,
     @inject(TYPES.Lib.WebClient) protected _webClient: IWebClient
   ) {}

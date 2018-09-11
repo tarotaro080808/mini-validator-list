@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { ILogger } from "../../lib/types";
 import { Domains } from "../../domain/types";
 import { Handlers } from "../types";
 import { _takeLastNHours } from "../../domain/common/util";
@@ -9,7 +8,6 @@ import * as moment from "moment";
 @injectable()
 export default class ValidatorHandler implements Handlers.IValidatorHandler {
   constructor(
-    @inject(TYPES.Lib.Logger) protected _logger: ILogger,
     @inject(TYPES.Proxy.DefaultUnl) private _defaultUnl: Domains.IDefaultUnl,
     @inject(TYPES.Proxy.Geo) private _geo: Domains.IGeo,
     @inject(TYPES.Proxy.Stats) private _stats: Domains.IStats,

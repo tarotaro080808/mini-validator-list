@@ -6,7 +6,7 @@ export default {
     Memoizer: Symbol.for("Memoizer"),
     WebClient: Symbol.for("WebClient"),
     ThirdPartyFactory: Symbol.for("ThirdPartyFactory"),
-    Logger: Symbol.for("Logger"),
+    LoggerFactory: Symbol.for("LoggerFactory"),
     GitHubClient: Symbol.for("GitHubClient"),
     Cache: Symbol.for("Cache")
   }

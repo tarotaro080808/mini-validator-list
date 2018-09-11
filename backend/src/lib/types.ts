@@ -1,6 +1,5 @@
 import * as Octokit from "@octokit/rest";
 
-import { Logger } from "../../node_modules/winston";
 // import { analyticsreporting_v4 } from "../../node_modules/googleapis";
 
 export type HashMap<TType> = { [key: string]: TType };
@@ -22,14 +21,22 @@ export interface IConfiguration {
   getGAExcludedReferralDomainsRegex(): RegExp;
   getGoogleJwtJsonFilePath(): string;
   isProduction(): boolean;
+  getLoggingServiceToken(): string;
 }
 
-export interface ILogger extends Logger {}
-
 export interface IThirdPartyLibFactory {
-  createLogger(): ILogger;
   createGitHubApi(): Octokit;
   // createGAReportingApi(): Promise<Google.IApi>;
+}
+
+export interface ILogger {
+  info(message: string);
+  warn(message: string);
+  error(message: string);
+}
+
+export interface ILoggerFactory {
+  create(name: string): ILogger;
 }
 
 export interface IWebClient {
@@ -96,7 +103,7 @@ export interface ICache {
 }
 
 export enum Frequency {
-  Often = 1000 * 60,
+  Often = 1000 * 60, // every 60 seconds
   Rarely = 1000 * 60 * 60 * 24, // every 24 hours
   Never = -1
 }

@@ -1,12 +1,11 @@
 import "reflect-metadata";
-import { injectable, inject, TYPES } from "../../inversify";
-import { ILogger } from "../../lib/types";
+import { injectable } from "../../inversify";
 import { _groupByWithCount, _sort, _addRate } from "../../lib/util/util";
 import { Models } from "../types";
 
 @injectable()
 export default class StatsUtil {
-  constructor(@inject(TYPES.Lib.Logger) protected _logger: ILogger) {}
+  constructor() {}
 
   private static byCountryStats = (
     mainNetValidators: Models.ValidatorSummary[]

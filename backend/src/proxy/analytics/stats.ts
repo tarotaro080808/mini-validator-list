@@ -14,7 +14,7 @@ export default class StatsProxy implements Domains.IStats {
   getSummary = async (date: string, validatorList: Models.ValidatorSummary[]) =>
     this._cache.get(
       Cache.SUMMARY_DATA.key,
-      `${date || ""}`,
+      `${date}`,
       () => this._actual.getSummary(date, validatorList),
       Cache.SUMMARY_DATA.interval
     );

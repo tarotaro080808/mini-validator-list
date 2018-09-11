@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { ILogger, IConfiguration } from "../../lib/types";
+import { IConfiguration, ILoggerFactory, ILogger } from "../../lib/types";
 import { Service, IGeoService } from "../../service/types";
 import { Domains, Models } from "../types";
 
@@ -26,11 +26,15 @@ const _reverseJoin = (domainChunks: string[]) => {
 
 @injectable()
 export default class Geo implements Domains.IGeo {
+  private _logger: ILogger;
+
   constructor(
-    @inject(TYPES.Lib.Logger) protected _logger: ILogger,
+    @inject(TYPES.Lib.LoggerFactory) protected _loggerFactory: ILoggerFactory,
     @inject(TYPES.Lib.Configuration) protected _configuration: IConfiguration,
     @inject(TYPES.Service.GeoService) protected _geoService: IGeoService
-  ) {}
+  ) {
+    this._logger = _loggerFactory.create("Domain.Geo");
+  }
 
   private _createEmptyDomain = domain => ({
     domain: domain,

@@ -28,7 +28,7 @@ export default class ValidatorsProxy implements Domains.IValidators {
   ) =>
     this._cache.get(
       Cache.MERGED_DATA.key,
-      `${date || ""}`,
+      `${date}`,
       () =>
         this._actual.getValidatorSummary(
           date,

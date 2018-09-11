@@ -1,19 +1,23 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { ILogger } from "../../lib/types";
 import { IRippleDataService } from "../../service/types";
 import { Domains, Models } from "../types";
 import * as moment from "moment";
 import StatsUtil from "./calculate";
 import { _takeLastNHours, _takeMainNetOnly } from "../common/util";
+import { ILoggerFactory, ILogger } from "../../lib/types";
 
 @injectable()
 export default class Stats implements Domains.IStats {
+  private _logger: ILogger;
+
   constructor(
-    @inject(TYPES.Lib.Logger) protected _logger: ILogger,
+    @inject(TYPES.Lib.LoggerFactory) protected _loggerFactory: ILoggerFactory,
     @inject(TYPES.Service.RippleDataService)
     private _rippleDataService: IRippleDataService
-  ) {}
+  ) {
+    this._logger = _loggerFactory.create("Domain.Stats");
+  }
 
   getSummary = async (
     _date: string,

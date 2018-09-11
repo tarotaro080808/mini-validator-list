@@ -11,6 +11,7 @@ services:
     networks:
       - mini-validator-list
     volumes:
+      - ./backend/node_modules:/usr/app/node_modules
       - ./backend/build/src:/usr/app/api
       - .env:/usr/app/.env
       - ./secret:/usr/app/secret

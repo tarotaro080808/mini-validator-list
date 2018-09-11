@@ -1,19 +1,52 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { ILogger, ICache, Frequency, HashMap } from "../types";
-import * as NodeCache from "node-cache";
+import { ILogger, ICache, Frequency, HashMap, ILoggerFactory } from "../types";
+
+class InMemoryCache {
+  private _obj: HashMap<any>;
+  constructor() {
+    this._obj = {};
+  }
+
+  get = <TItem>(name: string) => {
+    return <TItem>this._obj[name];
+  };
+
+  set = (name: string, value: any) => {
+    if (this.get(name)) {
+      this.del(name);
+    }
+    this._obj[name] = value;
+  };
+
+  del = (name: string) => {
+    delete this._obj[name];
+  };
+
+  keys = () => {
+    return Object.keys(this._obj);
+  };
+}
 
 @injectable()
 export default class Cache implements ICache {
-  private _cache: NodeCache;
+  private _logger: ILogger;
+  private _cache: InMemoryCache;
   private _intervalKeys: HashMap<NodeJS.Timer>;
 
-  constructor(@inject(TYPES.Lib.Logger) private _logger: ILogger) {
-    this._cache = new NodeCache();
+  constructor(@inject(TYPES.Lib.LoggerFactory) _loggerFactory: ILoggerFactory) {
+    this._logger = _loggerFactory.create("Lib.Cache");
+    this._cache = new InMemoryCache();
     this._intervalKeys = {};
   }
 
-  private _createCacheKey = (key, variant) => key + "_" + variant;
+  private _createCacheKey = (key: string, variant: string) => {
+    if (!key) {
+      throw new Error(`Cache key cannot be empty`);
+    }
+    variant = variant || "";
+    return key + "_" + variant;
+  };
 
   private _startInterval = async <TItem>(
     key: string,
@@ -26,13 +59,17 @@ export default class Cache implements ICache {
       this._intervalKeys[key] = setInterval(async () => {
         this._logger.info(`Re-populating the cache: ${key}...`);
 
-        // delete all keys that have the same root.
-        this.delete(cacheKey, true);
+        const newValue = await setter().catch(err => {
+          this._logger.error(`Failed to set ${cacheKey}: ${err}`);
+          return undefined;
+        });
 
-        const newValue = await setter();
-
-        // set the new one.
-        this._cache.set(cacheKey, newValue);
+        if (newValue) {
+          // delete all keys that have the same root.
+          this.delete(cacheKey, true);
+          // set the new one.
+          this._cache.set(cacheKey, newValue);
+        }
       }, interval);
     }
   };

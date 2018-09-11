@@ -1,12 +1,11 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IWebClient, ILogger, IConfiguration } from "../../lib/types";
+import { IWebClient, IConfiguration } from "../../lib/types";
 import { Service, IRippleDataService } from "../types";
 
 @injectable()
 export default class RippleDataService implements IRippleDataService {
   constructor(
-    @inject(TYPES.Lib.Logger) protected _logger: ILogger,
     @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration,
     @inject(TYPES.Lib.WebClient) protected _webClient: IWebClient
   ) {}

@@ -17,7 +17,7 @@ export default class DefaultUnlProxy implements Domains.IDefaultUnl {
   ) =>
     this._cache.get(
       Cache.GITHUB_DEFAULT_UNL.key,
-      `${date || ""}`,
+      `${date}`,
       () => this._actual.getDefaultUnl(date, archives),
       Cache.GITHUB_DEFAULT_UNL.interval
     );

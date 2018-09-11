@@ -1,6 +1,11 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IConfiguration, ILogger, ICrypto } from "../../lib/types";
+import {
+  IConfiguration,
+  ILogger,
+  ICrypto,
+  ILoggerFactory
+} from "../../lib/types";
 import { Domains, Models } from "../types";
 import { IRippleDataService } from "../../service/types";
 import { _union, _first } from "../../lib/util/util";
@@ -8,13 +13,17 @@ import { _isRippleValidator, _rippleDomain } from "../common/util";
 
 @injectable()
 export default class Validators implements Domains.IValidators {
+  private _logger: ILogger;
+
   constructor(
-    @inject(TYPES.Lib.Logger) protected _logger: ILogger,
+    @inject(TYPES.Lib.LoggerFactory) protected _loggerFactory: ILoggerFactory,
     @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration,
     @inject(TYPES.Lib.Crypto) private _crypto: ICrypto,
     @inject(TYPES.Service.RippleDataService)
     private _rippleDataService: IRippleDataService
-  ) {}
+  ) {
+    this._logger = _loggerFactory.create("Domain.Validators");
+  }
 
   getValidators = async () => {
     try {
