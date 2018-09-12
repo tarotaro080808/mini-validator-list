@@ -15,7 +15,7 @@ export default class ValidatorHandler implements Handlers.IValidatorHandler {
   ) {}
 
   getValidatorSummary = async args => {
-    const date = args.query.d;
+    const date = args.query.d || "";
     const lastNHours = args.query.h || 6;
 
     const archives = await this._defaultUnl.getDefaultUnlArchives();
@@ -33,8 +33,22 @@ export default class ValidatorHandler implements Handlers.IValidatorHandler {
 
     // apply the filter by last n hours
     if (lastNHours > 0) {
-      const n = moment().add(-lastNHours, "h");
-      data = data.filter(a => _takeLastNHours(n, moment(a.last_datetime)));
+      const current = moment().add(-lastNHours, "h");
+      console.log(
+        "DR:",
+        dailyReports[0].last_datetime,
+        "VL:",
+        validators[0].last_datetime,
+        "SY",
+        data[0].last_datetime,
+        "diff: ",
+        moment(data[0].last_datetime).diff(current),
+        "res: ",
+        _takeLastNHours(current, moment(data[0].last_datetime))
+      );
+      data = data.filter(a =>
+        _takeLastNHours(current, moment(a.last_datetime))
+      );
     }
 
     return data;

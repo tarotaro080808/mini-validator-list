@@ -47,7 +47,7 @@ export default class GitHubService implements IGitHubService {
   };
 
   getDefaultUnlArchives = async () => {
-    this._logger.info(`Fetching archives from GitHub page...`);
+    this._logger.info(`getDefaultUnlArchives`);
 
     const res = await this._githubClient.repos.getContent({
       owner: "ripple",

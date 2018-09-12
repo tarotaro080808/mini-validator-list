@@ -15,17 +15,25 @@ export default class StatsHandler implements Handlers.IStatsHandler {
   getStats = async args => {
     args.params.lastNHours || 6;
 
-    const defaultUnl = await this._defaultUnl.getLatestDefaultUnl();
+    const defaultUnl = await this._defaultUnl.getDefaultUnl();
     const dailyReports = await this._stats.getDailyReports();
     const validators = await this._validators.getValidators();
     const domainGeoList = await this._geo.getDomainGeoList(validators);
     const validatorSummary = await this._validators.getValidatorSummary(
-      "",
+      undefined,
       defaultUnl,
       dailyReports,
       validators,
       domainGeoList
     );
-    return this._stats.getSummary("", validatorSummary);
+    console.log(
+      "DR:",
+      dailyReports[0].last_datetime,
+      "VL:",
+      validators[0].last_datetime,
+      "SY",
+      validatorSummary[0].last_datetime
+    );
+    return this._stats.getSummary(validatorSummary);
   };
 }

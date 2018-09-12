@@ -25,6 +25,11 @@ export default class DefaultUnl implements Domains.IDefaultUnl {
   ) => {
     try {
       if (date) {
+        if (!archives) {
+          throw new Error(
+            `getting a default UNL for a specific date requires archives`
+          );
+        }
         const archive = archives.find(a => a.date === date);
         if (!archive) {
           throw new Error(`no mathcing default unl found for the date ${date}`);

@@ -16,6 +16,7 @@ export default class DefaultUnlHandler implements Handlers.IDefaultUnlHandler {
   getDefaultUnl = async args => {
     const date = args.params.date;
     const archives = await this._defaultUnl.getDefaultUnlArchives();
-    return this._defaultUnl.getDefaultUnl(date, archives);
+    const data = await this._defaultUnl.getDefaultUnl(date, archives);
+    return data;
   };
 }

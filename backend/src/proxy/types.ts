@@ -1,35 +1,31 @@
 import { Frequency } from "../lib/types";
 
 export const Cache = {
-  RIPPLE_DEFAULT_UNL: {
+  DefaultUnl: {
     key: "ripple.defaultUNL",
     interval: Frequency.Often
   },
-  GITHUB_DEFAULT_UNL_ARCHIVES: {
+  UnlArchives: {
     key: "github.defaultUNLArchives",
     interval: Frequency.Often
   },
-  GITHUB_DEFAULT_UNL: {
-    key: "github.defaultUNL",
-    interval: Frequency.Never
-  },
-  RIPPLE_DAILY_REPORT: {
+  DailyReports: {
     key: "ripple.dataapi.dailyreports",
     interval: Frequency.Often
   },
-  RIPPLE_VALIDATORS: {
+  Validators: {
     key: "ripple.dataapi.validators",
     interval: Frequency.Often
   },
-  IPSTACK_GEO: {
+  Geo: {
     key: "ipstack",
     interval: Frequency.Rarely
   },
-  MERGED_DATA: {
+  ValidatorsSummary: {
     key: "aggregated.validatorssummary",
     interval: Frequency.Often
   },
-  SUMMARY_DATA: {
+  Stats: {
     key: "aggregated.stats",
     interval: Frequency.Often
   }

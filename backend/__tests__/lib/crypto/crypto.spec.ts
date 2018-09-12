@@ -1,5 +1,5 @@
 import "jest";
-import Crypto from "../src/crypto";
+import Crypto from "../../../src/lib/crypto/crypto";
 
 describe("Crypto", () => {
   beforeEach(() => {});
@@ -11,7 +11,7 @@ describe("Crypto", () => {
 
   test("parseDefaultUNLResponse", () => {
     const crypto = new Crypto();
-    const result = crypto.parseDefaultUNLResponse(defaultUnlRawResponse);
+    const result = crypto.parseDefaultUNLBlob(defaultUnlRawResponse.blob);
     expect(result.some(a => a === pubkey_sample)).toBeTruthy();
   });
 });

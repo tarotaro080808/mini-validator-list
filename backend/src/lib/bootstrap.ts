@@ -15,6 +15,8 @@ import Crypto from "./crypto/crypto";
 import WebClient from "./external/webClient";
 import Cache from "./cache/cache";
 import LoggerFactory from "./logger/loggerFactory";
+import { cacheAdapter } from "./cache/smartCache";
+import InMemoryCache from "./cache/memoryCache";
 
 export default (container: Container) => {
   container
@@ -40,4 +42,13 @@ export default (container: Container) => {
     .bind<ILoggerFactory>(TYPES.Lib.LoggerFactory)
     .to(LoggerFactory)
     .inSingletonScope();
+
+  const inMemoryCache = new InMemoryCache();
+
+  cacheAdapter.use(
+    inMemoryCache,
+    (c, key) => c.get(key),
+    (c, key, item) => c.set(key, item),
+    (c, key) => c.del(key)
+  );
 };

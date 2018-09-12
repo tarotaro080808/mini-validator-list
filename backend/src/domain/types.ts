@@ -33,7 +33,7 @@ export namespace Domains {
   export interface IValidators {
     getValidators: () => Promise<Models.Validator[]>;
     getValidatorSummary: (
-      date: string,
+      _date: string,
       defaultUnl: Models.DefaultUnl,
       dailyReports: Models.DailyReports[],
       allValidators: Models.Validator[],
@@ -42,10 +42,9 @@ export namespace Domains {
   }
   export interface IDefaultUnl {
     getDefaultUnl: (
-      date: string,
-      archives: Models.DefaultUnlArchiveEntry[]
+      date?: string,
+      archives?: Models.DefaultUnlArchiveEntry[]
     ) => Promise<Models.DefaultUnl>;
-    getLatestDefaultUnl: () => Promise<Models.DefaultUnl>;
     getDefaultUnlArchives: () => Promise<Models.DefaultUnlArchiveEntry[]>;
   }
   export interface IGeo {
@@ -55,7 +54,6 @@ export namespace Domains {
   }
   export interface IStats {
     getSummary: (
-      date: string,
       validatorList: Models.ValidatorSummary[]
     ) => Promise<Models.Stats>;
     getDailyReports: () => Promise<Models.DailyReports[]>;

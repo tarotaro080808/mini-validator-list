@@ -84,7 +84,7 @@ export default class Cache implements ICache {
     const value = this._cache.get<TItem>(cacheKey);
     if (value) {
       this._logger.info(
-        `The cache: ${this._createCacheKey(key, variant)} found.`
+        `The cache: ${cacheKey} found.`
       );
       return await value;
     }

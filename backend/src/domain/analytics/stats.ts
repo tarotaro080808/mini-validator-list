@@ -19,10 +19,7 @@ export default class Stats implements Domains.IStats {
     this._logger = _loggerFactory.create("Domain.Stats");
   }
 
-  getSummary = async (
-    _date: string,
-    validatorList: Models.ValidatorSummary[]
-  ) => {
+  getSummary = async (validatorList: Models.ValidatorSummary[]) => {
     try {
       // remove non active validators in the last N hours.
       const threshould = moment().add(-6, "h");
