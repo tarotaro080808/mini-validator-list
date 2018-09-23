@@ -25,8 +25,9 @@ export default class Stats implements Domains.IStats {
       const threshould = moment().add(-6, "h");
       const mainNetValidators = validatorList.filter(
         a =>
-          _takeLastNHours(threshould, moment(a.last_datetime)) &&
-          _takeMainNetOnly(a)
+          a.default ||
+          (_takeLastNHours(threshould, moment(a.last_datetime)) &&
+            _takeMainNetOnly(a))
       );
       const summary = StatsUtil.getSummaryStats(mainNetValidators);
       return summary;
