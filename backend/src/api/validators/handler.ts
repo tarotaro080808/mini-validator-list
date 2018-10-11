@@ -1,17 +1,15 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { Domains } from "../../domain/types";
-import { Handlers } from "../types";
 import { _takeLastNHours } from "../../domain/common/util";
 import * as moment from "moment";
 
 @injectable()
-export default class ValidatorHandler implements Handlers.IValidatorHandler {
+export default class ValidatorHandler implements api.IValidatorHandler {
   constructor(
-    @inject(TYPES.Proxy.DefaultUnl) private _defaultUnl: Domains.IDefaultUnl,
-    @inject(TYPES.Proxy.Geo) private _geo: Domains.IGeo,
-    @inject(TYPES.Proxy.Stats) private _stats: Domains.IStats,
-    @inject(TYPES.Proxy.Validators) private _validators: Domains.IValidators
+    @inject(TYPES.Proxy.DefaultUnl) private _defaultUnl: domain.IDefaultUnl,
+    @inject(TYPES.Proxy.Geo) private _geo: domain.IGeo,
+    @inject(TYPES.Proxy.Stats) private _stats: domain.IStats,
+    @inject(TYPES.Proxy.Validators) private _validators: domain.IValidators
   ) {}
 
   getValidatorSummary = async args => {

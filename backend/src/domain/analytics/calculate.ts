@@ -1,14 +1,13 @@
 import "reflect-metadata";
 import { injectable } from "../../inversify";
 import { _groupByWithCount, _sort, _addRate } from "../../lib/util/util";
-import { Models } from "../types";
 
 @injectable()
 export default class StatsUtil {
   constructor() {}
 
   private static byCountryStats = (
-    mainNetValidators: Models.ValidatorSummary[]
+    mainNetValidators: domain.ValidatorSummary[]
   ): any => {
     const verifiedValidators = mainNetValidators.filter(
       a => a.verified && a.country_name
@@ -55,7 +54,7 @@ export default class StatsUtil {
   };
 
   private static defaultUnlStats = (
-    mainNetValidators: Models.ValidatorSummary[]
+    mainNetValidators: domain.ValidatorSummary[]
   ): any => {
     const defaultValidators = mainNetValidators.filter(a => a.default);
     const total = defaultValidators.length;
@@ -76,7 +75,7 @@ export default class StatsUtil {
   };
 
   private static allValidatorStats = (
-    mainNetValidators: Models.ValidatorSummary[]
+    mainNetValidators: domain.ValidatorSummary[]
   ): any => {
     const total = mainNetValidators.length;
     const verified = mainNetValidators.filter(a => a.verified).length;
@@ -93,7 +92,7 @@ export default class StatsUtil {
     };
   };
 
-  static getSummaryStats(validatorInfo: Models.ValidatorSummary[]): any {
+  static getSummaryStats(validatorInfo: domain.ValidatorSummary[]): any {
     const mainNetValidators = validatorInfo.filter(a => !a.is_alt_net);
     return {
       ...this.allValidatorStats(mainNetValidators),

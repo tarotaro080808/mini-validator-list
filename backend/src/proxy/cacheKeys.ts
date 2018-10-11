@@ -1,6 +1,6 @@
-import { Frequency } from "../lib/types";
+import { Frequency } from "../lib/enum";
 
-export const Cache = {
+export default {
   DefaultUnl: {
     key: "ripple.defaultUNL",
     interval: Frequency.Often

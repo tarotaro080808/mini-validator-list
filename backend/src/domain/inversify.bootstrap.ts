@@ -1,7 +1,6 @@
 import { Container } from "inversify";
-import { Domains } from "./types";
 
-import TYPES from "./";
+import TYPES from "./inversify.types";
 
 import Validators from "./ripple/validators";
 import DefaultUnl from "./ripple/defaultUnl";
@@ -10,19 +9,19 @@ import Stats from "./analytics/stats";
 
 export default (container: Container) => {
   container
-    .bind<Domains.IValidators>(TYPES.Domain.Validators)
+    .bind<domain.IValidators>(TYPES.Domain.Validators)
     .to(Validators)
     .inSingletonScope();
   container
-    .bind<Domains.IDefaultUnl>(TYPES.Domain.DefaultUnl)
+    .bind<domain.IDefaultUnl>(TYPES.Domain.DefaultUnl)
     .to(DefaultUnl)
     .inSingletonScope();
   container
-    .bind<Domains.IGeo>(TYPES.Domain.Geo)
+    .bind<domain.IGeo>(TYPES.Domain.Geo)
     .to(Geo)
     .inSingletonScope();
   container
-    .bind<Domains.IStats>(TYPES.Domain.Stats)
+    .bind<domain.IStats>(TYPES.Domain.Stats)
     .to(Stats)
     .inSingletonScope();
 };

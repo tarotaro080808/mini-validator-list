@@ -1,34 +1,28 @@
 import * as moment from "moment";
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IDefaultUnlService, IGitHubService } from "../../service/types";
-import {
-  ILogger,
-  IConfiguration,
-  ILoggerFactory,
-  ICrypto
-} from "../../lib/types";
 import { _sort } from "../../lib/util/util";
-import { Domains, Models } from "../types";
 
 @injectable()
-export default class DefaultUnl implements Domains.IDefaultUnl {
-  private _logger: ILogger;
+export default class DefaultUnl implements domain.IDefaultUnl {
+  private _logger: lib.ILogger;
 
   constructor(
-    @inject(TYPES.Lib.LoggerFactory) protected _loggerFactory: ILoggerFactory,
-    @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration,
-    @inject(TYPES.Service.GitHubService) private _githubService: IGitHubService,
-    @inject(TYPES.Lib.Crypto) private _crypto: ICrypto,
+    @inject(TYPES.Lib.LoggerFactory)
+    protected _loggerFactory: lib.ILoggerFactory,
+    @inject(TYPES.Lib.Configuration) private _configuration: lib.IConfiguration,
+    @inject(TYPES.Service.GitHubService)
+    private _githubService: service.IGitHubService,
+    @inject(TYPES.Lib.Crypto) private _crypto: lib.ICrypto,
     @inject(TYPES.Service.DefaultUnlService)
-    private _defaultUnlService: IDefaultUnlService
+    private _defaultUnlService: service.IDefaultUnlService
   ) {
     this._logger = _loggerFactory.create("Domain.DefaultUnl");
   }
 
   getDefaultUnl = async (
     date: string,
-    archives: Models.DefaultUnlArchiveEntry[]
+    archives: domain.DefaultUnlArchiveEntry[]
   ) => {
     try {
       if (date) {
@@ -51,8 +45,8 @@ export default class DefaultUnl implements Domains.IDefaultUnl {
   };
 
   getDefaultUnlStats = async (
-    archives: Models.DefaultUnlArchiveEntry[],
-    validatorSummary: Models.ValidatorSummary[]
+    archives: domain.DefaultUnlArchiveEntry[],
+    validatorSummary: domain.ValidatorSummary[]
   ) => {
     try {
       const unls = await Promise.all(
@@ -114,8 +108,8 @@ export default class DefaultUnl implements Domains.IDefaultUnl {
       const data = await this._githubService.getDefaultUnlArchives();
       _sort(data, "date", "dsc");
       data.unshift({
-        name: this._configuration.getDefaultUNLsURL(),
-        url: this._configuration.getDefaultUNLsURL(),
+        name: this._configuration.ripple.defaultUnlSite,
+        url: this._configuration.ripple.defaultUnlSite,
         date: ""
       });
       return data;

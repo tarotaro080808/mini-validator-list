@@ -1,10 +1,9 @@
 import "reflect-metadata";
 import { injectable } from "../../inversify";
-import { ILoggerFactory, ILogger } from "../types";
 
 import * as winston from "winston";
 
-class Logger implements ILogger {
+class Logger implements lib.ILogger {
   constructor(private _name: string, private _logger: winston.Logger) {}
 
   info = (message: string) => {
@@ -21,7 +20,7 @@ class Logger implements ILogger {
 }
 
 @injectable()
-export default class LoggerFactory implements ILoggerFactory {
+export default class LoggerFactory implements lib.ILoggerFactory {
   private _logger: winston.Logger;
 
   constructor() {

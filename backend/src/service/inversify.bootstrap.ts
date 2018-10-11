@@ -1,12 +1,6 @@
 import { Container } from "inversify";
-import {
-  IDefaultUnlService,
-  IGitHubService,
-  IRippleDataService,
-  IGeoService
-} from "./types";
 
-import TYPES from "./";
+import TYPES from "./inversify.types";
 
 import GitHubService from "./github/service";
 import RippleDataService from "./rippleData/service";
@@ -15,19 +9,19 @@ import GeoService from "./geoService/service";
 
 export default (container: Container) => {
   container
-    .bind<IGitHubService>(TYPES.Service.GitHubService)
+    .bind<service.IGitHubService>(TYPES.Service.GitHubService)
     .to(GitHubService)
     .inSingletonScope();
   container
-    .bind<IRippleDataService>(TYPES.Service.RippleDataService)
+    .bind<service.IRippleDataService>(TYPES.Service.RippleDataService)
     .to(RippleDataService)
     .inSingletonScope();
   container
-    .bind<IGeoService>(TYPES.Service.GeoService)
+    .bind<service.IGeoService>(TYPES.Service.GeoService)
     .to(GeoService)
     .inSingletonScope();
   container
-    .bind<IDefaultUnlService>(TYPES.Service.DefaultUnlService)
+    .bind<service.IDefaultUnlService>(TYPES.Service.DefaultUnlService)
     .to(DefaultUnlService)
     .inSingletonScope();
 };

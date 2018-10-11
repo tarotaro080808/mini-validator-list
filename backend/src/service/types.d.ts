@@ -1,33 +1,33 @@
-export interface IDefaultUnlService {
-  getDefaultUnl: () => Promise<Service.RippleDataApi.DefaultUnlResponse>;
-  getDefaultUnlByUrl: (
-    url: string
-  ) => Promise<Service.RippleDataApi.DefaultUnlResponse>;
-}
+declare namespace service {
+  export interface IDefaultUnlService {
+    getDefaultUnl: () => Promise<RippleDataApi.DefaultUnlResponse>;
+    getDefaultUnlByUrl: (
+      url: string
+    ) => Promise<RippleDataApi.DefaultUnlResponse>;
+  }
 
-export interface IGeoService {
-  getGeoData: (domainOrIp: string) => Promise<Service.Geo.GeoResponseData>;
-  getIpFromDomain: (domain: string) => Promise<string>;
-}
+  export interface IGeoService {
+    getGeoData: (domainOrIp: string) => Promise<Geo.GeoResponseData>;
+    getIpFromDomain: (domain: string) => Promise<string>;
+  }
 
-export interface IRippleDataService {
-  getValidators: () => Promise<Service.RippleDataApi.GetValidatorsResponse>;
-  getValidatorDailyReports: () => Promise<
-    Service.RippleDataApi.GetDailyReportResponse
-  >;
-}
+  export interface IRippleDataService {
+    getValidators: () => Promise<RippleDataApi.GetValidatorsResponse>;
+    getValidatorDailyReports: () => Promise<
+      RippleDataApi.GetDailyReportResponse
+    >;
+  }
 
-export interface IGitHubService {
-  getDefaultUnlArchives: () => Promise<
-    Service.GitHubService.RepositoryContentResponse
-  >;
-}
+  export interface IGitHubService {
+    getDefaultUnlArchives: () => Promise<
+      GitHubService.RepositoryContentResponse
+    >;
+  }
 
-export interface IGoogleAnalyticsService {
-  getReferrals: () => Promise<Service.GitHubService.RepositoryContentResponse>;
-}
+  export interface IGoogleAnalyticsService {
+    getReferrals: () => Promise<GitHubService.RepositoryContentResponse>;
+  }
 
-export namespace Service {
   /**
    * Ripple Data API Response
    */

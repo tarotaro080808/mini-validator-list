@@ -1,9 +1,9 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { ILogger, ICache, Frequency, HashMap, ILoggerFactory } from "../types";
+import { Frequency } from "../enum";
 
 class InMemoryCache {
-  private _obj: HashMap<any>;
+  private _obj: lib.HashMap<any>;
   constructor() {
     this._obj = {};
   }
@@ -29,12 +29,14 @@ class InMemoryCache {
 }
 
 @injectable()
-export default class Cache implements ICache {
-  private _logger: ILogger;
+export default class Cache implements lib.ICache {
+  private _logger: lib.ILogger;
   private _cache: InMemoryCache;
-  private _intervalKeys: HashMap<NodeJS.Timer>;
+  private _intervalKeys: lib.HashMap<NodeJS.Timer>;
 
-  constructor(@inject(TYPES.Lib.LoggerFactory) _loggerFactory: ILoggerFactory) {
+  constructor(
+    @inject(TYPES.Lib.LoggerFactory) _loggerFactory: lib.ILoggerFactory
+  ) {
     this._logger = _loggerFactory.create("Lib.Cache");
     this._cache = new InMemoryCache();
     this._intervalKeys = {};
@@ -83,9 +85,7 @@ export default class Cache implements ICache {
     const cacheKey = this._createCacheKey(key, variant);
     const value = this._cache.get<TItem>(cacheKey);
     if (value) {
-      this._logger.info(
-        `The cache: ${cacheKey} found.`
-      );
+      this._logger.info(`The cache: ${cacheKey} found.`);
       return await value;
     }
 

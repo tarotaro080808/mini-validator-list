@@ -1,8 +1,5 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IConfiguration, ILoggerFactory, ILogger } from "../../lib/types";
-import { Service, IGeoService } from "../../service/types";
-import { Domains, Models } from "../types";
 
 const _roundCoordinate = (num: number) => {
   const factor = 100;
@@ -25,13 +22,15 @@ const _reverseJoin = (domainChunks: string[]) => {
 };
 
 @injectable()
-export default class Geo implements Domains.IGeo {
-  private _logger: ILogger;
+export default class Geo implements domain.IGeo {
+  private _logger: lib.ILogger;
 
   constructor(
-    @inject(TYPES.Lib.LoggerFactory) protected _loggerFactory: ILoggerFactory,
-    @inject(TYPES.Lib.Configuration) protected _configuration: IConfiguration,
-    @inject(TYPES.Service.GeoService) protected _geoService: IGeoService
+    @inject(TYPES.Lib.LoggerFactory)
+    protected _loggerFactory: lib.ILoggerFactory,
+    @inject(TYPES.Lib.Configuration)
+    protected _configuration: lib.IConfiguration,
+    @inject(TYPES.Service.GeoService) protected _geoService: service.IGeoService
   ) {
     this._logger = _loggerFactory.create("Domain.Geo");
   }
@@ -49,8 +48,8 @@ export default class Geo implements Domains.IGeo {
 
   private _lookup = async (
     domain: string
-  ): Promise<Service.Geo.GeoResponseData> => {
-    let data: Service.Geo.GeoResponseData;
+  ): Promise<service.Geo.GeoResponseData> => {
+    let data: service.Geo.GeoResponseData;
     const reverseSplit = _reverseSplit(domain);
     const domainChunks = [];
 
@@ -82,7 +81,7 @@ export default class Geo implements Domains.IGeo {
     throw Error(logMessage);
   };
 
-  getDomainGeoList = async (validators: Models.Validator[]) => {
+  getDomainGeoList = async (validators: domain.Validator[]) => {
     try {
       // lookup ip address from the domain
       const domains = {};

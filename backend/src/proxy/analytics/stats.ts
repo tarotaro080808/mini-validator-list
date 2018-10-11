@@ -1,17 +1,16 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { Cache } from "../types";
-import { Domains, Models } from "../../domain/types";
 import { cache, cached } from "../../lib/cache/smartCache";
+import Cache from "../../proxy/cacheKeys";
 
 @injectable()
-export default class StatsProxy implements Domains.IStats {
-  constructor(@inject(TYPES.Domain.Stats) private _actual: Domains.IStats) {}
+export default class StatsProxy implements domain.IStats {
+  constructor(@inject(TYPES.Domain.Stats) private _actual: domain.IStats) {}
 
   @cache({ key: Cache.Stats.key, interval: Cache.Stats.interval })
   async getSummary(
     @cached(Cache.ValidatorsSummary.key)
-    validatorList: Models.ValidatorSummary[]
+    validatorList: domain.ValidatorSummary[]
   ) {
     return this._actual.getSummary(validatorList);
   }

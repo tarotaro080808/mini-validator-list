@@ -1,12 +1,10 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { Domains } from "../../domain/types";
-import { Handlers } from "../types";
 
 @injectable()
-export default class DefaultUnlHandler implements Handlers.IDefaultUnlHandler {
+export default class DefaultUnlHandler implements api.IDefaultUnlHandler {
   constructor(
-    @inject(TYPES.Proxy.DefaultUnl) private _defaultUnl: Domains.IDefaultUnl
+    @inject(TYPES.Proxy.DefaultUnl) private _defaultUnl: domain.IDefaultUnl
   ) {}
 
   getDefaultUnlArchives = async () => {

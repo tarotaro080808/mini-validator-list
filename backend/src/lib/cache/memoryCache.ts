@@ -1,8 +1,7 @@
 import "reflect-metadata";
-import { HashMap } from "../types";
 
 export default class InMemoryCache {
-  private _obj: HashMap<any>;
+  private _obj: lib.HashMap<any>;
   constructor() {
     this._obj = {};
   }
@@ -15,7 +14,7 @@ export default class InMemoryCache {
     if (this.get(name)) {
       this.del(name);
     }
-    return this._obj[name] = value;
+    return (this._obj[name] = value);
   };
 
   del = (name: string) => {

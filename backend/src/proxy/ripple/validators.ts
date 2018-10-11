@@ -1,13 +1,12 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { Domains, Models } from "../../domain/types";
-import { Cache } from "../types";
 import { cached, cache } from "../../lib/cache/smartCache";
+import Cache from "../../proxy/cacheKeys";
 
 @injectable()
-export default class ValidatorsProxy implements Domains.IValidators {
+export default class ValidatorsProxy implements domain.IValidators {
   constructor(
-    @inject(TYPES.Domain.Validators) private _actual: Domains.IValidators
+    @inject(TYPES.Domain.Validators) private _actual: domain.IValidators
   ) {}
 
   @cache({
@@ -24,10 +23,10 @@ export default class ValidatorsProxy implements Domains.IValidators {
   })
   async getValidatorSummary(
     _date: string,
-    @cached(Cache.DefaultUnl.key) defaultUnl: Models.DefaultUnl,
-    @cached(Cache.DailyReports.key) dailyReports: Models.DailyReports[],
-    @cached(Cache.Validators.key) allValidators: Models.Validator[],
-    @cached(Cache.Geo.key) domainGeoList: Models.DomainGeo[]
+    @cached(Cache.DefaultUnl.key) defaultUnl: domain.DefaultUnl,
+    @cached(Cache.DailyReports.key) dailyReports: domain.DailyReports[],
+    @cached(Cache.Validators.key) allValidators: domain.Validator[],
+    @cached(Cache.Geo.key) domainGeoList: domain.DomainGeo[]
   ) {
     return this._actual.getValidatorSummary(
       _date,

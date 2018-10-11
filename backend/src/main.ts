@@ -1,12 +1,11 @@
 import { TYPES } from "./inversify";
 import { container } from "./inversify/bootstrap";
-import { IConfiguration, ILoggerFactory } from "./lib/types";
 import Routes from "./api/routes";
 import Server from "./lib/koa/server";
 
-const config = container.get<IConfiguration>(TYPES.Lib.Configuration);
+const config = container.get<lib.IConfiguration>(TYPES.Lib.Configuration);
 const logger = container
-  .get<ILoggerFactory>(TYPES.Lib.LoggerFactory)
+  .get<lib.ILoggerFactory>(TYPES.Lib.LoggerFactory)
   .create("main");
 
 process.on("uncaughtException", err => {
@@ -15,4 +14,4 @@ process.on("uncaughtException", err => {
 
 Server("/api", config, logger, Routes(container));
 
-logger.info(`app started listeninig on port ${config.getPort()}...`);
+logger.info(`app started listeninig on port ${config.port}...`);

@@ -1,12 +1,11 @@
 import { Container } from "inversify";
 
-import LibBootstrapper from "../lib/bootstrap";
-import ServiceBootstrapper from "../service/bootstrap";
-import DomainBootstrapper from "../domain/bootstrap";
-import ProxyBootstrapper from "../proxy/bootstrap";
-import ApiBootstrapper from "../api/bootstrap";
+import LibBootstrapper from "../lib/inversify.bootstrap";
+import ServiceBootstrapper from "../service/inversify.bootstrap";
+import DomainBootstrapper from "../domain/inversify.bootstrap";
+import ProxyBootstrapper from "../proxy/inversify.bootstrap";
+import ApiBootstrapper from "../api/inversify.bootstrap";
 
-require("dotenv").config();
 const container = new Container();
 
 LibBootstrapper(container);

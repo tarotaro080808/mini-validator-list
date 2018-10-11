@@ -1,26 +1,19 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import {
-  IConfiguration,
-  ILogger,
-  ICrypto,
-  ILoggerFactory
-} from "../../lib/types";
-import { Domains, Models } from "../types";
-import { IRippleDataService } from "../../service/types";
 import { _union, _first } from "../../lib/util/util";
 import { _isRippleValidator, _rippleDomain } from "../common/util";
 
 @injectable()
-export default class Validators implements Domains.IValidators {
-  private _logger: ILogger;
+export default class Validators implements domain.IValidators {
+  private _logger: lib.ILogger;
 
   constructor(
-    @inject(TYPES.Lib.LoggerFactory) protected _loggerFactory: ILoggerFactory,
-    @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration,
-    @inject(TYPES.Lib.Crypto) private _crypto: ICrypto,
+    @inject(TYPES.Lib.LoggerFactory)
+    protected _loggerFactory: lib.ILoggerFactory,
+    @inject(TYPES.Lib.Configuration) private _configuration: lib.IConfiguration,
+    @inject(TYPES.Lib.Crypto) private _crypto: lib.ICrypto,
     @inject(TYPES.Service.RippleDataService)
-    private _rippleDataService: IRippleDataService
+    private _rippleDataService: service.IRippleDataService
   ) {
     this._logger = _loggerFactory.create("Domain.Validators");
   }
@@ -36,17 +29,17 @@ export default class Validators implements Domains.IValidators {
 
   getValidatorSummary = async (
     _date: string,
-    defaultUnl: Models.DefaultUnl,
-    dailyReports: Models.DailyReports[],
-    allValidators: Models.Validator[],
-    domainGeoList: Models.DomainGeo[]
+    defaultUnl: domain.DefaultUnl,
+    dailyReports: domain.DailyReports[],
+    allValidators: domain.Validator[],
+    domainGeoList: domain.DomainGeo[]
   ) => {
     try {
       const validators = allValidators;
       const defaultUnlValidators = this._crypto.parseDefaultUNLBlob(
         defaultUnl.blob
       );
-      const altnetRegex = this._configuration.getAltNetDomainsPattern();
+      const altnetRegex = this._configuration.ripple.altNetDomainsPattern;
       const allValidationPublicKeys = _union(
         defaultUnlValidators,
         validators.map(a => a.validation_public_key)
@@ -107,7 +100,7 @@ export default class Validators implements Domains.IValidators {
           // set ALT-Net flag - check if the alt net pattern matches.
           data.is_alt_net = v.domain && !!altnetRegex.exec(data.domain);
 
-          const reportItem = _first<Models.DailyReports>(
+          const reportItem = _first<domain.DailyReports>(
             dailyReports,
             report => report.validation_public_key === v.validation_public_key
           );
@@ -136,7 +129,7 @@ export default class Validators implements Domains.IValidators {
             data.disagreement = parseFloat(disagreement.toFixed(5));
             data.total_ledgers = reportItem.total_ledgers;
           }
-          const geoItem = _first<Models.DomainGeo>(
+          const geoItem = _first<domain.DomainGeo>(
             domainGeoList,
             geo => geo.domain === v.domain,
             <any>{
@@ -161,7 +154,7 @@ export default class Validators implements Domains.IValidators {
           prev.push(data);
           return prev;
         },
-        <Models.ValidatorSummary[]>[]
+        <domain.ValidatorSummary[]>[]
       );
 
       return mergedList;

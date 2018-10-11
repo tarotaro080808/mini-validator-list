@@ -1,8 +1,6 @@
 import "reflect-metadata";
 import { google, analyticsreporting_v4 } from "googleapis";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IGoogleAnalyticsService } from "../types";
-import { ILogger, ILoggerFactory, IConfiguration } from "../../lib/types";
 import * as moment from "moment";
 
 const createGAReportingApi = async () => {
@@ -18,13 +16,14 @@ const createGAReportingApi = async () => {
 };
 
 @injectable()
-export default class GoogleAnalyticsService implements IGoogleAnalyticsService {
-  private _logger: ILogger;
+export default class GoogleAnalyticsService
+  implements service.IGoogleAnalyticsService {
+  private _logger: lib.ILogger;
   private _gaClient: analyticsreporting_v4.Analyticsreporting;
 
   constructor(
-    @inject(TYPES.Lib.LoggerFactory) _loggerFactory: ILoggerFactory,
-    @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration
+    @inject(TYPES.Lib.LoggerFactory) _loggerFactory: lib.ILoggerFactory,
+    @inject(TYPES.Lib.Configuration) private _configuration: lib.IConfiguration
   ) {
     this._logger = _loggerFactory.create("Service.GitHubService");
     setImmediate(async () => {
@@ -37,7 +36,7 @@ export default class GoogleAnalyticsService implements IGoogleAnalyticsService {
       requestBody: {
         reportRequests: [
           {
-            viewId: this._configuration.getGAViewId(),
+            viewId: this._configuration.ga.viewId,
             dateRanges: [
               {
                 startDate: moment(new Date())
@@ -56,7 +55,7 @@ export default class GoogleAnalyticsService implements IGoogleAnalyticsService {
       }
     });
 
-    const excludeRegex = this._configuration.getGAExcludedReferralDomainsRegex();
+    const excludeRegex = this._configuration.ga.excludedReferralDomainsRegex;
 
     // sort
     const list = res.data.reports[0].data.rows.reduce((prev, curr) => {

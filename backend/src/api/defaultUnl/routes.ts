@@ -1,13 +1,11 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IRoutes } from "../../lib/types";
-import { Handlers } from "../types";
 
 @injectable()
-export default class DefaultUnlRoutes implements IRoutes {
+export default class DefaultUnlRoutes implements lib.IRoutes {
   constructor(
     @inject(TYPES.Api.DefaultUnlHandler)
-    private _handler: Handlers.IDefaultUnlHandler
+    private _handler: api.IDefaultUnlHandler
   ) {}
 
   get() {

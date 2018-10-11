@@ -1,13 +1,10 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IRoutes } from "../../lib/types";
-import { Handlers } from "../types";
 
 @injectable()
-export default class ValidatorRoutes implements IRoutes {
+export default class ValidatorRoutes implements lib.IRoutes {
   constructor(
-    @inject(TYPES.Api.ValidatorHandler)
-    private _handler: Handlers.IValidatorHandler
+    @inject(TYPES.Api.ValidatorHandler) private _handler: api.IValidatorHandler
   ) {}
 
   get() {

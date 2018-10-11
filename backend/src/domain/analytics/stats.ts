@@ -1,25 +1,23 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IRippleDataService } from "../../service/types";
-import { Domains, Models } from "../types";
 import * as moment from "moment";
 import StatsUtil from "./calculate";
 import { _takeLastNHours, _takeMainNetOnly } from "../common/util";
-import { ILoggerFactory, ILogger } from "../../lib/types";
 
 @injectable()
-export default class Stats implements Domains.IStats {
-  private _logger: ILogger;
+export default class Stats implements domain.IStats {
+  private _logger: lib.ILogger;
 
   constructor(
-    @inject(TYPES.Lib.LoggerFactory) protected _loggerFactory: ILoggerFactory,
+    @inject(TYPES.Lib.LoggerFactory)
+    protected _loggerFactory: lib.ILoggerFactory,
     @inject(TYPES.Service.RippleDataService)
-    private _rippleDataService: IRippleDataService
+    private _rippleDataService: service.IRippleDataService
   ) {
     this._logger = _loggerFactory.create("Domain.Stats");
   }
 
-  getSummary = async (validatorList: Models.ValidatorSummary[]) => {
+  getSummary = async (validatorList: domain.ValidatorSummary[]) => {
     try {
       // remove non active validators in the last N hours.
       const threshould = moment().add(-6, "h");

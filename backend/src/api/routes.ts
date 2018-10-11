@@ -1,6 +1,5 @@
 import { Container } from "inversify";
 import { TYPES } from "../inversify";
-import { IRoutes } from "../lib/types";
 
 const routeTypes = [
   TYPES.Api.DefaultUnlRoutes,
@@ -10,6 +9,6 @@ const routeTypes = [
 
 export default (container: Container) => {
   return routeTypes.reduce((prev, type) => {
-    return prev.concat(container.get<IRoutes>(type).get());
+    return prev.concat(container.get<lib.IRoutes>(type).get());
   }, []);
 };

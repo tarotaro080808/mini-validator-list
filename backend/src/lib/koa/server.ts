@@ -2,8 +2,6 @@ import * as Koa from "koa";
 import * as Router from "koa-router";
 import * as cors from "@koa/cors";
 
-import { IConfiguration, ILogger, Route } from "../types";
-
 const handleRequest = async (ctx, route) => {
   ctx.body = {
     data: await route.handler({
@@ -14,7 +12,7 @@ const handleRequest = async (ctx, route) => {
   };
 };
 
-const handlerError = (err, logger: ILogger, route: Route) => {
+const handlerError = (err, logger: lib.ILogger, route: lib.Route) => {
   logger.error(
     `An error has occurred while handling the request for ${route.method}: ${
       route.path
@@ -24,9 +22,9 @@ const handlerError = (err, logger: ILogger, route: Route) => {
 
 export default (
   prefix: string,
-  config: IConfiguration,
-  logger: ILogger,
-  routes: Route[]
+  config: lib.IConfiguration,
+  logger: lib.ILogger,
+  routes: lib.Route[]
 ) => {
   const koa = new Koa();
   const router = new Router({
@@ -36,7 +34,7 @@ export default (
   // setup middlewares
   const middlewares = [];
   middlewares.push(router.routes());
-  if (!config.isProduction()) {
+  if (!config.isProduction) {
     middlewares.push(cors());
     logger.info(`CORS enabled...`);
   }
@@ -63,5 +61,5 @@ export default (
   });
 
   // start the app
-  koa.listen(config.getPort());
+  koa.listen(config.port);
 };

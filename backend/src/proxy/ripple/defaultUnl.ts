@@ -1,13 +1,12 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { Domains, Models } from "../../domain/types";
-import { Cache } from "../types";
 import { cache, cached } from "../../lib/cache/smartCache";
+import Cache from "../../proxy/cacheKeys";
 
 @injectable()
-export default class DefaultUnlProxy implements Domains.IDefaultUnl {
+export default class DefaultUnlProxy implements domain.IDefaultUnl {
   constructor(
-    @inject(TYPES.Domain.DefaultUnl) private _actual: Domains.IDefaultUnl
+    @inject(TYPES.Domain.DefaultUnl) private _actual: domain.IDefaultUnl
   ) {}
 
   @cache({
@@ -16,7 +15,7 @@ export default class DefaultUnlProxy implements Domains.IDefaultUnl {
   })
   async getDefaultUnl(
     date: string,
-    @cached(Cache.UnlArchives.key) archives?: Models.DefaultUnlArchiveEntry[]
+    @cached(Cache.UnlArchives.key) archives?: domain.DefaultUnlArchiveEntry[]
   ) {
     return this._actual.getDefaultUnl(date, archives);
   }
@@ -34,9 +33,9 @@ export default class DefaultUnlProxy implements Domains.IDefaultUnl {
     interval: Cache.UnlMovementStats.interval
   })
   async getDefaultUnlStats(
-    @cached(Cache.UnlArchives.key) archives: Models.DefaultUnlArchiveEntry[],
+    @cached(Cache.UnlArchives.key) archives: domain.DefaultUnlArchiveEntry[],
     @cached(Cache.ValidatorsSummary.key)
-    validatorList: Models.ValidatorSummary[]
+    validatorList: domain.ValidatorSummary[]
   ) {
     return this._actual.getDefaultUnlStats(archives, validatorList);
   }

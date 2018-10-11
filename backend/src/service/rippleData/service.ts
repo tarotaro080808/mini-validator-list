@@ -1,21 +1,14 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import {
-  IWebClient,
-  IConfiguration,
-  ILoggerFactory,
-  ILogger
-} from "../../lib/types";
-import { Service, IRippleDataService } from "../types";
 
 @injectable()
-export default class RippleDataService implements IRippleDataService {
-  private _logger: ILogger;
+export default class RippleDataService implements service.IRippleDataService {
+  private _logger: lib.ILogger;
 
   constructor(
-    @inject(TYPES.Lib.LoggerFactory) private _loggerFactory: ILoggerFactory,
-    @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration,
-    @inject(TYPES.Lib.WebClient) protected _webClient: IWebClient
+    @inject(TYPES.Lib.LoggerFactory) private _loggerFactory: lib.ILoggerFactory,
+    @inject(TYPES.Lib.Configuration) private _configuration: lib.IConfiguration,
+    @inject(TYPES.Lib.WebClient) protected _webClient: lib.IWebClient
   ) {
     this._logger = this._loggerFactory.create(`Service.RippleDataService`);
   }
@@ -23,8 +16,8 @@ export default class RippleDataService implements IRippleDataService {
   getValidators = async () => {
     this._logger.info(`getValidators`);
     return this._webClient
-      .get<{ validators: Service.RippleDataApi.GetValidatorsResponse }>(
-        this._configuration.getValidatorsURL()
+      .get<{ validators: service.RippleDataApi.GetValidatorsResponse }>(
+        this._configuration.ripple.validatorsUrl
       )
       .then(data => data.validators);
   };
@@ -32,8 +25,8 @@ export default class RippleDataService implements IRippleDataService {
   getValidatorDailyReports = async () => {
     this._logger.info(`getValidatorDailyReports`);
     return this._webClient
-      .get<{ reports: Service.RippleDataApi.GetDailyReportResponse }>(
-        this._configuration.getValidatorDailyReportsURL()
+      .get<{ reports: service.RippleDataApi.GetDailyReportResponse }>(
+        this._configuration.ripple.validatorDailyReportsUrl
       )
       .then(data => data.reports);
   };

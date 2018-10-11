@@ -1,10 +1,9 @@
 import * as moment from "moment";
 import WELL_KNOWN_PUBKEYS from "../../resources/wellKnownValidators";
-import { Models } from "../types";
 
 const _rippleDomain = "ripple.com";
 
-const _isRippleValidator = (validator: Models.Validator) => {
+const _isRippleValidator = (validator: domain.Validator) => {
   const isWellKnown =
     validator.validation_public_key &&
     WELL_KNOWN_PUBKEYS[_rippleDomain].indexOf(
@@ -21,7 +20,7 @@ const _takeLastNHours = (
   last_datetime: moment.Moment
 ) => last_datetime.diff(threshould) > 0;
 
-const _takeMainNetOnly = (validator: Models.ValidatorSummary) =>
+const _takeMainNetOnly = (validator: domain.ValidatorSummary) =>
   !validator.is_alt_net;
 
 export { _isRippleValidator, _rippleDomain, _takeLastNHours, _takeMainNetOnly };

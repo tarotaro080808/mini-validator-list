@@ -1,15 +1,13 @@
 import "reflect-metadata";
 import { injectable, inject, TYPES } from "../../inversify";
-import { Domains } from "../../domain/types";
-import { Handlers } from "../types";
 
 @injectable()
-export default class StatsHandler implements Handlers.IStatsHandler {
+export default class StatsHandler implements api.IStatsHandler {
   constructor(
-    @inject(TYPES.Proxy.DefaultUnl) private _defaultUnl: Domains.IDefaultUnl,
-    @inject(TYPES.Proxy.Validators) private _validators: Domains.IValidators,
-    @inject(TYPES.Proxy.Geo) private _geo: Domains.IGeo,
-    @inject(TYPES.Proxy.Stats) private _stats: Domains.IStats
+    @inject(TYPES.Proxy.DefaultUnl) private _defaultUnl: domain.IDefaultUnl,
+    @inject(TYPES.Proxy.Validators) private _validators: domain.IValidators,
+    @inject(TYPES.Proxy.Geo) private _geo: domain.IGeo,
+    @inject(TYPES.Proxy.Stats) private _stats: domain.IStats
   ) {}
 
   getStats = async args => {

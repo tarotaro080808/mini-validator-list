@@ -1,8 +1,6 @@
 import "reflect-metadata";
 import * as Octokit from "@octokit/rest";
 import { injectable, inject, TYPES } from "../../inversify";
-import { IGitHubService } from "../types";
-import { ILogger, ILoggerFactory, IConfiguration } from "../../lib/types";
 
 const fileNameRegexp = new RegExp(/^index\..*\.json$/);
 const dateRegexp = new RegExp(/index\.([\d-]{1,})\.json/);
@@ -20,13 +18,13 @@ const getDate = file => {
 };
 
 @injectable()
-export default class GitHubService implements IGitHubService {
-  private _logger: ILogger;
+export default class GitHubService implements service.IGitHubService {
+  private _logger: lib.ILogger;
   private _githubClient: Octokit;
 
   constructor(
-    @inject(TYPES.Lib.LoggerFactory) _loggerFactory: ILoggerFactory,
-    @inject(TYPES.Lib.Configuration) private _configuration: IConfiguration
+    @inject(TYPES.Lib.LoggerFactory) _loggerFactory: lib.ILoggerFactory,
+    @inject(TYPES.Lib.Configuration) private _configuration: lib.IConfiguration
   ) {
     this._logger = _loggerFactory.create("Service.GitHubService");
     this._githubClient = this._createGitHubClient();
@@ -34,7 +32,7 @@ export default class GitHubService implements IGitHubService {
 
   private _createGitHubClient = () => {
     const oktokit = new Octokit();
-    const token = this._configuration.getGitHubPersonalToken();
+    const token = this._configuration.github.token;
     // using a token can increase the rate limit
     if (token) {
       oktokit.authenticate({
