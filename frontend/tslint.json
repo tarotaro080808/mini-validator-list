@@ -2,7 +2,8 @@
   "extends": [
     "tslint-config-airbnb",
     "tslint-config-prettier",
-    "tslint-plugin-prettier"
+    "tslint-plugin-prettier",
+    "tslint-react"
   ],
   "rules": {
     "variable-name": [
