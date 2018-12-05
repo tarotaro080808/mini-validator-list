@@ -5,7 +5,7 @@ yarn-*
 secret
 
 # backend
-backend/build/
+api/build/
 .env
 
 # frontend

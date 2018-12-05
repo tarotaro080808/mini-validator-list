@@ -1,6 +1,6 @@
 # build backend
-echo "building backend..."
-cd backend
+echo "building api..."
+cd api
 yarn run build
 cd ..
 echo
@@ -19,13 +19,13 @@ echo
 
 # build docker images
 echo "tagging imgaegs with 'cinnapple'..."
-docker image tag mini-validator-list-backend cinnapple/mini-validator-list-backend
+docker image tag mini-validator-list-api cinnapple/mini-validator-list-api
 docker image tag mini-validator-list-frontend cinnapple/mini-validator-list-frontend
 echo
 
 # push docker image
 echo "pushing images to the hub..."
-docker image push cinnapple/mini-validator-list-backend
+docker image push cinnapple/mini-validator-list-api
 docker image push cinnapple/mini-validator-list-frontend
 echo
 
